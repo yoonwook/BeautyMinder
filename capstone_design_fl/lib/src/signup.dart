@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:capstone_design_fl/src/Widget/bezierContainer.dart';
 import 'package:capstone_design_fl/src/loginPage.dart';
@@ -105,18 +107,19 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<String> trySignUp(String name, String email,String phone, String id, String password) async {
     try {
-      var request_body = '''
-      [
-        {"name" : ${name}},
-        {"email" : ${email}},
-        {"phone" : ${phone}},
-        {"id" : ${id}},
-        {"password" : ${password}}
-      ]
-      ''';
+      var request_body = jsonEncode(
+      {
+        "name" : "${name}",
+        "email" : "${email}",
+        "phone" : "${phone}",
+        "id" : "${id}",
+        "password" : "${password}"
+      });
+
       print(request_body);
       final response = await http.post(
-        Uri.parse("/user/signup"),
+        // Uri.parse("/user/signup"),
+        Uri.parse("http://118.34.170.132:8080/user/signup"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

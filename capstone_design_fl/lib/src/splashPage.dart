@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:capstone_design_fl/src/loginPage.dart';
 import 'package:capstone_design_fl/src/signup.dart';
 
-class StartPage extends StatefulWidget {
-  StartPage({Key? key, this.title}) : super(key: key);
+class SplashPage extends StatefulWidget {
+  SplashPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
   @override
-  _StartPageState createState() => _StartPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class _StartPageState extends State<StartPage> {
+class _SplashPageState extends State<SplashPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {

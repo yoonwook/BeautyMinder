@@ -2,6 +2,115 @@ import 'package:flutter/material.dart';
 import 'package:capstone_design_fl/src/signup.dart';
 import 'package:http/http.dart' as http;
 
+class LoginResponse {
+  String? accessToken;
+  String? refreshToken;
+  User? user;
+
+  LoginResponse({this.accessToken, this.refreshToken, this.user});
+
+  LoginResponse.fromJson(Map<String, dynamic> json) {
+    accessToken = json['accessToken'];
+    refreshToken = json['refreshToken'];
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['accessToken'] = accessToken;
+    data['refreshToken'] = refreshToken;
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
+    return data;
+  }
+}
+
+class User {
+  String? id;
+  String? email;
+  String? password;
+  Null? nickname;
+  Null? profileImage;
+  Null? createdAt;
+  List<Authorities>? authorities;
+  bool? enabled;
+  bool? accountNonExpired;
+  bool? credentialsNonExpired;
+  String? username;
+  bool? accountNonLocked;
+
+  User({
+    this.id,
+    this.email,
+    this.password,
+    this.nickname,
+    this.profileImage,
+    this.createdAt,
+    this.authorities,
+    this.enabled,
+    this.accountNonExpired,
+    this.credentialsNonExpired,
+    this.username,
+    this.accountNonLocked,
+  });
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    email = json['email'];
+    password = json['password'];
+    nickname = json['nickname'];
+    profileImage = json['profileImage'];
+    createdAt = json['createdAt'];
+    if (json['authorities'] != null) {
+      authorities = <Authorities>[];
+      json['authorities'].forEach((v) {
+        authorities!.add(Authorities.fromJson(v));
+      });
+    }
+    enabled = json['enabled'];
+    accountNonExpired = json['accountNonExpired'];
+    credentialsNonExpired = json['credentialsNonExpired'];
+    username = json['username'];
+    accountNonLocked = json['accountNonLocked'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['email'] = email;
+    data['password'] = password;
+    data['nickname'] = nickname;
+    data['profileImage'] = profileImage;
+    data['createdAt'] = createdAt;
+    if (authorities != null) {
+      data['authorities'] = authorities!.map((v) => v.toJson()).toList();
+    }
+    data['enabled'] = enabled;
+    data['accountNonExpired'] = accountNonExpired;
+    data['credentialsNonExpired'] = credentialsNonExpired;
+    data['username'] = username;
+    data['accountNonLocked'] = accountNonLocked;
+    return data;
+  }
+}
+
+class Authorities {
+  String? authority;
+
+  Authorities({this.authority});
+
+  Authorities.fromJson(Map<String, dynamic> json) {
+    authority = json['authority'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['authority'] = authority;
+    return data;
+  }
+}
+
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, this.title}) : super(key: key);
 
@@ -37,9 +146,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool isButtonEnabled() {
-    return
-        idController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty;
+    return idController.text.isNotEmpty && passwordController.text.isNotEmpty;
   }
 
   Widget _entryField(String title, TextEditingController controller, {bool isPassword = false}) {
@@ -104,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
       ''';
       print(request_body);
       final response = await http.post(
-        Uri.parse("/user/login"),
+        Uri.parse("http://118.34.170.132:8080/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
