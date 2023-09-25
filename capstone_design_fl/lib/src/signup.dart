@@ -246,6 +246,7 @@ class _SignUpPageState extends State<SignUpPage> {
         preferredSize: Size.fromHeight(60),
         child: AppBar(
           backgroundColor: Color(0xffffecda),
+          elevation: 0,
           title: Text(
             "BeautyMinder 회원가입",
             style: TextStyle(color: Color(0xffd86a04)),

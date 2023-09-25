@@ -1,30 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:capstone_design_fl/src/signup.dart';
 import 'package:http/http.dart' as http;
 
-class LoginResponse {
-  String? accessToken;
-  String? refreshToken;
-  User? user;
+class Authorities {
+  String? authority;
 
-  LoginResponse({this.accessToken, this.refreshToken, this.user});
+  Authorities({this.authority});
 
-  LoginResponse.fromJson(Map<String, dynamic> json) {
-    accessToken = json['accessToken'];
-    refreshToken = json['refreshToken'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+  Authorities.fromJson(Map<String, dynamic> json) {
+    authority = json['authority'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['accessToken'] = accessToken;
-    data['refreshToken'] = refreshToken;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['authority'] = this.authority;
     return data;
   }
 }
+
 
 class User {
   String? id;
@@ -40,20 +35,19 @@ class User {
   String? username;
   bool? accountNonLocked;
 
-  User({
-    this.id,
-    this.email,
-    this.password,
-    this.nickname,
-    this.profileImage,
-    this.createdAt,
-    this.authorities,
-    this.enabled,
-    this.accountNonExpired,
-    this.credentialsNonExpired,
-    this.username,
-    this.accountNonLocked,
-  });
+  User(
+      {this.id,
+        this.email,
+        this.password,
+        this.nickname,
+        this.profileImage,
+        this.createdAt,
+        this.authorities,
+        this.enabled,
+        this.accountNonExpired,
+        this.credentialsNonExpired,
+        this.username,
+        this.accountNonLocked});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -65,7 +59,7 @@ class User {
     if (json['authorities'] != null) {
       authorities = <Authorities>[];
       json['authorities'].forEach((v) {
-        authorities!.add(Authorities.fromJson(v));
+        authorities!.add(new Authorities.fromJson(v));
       });
     }
     enabled = json['enabled'];
@@ -76,40 +70,49 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = id;
-    data['email'] = email;
-    data['password'] = password;
-    data['nickname'] = nickname;
-    data['profileImage'] = profileImage;
-    data['createdAt'] = createdAt;
-    if (authorities != null) {
-      data['authorities'] = authorities!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['email'] = this.email;
+    data['password'] = this.password;
+    data['nickname'] = this.nickname;
+    data['profileImage'] = this.profileImage;
+    data['createdAt'] = this.createdAt;
+    if (this.authorities != null) {
+      data['authorities'] = this.authorities!.map((v) => v.toJson()).toList();
     }
-    data['enabled'] = enabled;
-    data['accountNonExpired'] = accountNonExpired;
-    data['credentialsNonExpired'] = credentialsNonExpired;
-    data['username'] = username;
-    data['accountNonLocked'] = accountNonLocked;
+    data['enabled'] = this.enabled;
+    data['accountNonExpired'] = this.accountNonExpired;
+    data['credentialsNonExpired'] = this.credentialsNonExpired;
+    data['username'] = this.username;
+    data['accountNonLocked'] = this.accountNonLocked;
     return data;
   }
 }
 
-class Authorities {
-  String? authority;
+class LoginResponse {
+  String? accessToken;
+  String? refreshToken;
+  User? user;
 
-  Authorities({this.authority});
+  LoginResponse({this.accessToken, this.refreshToken, this.user});
 
-  Authorities.fromJson(Map<String, dynamic> json) {
-    authority = json['authority'];
+  LoginResponse.fromJson(Map<String, dynamic> json) {
+    accessToken = json['accessToken'];
+    refreshToken = json['refreshToken'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['authority'] = authority;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['accessToken'] = this.accessToken;
+    data['refreshToken'] = this.refreshToken;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
     return data;
   }
 }
+
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, this.title}) : super(key: key);
@@ -141,6 +144,11 @@ class _LoginPageState extends State<LoginPage> {
   //     ),
   //   );
   // }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -201,23 +209,46 @@ class _LoginPageState extends State<LoginPage> {
   //     ),
   //   );
   // }
-  Future<String> tryLogin(String id, String password) async {
+  String? accessToken;
+  String? refreshToken;
+
+  Future<void> tryLogin(String id, String password) async {
     try {
-      var request_body = '''
-      [
-        {"id" : ${id}},
-        {"password" : ${password}}
-      ]
-      ''';
+      var request_body = jsonEncode(
+      {
+        "id" : "${id}",
+        "password" : "${password}"
+      });
       print(request_body);
+      // final Map<String, String> loginData = {
+      //   'userid' : id,
+      //   'password' : password,
+      // };
       final response = await http.post(
         Uri.parse("http://118.34.170.132:8080/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: request_body,
+        // body: jsonEncode(loginData),
       );
+
       print(response.body);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        // 저장된 토큰값을 업데이트
+        setState(() {
+          accessToken = responseData['accessToken'];
+          refreshToken = responseData['refreshToken'];
+        });
+
+        // 이후 요청에 대해 헤더에 JWT 토큰을 추가하여 보낼 수 있음
+      }
+      else {
+        print("Login failed");
+      }
       // if (response.statusCode != 201) {
       //   throw Exception("Failed to send data");
       // } else {
@@ -227,7 +258,6 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       print("Failed to send post data: ${e}");
     }
-    return "login check";
   }
 
   Widget _submitButton() {
@@ -402,7 +432,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("아이디 입력", idController),
+        _entryField("이메일 입력", idController),
         _entryField("비밀번호 입력", passwordController, isPassword: true),
       ],
     );
@@ -416,6 +446,7 @@ class _LoginPageState extends State<LoginPage> {
             preferredSize: Size.fromHeight(60),
             child: AppBar(
                 backgroundColor: Color(0xffffecda),
+                elevation: 0,
                 title: Text(
                   "BeautyMinder 로그인",
                   style: TextStyle(color: Color(0xffd86a04)),
