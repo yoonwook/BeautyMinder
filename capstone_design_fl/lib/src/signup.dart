@@ -184,14 +184,14 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Already have an account ?',
+              '이미 등록된 계정이 있으신가요 ?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              'Login',
+              '로그인하기',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
@@ -246,7 +246,10 @@ class _SignUpPageState extends State<SignUpPage> {
           title: Text(
             "BeautyMinder 회원가입",
             style: TextStyle(color: Color(0xffd86a04)),
-          )
+          ),
+          iconTheme: IconThemeData(
+            color: Color(0xffd86a04),
+          ),
         )
 
       ),

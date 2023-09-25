@@ -250,14 +250,14 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Don\'t have an account ?',
+              '등록된 계정이 없으신가요 ?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              'Register',
+              '가입하기',
               style: TextStyle(
                   color: Color(0xffffb876),
                   fontSize: 13,
@@ -312,7 +312,10 @@ class _LoginPageState extends State<LoginPage> {
                 title: Text(
                   "BeautyMinder 로그인",
                   style: TextStyle(color: Color(0xffd86a04)),
-                )
+                ),
+                iconTheme: IconThemeData(
+                color: Color(0xffd86a04),
+                ),
             )
 
         ),
@@ -336,9 +339,9 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         padding: EdgeInsets.symmetric(vertical: 10),
                         alignment: Alignment.centerRight,
-                        child: Text('Forgot Password ?',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500)),
+                        // child: Text('Forgot Password ?',
+                        //     style: TextStyle(
+                        //         fontSize: 14, fontWeight: FontWeight.w500)),
                       ),
                       _divider(),
                       // _facebookButton(),
