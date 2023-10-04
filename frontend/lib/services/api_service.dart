@@ -117,6 +117,24 @@ class APIService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+  static Future<bool> updateExpiration(int cosmeticId, DateTime expirationDate) async {
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      // 인증 토큰
+    };
+
+    var url = Uri.http(Config.apiURL, '/api/cosmetics/$cosmeticId/expiration');
+
+    var response = await client.patch(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode({"expirationDate": expirationDate.toIso8601String()}),
+    );
+
+    return response.statusCode == 200;
+  }
+
 }
 
 // 결과 클래스
