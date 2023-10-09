@@ -3,6 +3,7 @@ import 'package:beautyminder/dto/login_response_model.dart';
 import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:beautyminder/dto/register_response_model.dart';
 import 'package:dio/dio.dart';  // DIO 패키지를 이용해 HTTP 통신
+import 'dart:convert';
 
 import '../../config.dart';
 import '../dto/user_model.dart';
@@ -124,12 +125,13 @@ class APIService {
       // 인증 토큰
     };
 
-    var url = Uri.http(Config.apiURL, '/api/cosmetics/$cosmeticId/expiration');
+    var url = Uri.http(Config.apiURL, '/api/cosmetics/$cosmeticId/expiration').toString();
+
 
     var response = await client.patch(
       url,
-      headers: requestHeaders,
-      body: jsonEncode({"expirationDate": expirationDate.toIso8601String()}),
+      options: Options(headers: requestHeaders),
+      data: jsonEncode({"expirationDate": expirationDate.toIso8601String()}),
     );
 
     return response.statusCode == 200;

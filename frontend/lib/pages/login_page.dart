@@ -38,6 +38,12 @@ class _LoginPageState extends State<LoginPage> {
           opacity: 0.3,
           key: UniqueKey(),
         ),
+        bottomNavigationBar: ElevatedButton(
+          child: Text('화장품 페이지로 이동'),
+          onPressed: () {
+            Navigator.of(context).pushNamed('/cosmetic'); // 화장품 페이지 라우트로 이동
+          },
+        ),
       ),
     );
   }

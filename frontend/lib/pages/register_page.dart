@@ -114,14 +114,14 @@ class _RegisterPageState extends State<RegisterPage> {
               context,
               "email",
               "Email",
-              (onValidateVal) {
+                  (onValidateVal) {
                 if (onValidateVal.isEmpty) {
                   return 'Email can\'t be empty.';
                 }
 
                 return null;
               },
-              (onSavedVal) => {
+                  (onSavedVal) => {
                 email = onSavedVal,
               },
               initialValue: "",
@@ -140,14 +140,14 @@ class _RegisterPageState extends State<RegisterPage> {
               context,
               "password",
               "Password",
-              (onValidateVal) {
+                  (onValidateVal) {
                 if (onValidateVal.isEmpty) {
                   return 'Password can\'t be empty.';
                 }
 
                 return null;
               },
-              (onSavedVal) => {
+                  (onSavedVal) => {
                 password = onSavedVal,
               },
               initialValue: "",
@@ -200,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Center(
             child: FormHelper.submitButton(
               "Register",
-              () {
+                  () {
                 if (validateAndSave()) {
                   setState(() {
                     isApiCallProcess = true;
@@ -213,7 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   );
 
                   APIService.register(model).then(
-                    (result) {
+                        (result) {
                       setState(() {
                         isApiCallProcess = false;
                       });
@@ -224,11 +224,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           Config.appName,
                           "Registration Successful. Please login to the account",
                           "OK",
-                          () {
+                              () {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               '/',
-                              (route) => false,
+                                  (route) => false,
                             );
                           },
                         );
@@ -238,7 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Config.appName,
                           result.error ?? "Registration Failed",
                           "OK",
-                          () {
+                              () {
                             Navigator.of(context).pop();
                           },
                         );

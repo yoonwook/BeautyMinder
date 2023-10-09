@@ -69,6 +69,13 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
+      bottomNavigationBar: ElevatedButton(
+        child: Text('화장품 페이지로 이동'),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/cosmetic'); // 화장품 페이지 라우트로 이동
+        },
+      ),
+
     );
   }
 
