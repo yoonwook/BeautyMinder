@@ -1,6 +1,6 @@
-import 'package:beautyminder/pages/hot_page.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
+import 'package:beautyminder/pages/recommend_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/hot': (context) => const HotPage(),
+        '/recommend': (context) => const RecPage(),
         '/pouch': (context) => const PouchPage(),
         // '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),

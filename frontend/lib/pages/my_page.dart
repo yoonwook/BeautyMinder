@@ -1,4 +1,5 @@
 import 'package:beautyminder/pages/pouch_page.dart';
+import 'package:beautyminder/pages/recommend_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import '../widget/commonAppBar.dart';
 import '../widget/commonBottomNavigationBar.dart';
 import 'home_page.dart';
-import 'hot_page.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _MyPageState extends State<MyPage> {
         onTap: (int index) {
           // 페이지 전환 로직 추가
           if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HotPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
           }
           else if (index == 1) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));

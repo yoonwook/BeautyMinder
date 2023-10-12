@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:beautyminder/pages/pouch_page.dart';
+import 'package:beautyminder/pages/recommend_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/material.dart';
 import '../dto/user_model.dart';
@@ -8,7 +9,6 @@ import '../services/todo_service.dart';
 import '../dto/todo_model.dart';
 import '../widget/commonAppBar.dart';
 import '../widget/commonBottomNavigationBar.dart';
-import 'hot_page.dart';
 import 'my_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -94,8 +94,8 @@ class _HomePageState extends State<HomePage> {
             pageRoute: PouchPage(),
           ),
           CustomButton(
-            buttonText: 'Hot 페이지로 이동',
-            pageRoute: HotPage(),
+            buttonText: 'rec 페이지로 이동',
+            pageRoute: RecPage(),
           ),
           CustomButton(
             buttonText: 'Todo 페이지로 이동',
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
         onTap: (int index) {
           // 페이지 전환 로직 추가
           if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HotPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
           }
           else if (index == 1) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));

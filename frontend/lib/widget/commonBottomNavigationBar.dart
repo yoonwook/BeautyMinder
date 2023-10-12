@@ -12,8 +12,8 @@ class CommonBottomNavigationBar extends BottomNavigationBar {
     onTap: onTap,
     items: [
       BottomNavigationBarItem(
-        icon: Icon(Icons.whatshot),
-        label: 'HOT',
+        icon: Icon(Icons.favorite),
+        label: 'REC',
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.business_center),
