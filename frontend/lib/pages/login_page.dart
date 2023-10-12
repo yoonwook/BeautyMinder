@@ -1,13 +1,15 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
-
-import '../services/api_service.dart';
-import '../config.dart';
-import '../dto/login_request_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '/bloc/login/login_bloc.dart';
+import '/bloc/login/login_state.dart';
+import '/dto/login_request_model.dart';
+import 'package:flutter/gestures.dart';
+import '/services/api_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,49 +19,57 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool isApiCallProcess = false;
   bool hidePassword = true;
+  bool isApiCallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   String? email;
   String? password;
-  String? nickname; // 별명 필드 추가
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: HexColor("#283B71"),
-        body: ProgressHUD(
-          child: Form(
-            key: globalFormKey,
-            child: _loginUI(context),
-          ),
-          inAsyncCall: isApiCallProcess,
-          opacity: 0.3,
-          key: UniqueKey(),
-        ),
-        bottomNavigationBar: ElevatedButton(
-          child: Text('화장품 페이지로 이동'),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/cosmetic'); // 화장품 페이지 라우트로 이동
+        body: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LoginSuccess) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            } else if (state is LoginFailure) {
+              Fluttertoast.showToast(
+                msg: state.error ?? "Login Failed",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+              );
+            }
+          },
+          builder: (context, state) {
+            return ProgressHUD(
+              child: Form(
+                key: globalFormKey,
+                child: _loginUI(context),
+              ),
+              inAsyncCall: state is LoginLoading,
+              opacity: 0.3,
+              key: UniqueKey(),
+            );
           },
         ),
       ),
     );
   }
 
-  // 로그인 UI
   Widget _loginUI(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          _buildHeader(), // 헤더 구성
-          _buildEmailField(), // 이메일 필드
-          _buildPasswordField(), // 비밀번호 필드
-          _buildForgetPassword(), // 비밀번호 찾기
-          _buildLoginButton(), // 로그인 버튼
-          _buildOrText(), // OR 텍스트
-          _buildSignupText(), // 회원가입 텍스트
+          _buildHeader(),
+          _buildEmailField(),
+          _buildPasswordField(),
+          _buildForgetPassword(),
+          _buildLoginButton(),
+          _buildOrText(),
+          _buildSignupText(),
         ],
       ),
     );
@@ -79,14 +89,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 이메일 필드
   Widget _buildEmailField() {
     return FormHelper.inputFieldWidget(
       context,
       "email",
       "Email",
-      (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
-      (val) => email = val,
+          (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
+          (val) => email = val,
       obscureText: false,
       textColor: Colors.white,
       hintColor: Colors.white.withOpacity(0.7),
@@ -94,14 +103,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 비밀번호 필드
   Widget _buildPasswordField() {
     return FormHelper.inputFieldWidget(
       context,
       "password",
       "Password",
-      (val) => val.isEmpty ? 'Password can\'t be empty.' : null,
-      (val) => password = val,
+          (val) => val.isEmpty ? 'Password can\'t be empty.' : null,
+          (val) => password = val,
       obscureText: hidePassword,
       textColor: Colors.white,
       hintColor: Colors.white.withOpacity(0.7),
@@ -120,7 +128,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 비밀번호 찾기
   Widget _buildForgetPassword() {
     return Align(
       alignment: Alignment.bottomRight,
@@ -145,7 +152,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 로그인 버튼
   Widget _buildLoginButton() {
     return Center(
       child: FormHelper.submitButton("Login", () async {
@@ -153,33 +159,42 @@ class _LoginPageState extends State<LoginPage> {
           setState(() {
             isApiCallProcess = true;
           });
-          try {
-            // 로그인 API 호출
-            final model = LoginRequestModel(email: email, password: password);
-            final result = await APIService.login(model);
+          // Null Check 추가
+          if (email != null && password != null) {
+            try {
+              // 로그인 API 호출
+              final model = LoginRequestModel(email: email!, password: password!);  // Non-null assertion 사용
+              final result = await APIService.login(model);
 
-            if (result.value == true) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
-            } else {
-              // 에러 토스트 메시지
-              Fluttertoast.showToast(
-                msg: result.error ?? "Login Failed",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-              );
+              if (result.value == true) {
+                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              } else {
+                // 에러 토스트 메시지
+                Fluttertoast.showToast(
+                  msg: result.error ?? "Login Failed",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              }
+            } finally {
+              setState(() {
+                isApiCallProcess = false;
+              });
             }
-          } finally {
-            setState(() {
-              isApiCallProcess = false;
-            });
+          } else {
+            // 이메일 또는 비밀번호가 null인 경우 처리
+            Fluttertoast.showToast(
+              msg: "Email or Password is missing.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+            );
           }
         }
       }),
     );
   }
 
-  // OR 텍스트
+
   Widget _buildOrText() {
     return const Center(
       child: Text(
@@ -193,7 +208,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 회원가입 텍스트
   Widget _buildSignupText() {
     return Align(
       alignment: Alignment.center,
@@ -222,7 +236,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 입력 유효성 검사
   bool validateAndSave() {
     final form = globalFormKey.currentState;
     if (form!.validate()) {
@@ -232,3 +245,4 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 }
+

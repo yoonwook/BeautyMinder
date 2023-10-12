@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'bloc/login/login_bloc.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/cosmetic_page.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'services/shared_service.dart';
 import 'services/auth_service.dart';
 
@@ -27,22 +27,23 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BeautyMinder',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
+    return BlocProvider(
+      create: (context) => LoginBloc(),
+      child: MaterialApp(
+        title: 'BeautyMinder',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+        ),
+        routes: {
+          '/': (context) => _defaultHome,
+          '/home': (context) => const HomePage(),
+          '/login': (context) => const LoginPage(),
+          '/register': (context) => const RegisterPage(),
+          '/cosmetic': (context) => CosmeticPage(),
+        },
       ),
-      //home: const LoginPage(),
-      routes: {
-        '/': (context) => _defaultHome,
-        '/home': (context) => const HomePage(),
-        '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(),
-        '/cosmetic': (context) =>  CosmeticPage(),
-      },
     );
   }
 }
