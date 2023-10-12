@@ -447,6 +447,7 @@ class _LoginPageState extends State<LoginPage> {
             child: AppBar(
                 backgroundColor: Color(0xffffecda),
                 elevation: 0,
+                centerTitle: false,
                 title: Text(
                   "BeautyMinder 로그인",
                   style: TextStyle(color: Color(0xffd86a04)),

@@ -1,3 +1,5 @@
+import 'package:capstone_design_fl/src/Widget/bottomnavi.dart';
+import 'package:capstone_design_fl/src/homePage.dart';
 import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:capstone_design_fl/src/welcomPage.dart';
@@ -10,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'BeautyMinder',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         // textTheme:GoogleFonts.latoTextTheme(textTheme).copyWith(
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         // ),
       ),
       debugShowCheckedModeBanner: false,
-      home: WelcomePage(),
+      home: bottomnavi(),
     );
   }
 }
