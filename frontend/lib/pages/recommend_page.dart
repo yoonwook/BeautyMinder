@@ -17,7 +17,7 @@ class RecPage extends StatefulWidget {
 
 class _RecPageState extends State<RecPage> {
 
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
