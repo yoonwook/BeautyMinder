@@ -76,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 30),
+            SizedBox(height: 50),
             _buildEmailField(),
 
             SizedBox(height: 30),
@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(height: 10),
             _buildPasswordCheckField(),
 
-            SizedBox(height: 30),
+            SizedBox(height: 80),
             _buildRegisterButton(),
 
             SizedBox(height: 50),
@@ -255,12 +255,11 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          // validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
           onChanged: (val) => checkpassword = val,
           validator: (val) {
             if (val!.isEmpty) {
               return '비밀번호가 입력되지 않았습니다.';
-            } else if (val != password) {
+            } else if (checkpassword != password) {
               return '비밀번호가 일치하지 않습니다.';
             }
             return null;
