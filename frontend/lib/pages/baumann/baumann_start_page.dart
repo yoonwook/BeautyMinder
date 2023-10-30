@@ -11,45 +11,34 @@ class BaumannStartPage extends StatefulWidget {
   _BaumannStartPageState createState() => _BaumannStartPageState();
 }
 
+
+
 class _BaumannStartPageState extends State<BaumannStartPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffffb876),
       body:_baumannStartUI(),
     );
   }
 
+
+
+  //바우만 시작페이지 UI
   Widget _baumannStartUI() {
-    return SingleChildScrollView(
-      child:Container(
+    return Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xffffb876), Color(0xffffb876)])),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _title(),
-            SizedBox(
-              height: 80,
-            ),
+            SizedBox(height: 50,),
+            _baumannStartContent(),
+            SizedBox(height: 50,),
             _testStartButton(),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20,),
             _testLaterButton(),
             SizedBox(
               height: 20,
@@ -57,10 +46,64 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
             // _label()
           ],
         ),
-      ),
+      );
+  }
+
+
+
+  //타이틀 UI
+  Widget _title() {
+    return Column(
+      children: [
+        Text(
+          "바우만 피부 테스트",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Oswald',
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 
+
+
+  //안내사항 UI
+  Widget _baumannStartContent() {
+    return Column(
+      children: [
+        Text(
+          "정확한 피부 진단을 바탕으로 한 제품 추천을 위해 테스트를 진행합니다.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Oswald',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+
+        ),
+        Text(
+          "* 소요시간은 10-15분 입니다. *",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Oswald',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+        // 다른 내용을 추가하려면 여기에 추가하십시오.
+      ],
+    );
+  }
+
+
+
+  //테스트 시작 버튼 UI
   Widget _testStartButton() {
     return InkWell(
       onTap: () {
@@ -89,6 +132,9 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
     );
   }
 
+
+
+  //건너뛰기 버튼 UI
   Widget _testLaterButton() {
     return InkWell(
       onTap: () {
@@ -126,31 +172,11 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
           border: Border.all(color: Colors.white, width: 2),
         ),
         child: Text(
-          '나중에 하기',
+          '건너뛰기',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
     );
   }
 
-
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: '바우만 피부',
-          style: TextStyle(
-            fontFamily: 'Oswald',
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-          children: [
-            TextSpan(
-              text: ' 테스트',
-              style: TextStyle(color: Colors.white, fontSize: 30),
-            ),
-          ]),
-    );
-  }
 }

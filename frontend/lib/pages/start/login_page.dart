@@ -14,7 +14,10 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+
+
 class _LoginPageState extends State<LoginPage> {
+
   bool isApiCallProcess = false;
   bool hidePassword = true;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
@@ -22,14 +25,17 @@ class _LoginPageState extends State<LoginPage> {
   String? password;
   String? nickname; // 별명 필드 추가
 
+
+
   @override
   void initState() {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    // final height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(60),
@@ -59,12 +65,7 @@ class _LoginPageState extends State<LoginPage> {
       );
   }
 
-  final TextEditingController idController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
 
-  bool isButtonEnabled() {
-    return idController.text.isNotEmpty && passwordController.text.isNotEmpty;
-  }
 
   // 로그인 UI
   Widget _loginUI(BuildContext context) {
@@ -97,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
   }
+
 
 
   // 이메일 필드
@@ -133,6 +135,8 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
+
+
 
   // 비밀번호 필드
   Widget _buildPasswordField() {
@@ -182,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
+
   // 비밀번호 찾기
   Widget _buildForgetPassword() {
     return Align(
@@ -206,6 +211,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+
 
   // 로그인 버튼
   Widget _buildLoginButton() {
@@ -260,6 +267,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
+
   // OR 텍스트
   Widget _buildOrText() {
     return const Center(
@@ -272,6 +281,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+
 
   // 회원가입 텍스트
   Widget _buildSignupText() {
@@ -301,6 +312,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+
 
   // 입력 유효성 검사
   bool validateAndSave() {
