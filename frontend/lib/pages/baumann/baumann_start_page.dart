@@ -16,42 +16,46 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:SingleChildScrollView(
-        child:Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xffffb876), Color(0xffffb876)])),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _title(),
-              SizedBox(
-                height: 80,
-              ),
-              _testStartButton(),
-              SizedBox(
-                height: 20,
-              ),
-              _testLaterButton(),
-              SizedBox(
-                height: 20,
-              ),
-              // _label()
+      body:_baumannStartUI(),
+    );
+  }
+
+  Widget _baumannStartUI() {
+    return SingleChildScrollView(
+      child:Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
             ],
-          ),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xffffb876), Color(0xffffb876)])),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _title(),
+            SizedBox(
+              height: 80,
+            ),
+            _testStartButton(),
+            SizedBox(
+              height: 20,
+            ),
+            _testLaterButton(),
+            SizedBox(
+              height: 20,
+            ),
+            // _label()
+          ],
         ),
       ),
     );
