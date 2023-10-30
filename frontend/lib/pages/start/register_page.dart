@@ -1,9 +1,12 @@
+import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
+import '../../config.dart';
 import '../../services/api_service.dart';
+import 'package:snippet_coder_utils/FormHelper.dart';
 import '../../dto/login_request_model.dart';
 
 
@@ -20,11 +23,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isApiCallProcess = false;
   bool hidePassword = true;
-  GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+
   String? email;
   String? password;
   String? checkpassword;
-  String? nickname; // 별명 필드 추가
+  String? nickname;
+  String? phoneNumber;
 
 
 
@@ -127,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: false,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            hintText: "이메일을 입력하세요",
+            hintText: "이메일을 입력하세요.",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -163,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: false,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            hintText: "전화번호를 입력하세요",
+            hintText: "전화번호를 입력하세요.",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -199,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: false,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            hintText: "사용하실 닉네임을 입력하세요",
+            hintText: "사용하실 닉네임을 입력하세요.",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -235,7 +240,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: hidePassword,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            hintText: "비밀번호를 입력하세요",
+            hintText: "비밀번호를 입력하세요.",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             suffixIcon: IconButton(
               onPressed: () {
@@ -279,7 +284,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: hidePassword,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            hintText: "비밀번호를 한번 더 입력하세요",
+            hintText: "비밀번호를 한번 더 입력하세요.",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -322,27 +327,49 @@ class _RegisterPageState extends State<RegisterPage> {
           setState(() {
             isApiCallProcess = true;
           });
-          try {
-            // 로그인 API 호출
-            final model = LoginRequestModel(email: email, password: password);
-            final result = await APIService.login(model);
 
-            if (result.value == true) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
-            } else {
-              // 에러 토스트 메시지
-              Fluttertoast.showToast(
-                msg: result.error ?? "로그인에 실패하였습니다.",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-              );
-            }
-          } finally {
-            setState(() {
-              isApiCallProcess = false;
-            });
-          }
+          RegisterRequestModel model = RegisterRequestModel(
+            email: email,
+            password: password,
+            nickname: nickname,
+            phoneNumber: phoneNumber,
+
+          );
+
+          APIService.register(model).then(
+              (result) {
+                setState(() {
+                  isApiCallProcess = false;
+                });
+
+                if (result.value != null) {
+                  FormHelper.showSimpleAlertDialog(
+                    context,
+                    Config.appName,
+                    "Registration Successful. Please login to the account",
+                    "OK",
+                        () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/',
+                            (route) => false,
+                      );
+                    },
+                  );
+                }
+                else {
+                  FormHelper.showSimpleAlertDialog(
+                    context,
+                    Config.appName,
+                    result.error ?? "Register Failed",
+                    "OK",
+                    () {
+                    Navigator.of(context).pop();
+                    },
+                  );
+                }
+              },
+          );
         }
       },
     );
