@@ -272,11 +272,11 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          onChanged: (val) => checkpassword = val,
+          onChanged: (val) => password = val,
           validator: (val) {
             if (val!.isEmpty) {
               return '비밀번호가 입력되지 않았습니다.';
-            } else if (checkpassword != password) {
+            } else if (val != password) {
               return '비밀번호가 일치하지 않습니다.';
             }
             return null;
@@ -346,12 +346,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   FormHelper.showSimpleAlertDialog(
                     context,
                     Config.appName,
-                    "Registration Successful. Please login to the account",
-                    "OK",
+                    "가입이 완료되었습니다.",
+                    "확인",
                         () {
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        '/',
+                        '/login',
                             (route) => false,
                       );
                     },
