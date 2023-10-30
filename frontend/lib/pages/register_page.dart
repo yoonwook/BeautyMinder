@@ -12,7 +12,6 @@ import 'login_page.dart';
 import '../config.dart';
 import 'package:http/http.dart' as http;
 
-
 class RegisterPage extends StatefulWidget {
   // const RegisterPage({Key? key}) : super(key: key);
   RegisterPage({Key ?key, this.title}) : super(key: key);
@@ -43,7 +42,6 @@ class _RegisterPageState extends State<RegisterPage> {
         idController.text.isNotEmpty &&
         passwordController.text.isNotEmpty;
   }
-
 
   Widget _entryField(String title, TextEditingController controller,{bool isPassword = false}) {
     return Container(
@@ -142,8 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-
+  
   Widget _loginAccountLabel() {
     return InkWell(
       onTap: () {

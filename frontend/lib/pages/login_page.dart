@@ -30,8 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     // final height = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(60),
             child: AppBar(
@@ -57,8 +56,7 @@ class _LoginPageState extends State<LoginPage> {
           opacity: 0.3,
           key: UniqueKey(),
         ),
-      ),
-    );
+      );
   }
 
   final TextEditingController idController = TextEditingController();
@@ -179,30 +177,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Widget _buildPasswordField() {
-  //   return FormHelper.inputFieldWidget(
-  //     context,
-  //     "password",
-  //     " 비밀번호를 입력하세요",
-  //     (val) => val.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
-  //     (val) => password = val,
-  //     obscureText: hidePassword,
-  //     textColor: Colors.black,
-  //     hintColor: Colors.grey.withOpacity(0.7),
-  //     prefixIcon: const Icon(Icons.lock),
-  //     suffixIcon: IconButton(
-  //       onPressed: () {
-  //         setState(() {
-  //           hidePassword = !hidePassword;
-  //         });
-  //       },
-  //       color: Colors.grey.withOpacity(0.7),
-  //       icon: Icon(
-  //         hidePassword ? Icons.visibility_off : Icons.visibility,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   // 비밀번호 찾기
   Widget _buildForgetPassword() {
@@ -281,42 +255,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
-  // Widget _buildLoginButton() {
-  //   return InkWell(
-  //     child: FormHelper.submitButton("로그인", () async {
-  //       if (validateAndSave()) {
-  //         setState(() {
-  //           isApiCallProcess = true;
-  //         });
-  //         try {
-  //           // 로그인 API 호출
-  //           final model = LoginRequestModel(email: email, password: password);
-  //           final result = await APIService.login(model);
-  //
-  //           if (result.value == true) {
-  //             Navigator.pushNamedAndRemoveUntil(
-  //                 context, '/home', (route) => false);
-  //           } else {
-  //             // 에러 토스트 메시지
-  //             Fluttertoast.showToast(
-  //               msg: result.error ?? "로그인에 실패하였습니다.",
-  //               toastLength: Toast.LENGTH_SHORT,
-  //               gravity: ToastGravity.BOTTOM,
-  //             );
-  //           }
-  //         } finally {
-  //           setState(() {
-  //             isApiCallProcess = false;
-  //           });
-  //         }
-  //       }
-  //     },
-  //     //버튼 테두리 색상 설정
-  //     btnColor: Color(0xfffe9738),
-  //     ),
-  //   );
-  // }
 
   // OR 텍스트
   Widget _buildOrText() {
