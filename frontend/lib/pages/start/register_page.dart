@@ -88,10 +88,10 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(height: 30),
             _buildPasswordField(),
 
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             _buildPasswordCheckField(),
 
-            SizedBox(height: 80),
+            SizedBox(height: 60),
             _buildRegisterButton(),
 
             SizedBox(height: 50),
@@ -237,6 +237,18 @@ class _RegisterPageState extends State<RegisterPage> {
           decoration: InputDecoration(
             hintText: "비밀번호를 입력하세요",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  hidePassword = !hidePassword;
+                });
+              },
+              color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
+              icon: Icon(
+                hidePassword ? Icons.visibility_off : Icons.visibility,
+                color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
+              ),
+            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
