@@ -13,14 +13,6 @@ import 'pages/register_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Get result of the login function.
-  // bool _result = await SharedService.isLoggedIn();
-  // if (_result) {
-  //   _defaultHome = const HomePage();
-  // }
-  //
-  // setupAuthClient();
-
   runApp(const MyApp());
 }
 
@@ -36,14 +28,14 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xffffb876),
       ),
       // home: const LoginPage(),
-      home: const HomePage(),
+      home: LoginPage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
         '/recommend': (context) => const RecPage(),
         '/pouch': (context) => const PouchPage(),
-        // '/home': (context) => const HomePage(),
+        '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),
         '/my': (context) => const MyPage(),
 

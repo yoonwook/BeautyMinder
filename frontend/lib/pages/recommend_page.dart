@@ -28,10 +28,10 @@ class _RecPageState extends State<RecPage> {
           currentIndex: _currentIndex,
           onTap: (int index) {
             // 페이지 전환 로직 추가
-            if (index == 0) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
-            }
-            else if (index == 1) {
+            // if (index == 0) {
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
+            // }
+            if (index == 1) {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
             }
             else if (index == 2) {

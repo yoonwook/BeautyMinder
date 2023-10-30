@@ -3,7 +3,6 @@ import 'package:flutter/painting.dart';
 
 class ClipPainter extends CustomClipper<Path>{
   @override
-
   Path getClip(Size size) {
     var height = size.height;
     var width = size.width;

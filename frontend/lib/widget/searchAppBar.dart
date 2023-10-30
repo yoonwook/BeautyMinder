@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../pages/search_result_page.dart';
+
 class SearchAppBar extends AppBar {
   SearchAppBar({Key? key})
       : super(
@@ -21,6 +23,7 @@ class SearchAppBar extends AppBar {
         Flexible(
           flex: 1,
           child: TextField(
+            controller: TextEditingController(),
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                 vertical: 5,
@@ -59,7 +62,9 @@ class SearchAppBar extends AppBar {
         //   child: Text('검색'),
         // ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            final text = TextEditingController().text;
+          },
           icon: Icon(
             Icons.search,
             color: Color(0xffd86a04),

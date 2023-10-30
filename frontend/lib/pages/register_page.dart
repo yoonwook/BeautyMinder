@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:beautyminder/services/api_service.dart';
+import 'package:flutter/services.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
@@ -523,8 +524,7 @@ class _RegisterPageState extends State<RegisterPage> {
               iconTheme: IconThemeData(
                 color: Color(0xffd86a04),
               ),
-            )
-
+            ),
         ),
         body: Container(
           height: height,

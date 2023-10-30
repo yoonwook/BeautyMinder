@@ -213,9 +213,9 @@ class _HomePageState extends State<HomePage> {
           else if (index == 1) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
           }
-          else if (index == 2) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-          }
+          // else if (index == 2) {
+          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+          // }
           else if (index == 3) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
           }
@@ -238,64 +238,64 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  Widget userProfile() {
-    return FutureBuilder(
-      future: futureTodoList,
-      builder:
-          (BuildContext context, AsyncSnapshot<Result<List<Todo>>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text("Error: ${snapshot.error}"),
-          );
-        }
-
-        final todosResult = snapshot.data;
-
-        if (todosResult == null || todosResult.value == null) {
-          return Center(
-            child: Text(
-                "Failed to load todos: ${todosResult?.error ?? 'Unknown error'}"),
-          );
-        }
-
-        final todos = todosResult.value!;
-
-        return ListView.builder(
-          itemCount: todos.length,
-          itemBuilder: (context, index) {
-            final todo = todos[index];
-            return ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Date: ${todo.date.toString()}"),
-                  Text("Morning Tasks: ${todo.morningTasks.join(', ')}"),
-                  Text("Dinner Tasks: ${todo.dinnerTasks.join(', ')}"),
-                ],
-              ),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () async {
-                  final result = await TodoService.deleteTodo(todo.id ?? '-1');
-                  if (result.value != null) {
-                    setState(() {
-                      futureTodoList = TodoService.getAllTodos();
-                    });
-                  }
-                },
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  // Widget userProfile() {
+  //   return FutureBuilder(
+  //     future: futureTodoList,
+  //     builder:
+  //         (BuildContext context, AsyncSnapshot<Result<List<Todo>>> snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const Center(
+  //           child: CircularProgressIndicator(),
+  //         );
+  //       }
+  //
+  //       if (snapshot.hasError) {
+  //         return Center(
+  //           child: Text("Error: ${snapshot.error}"),
+  //         );
+  //       }
+  //
+  //       final todosResult = snapshot.data;
+  //
+  //       if (todosResult == null || todosResult.value == null) {
+  //         return Center(
+  //           child: Text(
+  //               "Failed to load todos: ${todosResult?.error ?? 'Unknown error'}"),
+  //         );
+  //       }
+  //
+  //       final todos = todosResult.value!;
+  //
+  //       return ListView.builder(
+  //         itemCount: todos.length,
+  //         itemBuilder: (context, index) {
+  //           final todo = todos[index];
+  //           return ListTile(
+  //             title: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text("Date: ${todo.date.toString()}"),
+  //                 Text("Morning Tasks: ${todo.morningTasks.join(', ')}"),
+  //                 Text("Dinner Tasks: ${todo.dinnerTasks.join(', ')}"),
+  //               ],
+  //             ),
+  //             trailing: IconButton(
+  //               icon: const Icon(Icons.delete),
+  //               onPressed: () async {
+  //                 final result = await TodoService.deleteTodo(todo.id ?? '-1');
+  //                 if (result.value != null) {
+  //                   setState(() {
+  //                     futureTodoList = TodoService.getAllTodos();
+  //                   });
+  //                 }
+  //               },
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 }
 
 

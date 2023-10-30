@@ -39,9 +39,9 @@ class _MyPageState extends State<MyPage> {
           else if (index == 3) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
           }
-          else if (index == 4) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
-          }
+          // else if (index == 4) {
+          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
+          // }
         }
       ),
     );

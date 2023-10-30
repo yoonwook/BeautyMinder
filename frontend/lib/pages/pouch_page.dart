@@ -31,9 +31,9 @@ class _PouchPageState extends State<PouchPage> {
           if (index == 0) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
           }
-          else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
-          }
+          // else if (index == 1) {
+          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
+          // }
           else if (index == 2) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
           }
