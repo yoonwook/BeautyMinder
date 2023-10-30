@@ -1,3 +1,4 @@
+import 'package:beautyminder/pages/baumann/baumann_start_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xffffb876),
       ),
       // home: const LoginPage(),
-      home: WelcomePage(),
+      home: BaumannStartPage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),

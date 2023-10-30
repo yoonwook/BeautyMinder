@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백 추가
               child: _buildEmailField(), // 이메일 필드
             ),
-            SizedBox(height: 20), // 여백 추가
+            SizedBox(height: 30), // 여백 추가
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백 추가
               child: _buildPasswordField(), // 비밀번호 필드
