@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xffffb876),
       ),
       // home: const LoginPage(),
-      home: BaumannStartPage(),
+      home: RegisterPage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),

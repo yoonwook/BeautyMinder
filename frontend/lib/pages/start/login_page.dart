@@ -70,33 +70,30 @@ class _LoginPageState extends State<LoginPage> {
   // 로그인 UI
   Widget _loginUI(BuildContext context) {
     return Container (
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 200), // 여백 추가
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백 추가
-              child: _buildEmailField(), // 이메일 필드
-            ),
-            SizedBox(height: 30), // 여백 추가
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백 추가
-              child: _buildPasswordField(), // 비밀번호 필드
-            ),
-            SizedBox(height: 50), // 여백 추가
-            _buildForgetPassword(), // 비밀번호 찾기
-            SizedBox(height: 20), // 여백 추가
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백 추가
-              child: _buildLoginButton(), // 로그인 버튼
-            ),
-            SizedBox(height: 50), // 여백 추가
-            _buildOrText(), // OR 텍스트
-            SizedBox(height: 20), // 여백 추가
-            _buildSignupText(), // 회원가입 텍스트
-          ],
-        ),
-      );
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 200), // 여백 추가
+          _buildEmailField(), // 이메일 필드
+
+          SizedBox(height: 30), // 여백 추가
+          _buildPasswordField(), // 비밀번호 필드
+
+          SizedBox(height: 50), // 여백 추가
+          _buildForgetPassword(), // 비밀번호 찾기
+
+          SizedBox(height: 20), // 여백 추가
+          _buildLoginButton(), // 로그인 버튼
+
+          SizedBox(height: 50), // 여백 추가
+          _buildOrText(), // OR 텍스트
+
+          SizedBox(height: 20), // 여백 추가
+          _buildSignupText(), // 회원가입 텍스트
+        ],
+      ),
+    );
   }
 
 
