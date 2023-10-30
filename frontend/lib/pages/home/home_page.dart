@@ -1,16 +1,16 @@
 import 'dart:convert';
-import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/recommend_page.dart';
-import 'package:beautyminder/pages/todo_page.dart';
+import 'package:beautyminder/pages/pouch/pouch_page.dart';
+import 'package:beautyminder/pages/recommend/recommend_page.dart';
+import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
 import 'package:flutter/material.dart';
-import '../dto/user_model.dart';
-import '../services/shared_service.dart';
-import '../services/todo_service.dart';
-import '../dto/todo_model.dart';
-import '../widget/commonAppBar.dart';
-import '../widget/commonBottomNavigationBar.dart';
-import 'my_page.dart';
+import '../../dto/user_model.dart';
+import '../../services/shared_service.dart';
+import '../../services/todo_service.dart';
+import '../../dto/todo_model.dart';
+import '../../widget/commonAppBar.dart';
+import '../../widget/commonBottomNavigationBar.dart';
+import '../my/my_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

@@ -1,12 +1,12 @@
-import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/recommend_page.dart';
-import 'package:beautyminder/pages/todo_page.dart';
+import 'package:beautyminder/pages/pouch/pouch_page.dart';
+import 'package:beautyminder/pages/recommend/recommend_page.dart';
+import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../widget/commonAppBar.dart';
-import '../widget/commonBottomNavigationBar.dart';
-import 'home_page.dart';
+import '../../widget/commonAppBar.dart';
+import '../../widget/commonBottomNavigationBar.dart';
+import '../home/home_page.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);

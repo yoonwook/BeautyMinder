@@ -9,7 +9,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
 import 'login_page.dart';
 
-import '../config.dart';
+import '../../config.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
@@ -140,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-  
+
   Widget _loginAccountLabel() {
     return InkWell(
       onTap: () {

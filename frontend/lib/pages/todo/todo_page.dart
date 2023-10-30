@@ -1,12 +1,12 @@
-import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/recommend_page.dart';
+import 'package:beautyminder/pages/pouch/pouch_page.dart';
+import 'package:beautyminder/pages/recommend/recommend_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../widget/commonAppBar.dart';
-import '../widget/commonBottomNavigationBar.dart';
-import 'home_page.dart';
-import 'my_page.dart';
+import '../../widget/commonAppBar.dart';
+import '../../widget/commonBottomNavigationBar.dart';
+import '../home/home_page.dart';
+import '../my/my_page.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({Key? key}) : super(key: key);
@@ -43,7 +43,6 @@ class _TodoPageState extends State<TodoPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
           }
         }
-
       ),
     );
   }

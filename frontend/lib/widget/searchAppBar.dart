@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/search_result_page.dart';
+import '../pages/search/search_result_page.dart';
 
 class SearchAppBar extends AppBar {
   SearchAppBar({Key? key})

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
-import '../services/api_service.dart';
-import '../dto/login_request_model.dart';
+import '../../services/api_service.dart';
+import '../../dto/login_request_model.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -122,10 +122,10 @@ class _LoginPageState extends State<LoginPage> {
             hintText: "이메일을 입력하세요",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             prefixIcon: Icon(Icons.person),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10), // 원하는 각도로 조절
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
-                color: Color(0xffd86a04),
+                color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
               ),
             ),
           ),
@@ -163,13 +163,17 @@ class _LoginPageState extends State<LoginPage> {
                   hidePassword = !hidePassword;
                 });
               },
-              color: Colors.grey.withOpacity(0.7),
+              color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
               icon: Icon(
-              hidePassword ? Icons.visibility_off : Icons.visibility,
+                hidePassword ? Icons.visibility_off : Icons.visibility,
+                color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
               ),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),  // 직사각형 모양으로 만들기
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+              ),
             ),
           ),
         ),

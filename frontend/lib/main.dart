@@ -1,12 +1,14 @@
-import 'package:beautyminder/pages/my_page.dart';
-import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/recommend_page.dart';
-import 'package:beautyminder/pages/todo_page.dart';
+import 'package:beautyminder/pages/my/my_page.dart';
+import 'package:beautyminder/pages/pouch/pouch_page.dart';
+import 'package:beautyminder/pages/recommend/recommend_page.dart';
+import 'package:beautyminder/pages/start/splash_page.dart';
+import 'package:beautyminder/pages/todo/todo_page.dart';
+import 'package:beautyminder/pages/start/welcome_page.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/home_page.dart';
-import 'pages/login_page.dart';
-import 'pages/register_page.dart';
+import 'pages/home/home_page.dart';
+import 'pages/start/login_page.dart';
+import 'pages/start/register_page.dart';
 
 // Widget _defaultHome = WelcomePage();
 
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xffffb876),
       ),
       // home: const LoginPage(),
-      home: LoginPage(),
+      home: WelcomePage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
