@@ -16,11 +16,8 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: CommonAppBar(),
-      body: Text('Baumann Test'),
+      body: Text('Baumann Result'),
     );
   }
 
-  // Widget baumannTestUI(){
-  //   return
-  // }
 }

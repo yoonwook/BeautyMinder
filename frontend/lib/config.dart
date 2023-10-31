@@ -22,4 +22,8 @@ class Config {
   static const todoAPI = "/todo/all";
   static const todoAddAPI = "/todo/add";
   static const todoDelAPI = "/todo/delete/";
+
+  //Baumann
+  static const baumannSurveyAPI = "/baumann/survey";
+  static const baumannTestAPI = "/baumann/test";
 }
