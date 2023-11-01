@@ -19,10 +19,10 @@ class CosmeticModel{
  factory CosmeticModel.fromJson(Map<String, dynamic> json){
   return CosmeticModel(
       id: json["id"],
-      images: json["images"],
+      images: List<String>.from(json["images"]),
       brand: json["brand"],
       category: json["category"],
-      keywords: json["keywords"],
+      keywords: List<String>.from(json["keywords"]),
       name: json["name"]);
  }
 

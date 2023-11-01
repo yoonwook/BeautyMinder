@@ -1,8 +1,10 @@
+import 'package:beautyminder/Observer.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/recommend_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
@@ -12,7 +14,7 @@ import 'pages/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  Bloc.observer = Observer();
   // Get result of the login function.
   // bool _result = await SharedService.isLoggedIn();
   // if (_result) {

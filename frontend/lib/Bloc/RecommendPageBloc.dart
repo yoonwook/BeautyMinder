@@ -4,7 +4,7 @@ import 'package:beautyminder/State/RecommendState.dart';
 import 'package:beautyminder/event/RecommendPageEvent.dart';
 import 'package:beautyminder/models/CosmeticModel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:beautyminder/services/CosmeticSearch_Service.dart';
+import 'package:beautyminder/services/Cosmetic_Recommend_Service.dart';
 
 class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
 
@@ -21,8 +21,14 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
 
       //추천 상품 받아오기 전체 추천상
       // 추천 상품 받아오는 로직 구현이 필
-      List<CosmeticModel> cosmetics = (await CosmeticSearchService
-          .getAllCosmetics()) as List<CosmeticModel>;
+      final result = (await CosmeticSearchService
+          .getAllCosmetics());
+
+      print("RecommendPageBloc result.value : ${result.value}");
+     // print("RecommendPagebloc result.failure : ${result.error}");
+      List<CosmeticModel>? cosmetics = result.value;
+
+      print("RecommendPageBloc cosmetics : ${cosmetics}");
 
       if (cosmetics != null) {
         // 정상적으로 데이터를 받아왔다면

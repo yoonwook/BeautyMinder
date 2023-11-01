@@ -40,10 +40,10 @@ class CosmeticSearchService{
     final accessToken = await SharedService.getAccessToken();
     //refreshToken 가지고오기
      final refreshToken = await SharedService.getRefreshToken();
-    
+
      // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
      final userId = user?.id ?? '-1';
-     
+
      final url = Uri.http(Config.apiURL, Config.CosmeticAPI).toString();
     // (new) Uri Uri.http(
      // String authority,
@@ -64,33 +64,57 @@ class CosmeticSearchService{
           options : _httpOptions('GET', headers),
       );
 
-      print("response : ${response.data}, statuscode : ${response.statusCode}");
-      print("token : $accessToken | $refreshToken");
+      //print("response : ${response.data}, statuscode : ${response.statusCode}");
+
+      //print("token : $accessToken | $refreshToken");
+      print("statuscode : ${response.statusCode}");
 
       if(response.statusCode == 200){
+        print("response.data : ${response.data.runtimeType}");
         Map<String, dynamic> decodedResponse;
-        if(response.data is String){
-          decodedResponse = jsonDecode(response.data);
+        // if(response.data is String){
+        //   print("data is String");
+        //   decodedResponse = jsonDecode(response.data);
+        //   print(decodedResponse);
+        // }
+        if(response.data is List){
+          List<dynamic> dataList = response.data;
+          //print("dataList : ${dataList}");
+          List<CosmeticModel> cosmetics = dataList.map<CosmeticModel>((data) {
+            if(data is Map<String, dynamic>){
+              return CosmeticModel.fromJson(data);
+            }else{
+              throw Exception("Invalid data type");
+            }
+          }).toList();
+
+
+          return Result.success(cosmetics);
+
         }else if(response.data is Map){
+          print("data is Map");
           decodedResponse = response.data;
-        }else{
+        }else {
+          print("failure");
           return Result.failure("Unexpected response data type");
         }
 
-        print("Cosmetics response : $decodedResponse");
-          if(decodedResponse.containsKey('name')){
-            List<dynamic> cosmeticList = decodedResponse['name'];
-            List<CosmeticModel> cosmetics =
-            cosmeticList.map((data) => CosmeticModel.fromJson(data)).toList();
-            // data는 cosmetic각각의 요소를 나타내는 변수임
-            print(cosmetics);
-            return Result.success(cosmetics);
-          }
+        // print("Cosmetics response : $decodedResponse");
+        //   if(decodedResponse.containsKey('name')){
+        //     List<dynamic> cosmeticList = decodedResponse['name'];
+        //     List<CosmeticModel> cosmetics =
+        //     cosmeticList.map((data) => CosmeticModel.fromJson(data)).toList();
+        //     // data는 cosmetic각각의 요소를 나타내는 변수임
+        //     print(cosmetics);
+        //     return Result.success(cosmetics);
+        //   }
           return Result.failure("Failed to serach Cosmetics : No cosmetics key in response");
         }
         return Result.failure("Failed to ge cosmeics");
       }catch(e){
+      print("CosmeticSearch_Service : ${e}");
       return Result.failure("An error Occured : $e");
+
 
     }
     }
