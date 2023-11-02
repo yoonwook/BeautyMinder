@@ -64,7 +64,7 @@ class CosmeticSearchService{
           options : _httpOptions('GET', headers),
       );
 
-      //print("response : ${response.data}, statuscode : ${response.statusCode}");
+      print("response : ${response.data}, statuscode : ${response.statusCode}");
 
       //print("token : $accessToken | $refreshToken");
       print("statuscode : ${response.statusCode}");

@@ -1,10 +1,10 @@
 import 'package:beautyminder/Observer.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/recommend_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/recommend': (context) => const RecPage(),
+        '/recommend': (context) =>  const RecPage_copy(),
         '/pouch': (context) => const PouchPage(),
         // '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),

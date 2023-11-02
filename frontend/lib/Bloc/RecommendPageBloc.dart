@@ -20,15 +20,14 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
       emit(RecommendDownloadedState(isError: state.isError));
 
       //추천 상품 받아오기 전체 추천상
-      // 추천 상품 받아오는 로직 구현이 필
+      // 추천 상품 받아오는 로직 구현이 필요
       final result = (await CosmeticSearchService
           .getAllCosmetics());
 
-      print("RecommendPageBloc result.value : ${result.value}");
-     // print("RecommendPagebloc result.failure : ${result.error}");
+     //print("RecommendPageBloc result.value : ${result.value}");
       List<CosmeticModel>? cosmetics = result.value;
 
-      print("RecommendPageBloc cosmetics : ${cosmetics}");
+      //print("RecommendPageBloc cosmetics : ${cosmetics}");
 
       if (cosmetics != null) {
         // 정상적으로 데이터를 받아왔다면

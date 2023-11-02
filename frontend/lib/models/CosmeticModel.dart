@@ -2,10 +2,10 @@
 class CosmeticModel{
  final String id;
  final String name;
- final String brand;
- final List<String> images;
- final String category;
- final List<String> keywords;
+ final String? brand;
+ final List<String>? images;
+ final String? category;
+ final List<String>? keywords;
 
  CosmeticModel({
    required this.id,

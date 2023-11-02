@@ -1,5 +1,5 @@
 import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/recommend_page.dart';
+import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class _CosmeticPageState extends State<CosmeticPage>{
             // 페이지 전환 로직 추가
             if (index == 0) {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const RecPage()));
+                  MaterialPageRoute(builder: (context) => const RecPage_copy()));
             }
             else if (index == 1) {
               Navigator.of(context).push(
