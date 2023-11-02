@@ -108,7 +108,7 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BaumannTestPage()));
+            context, MaterialPageRoute(builder: (context) => BaumannTestPage(surveys: [],)));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
