@@ -21,14 +21,14 @@ class Todo {
   @override
   String toString() {
     return '''
-Todo {
-  id: $id,
-  date: $date,
-  morningTasks: $morningTasks,
-  dinnerTasks: $dinnerTasks,
-  user: $user,
-  createdAt: $createdAt
-}''';
+    Todo {
+      id: $id,
+      date: $date,
+      morningTasks: $morningTasks,
+      dinnerTasks: $dinnerTasks,
+      user: $user,
+      createdAt: $createdAt
+    }''';
   }
 
   factory Todo.fromJson(Map<String, dynamic> json) {
