@@ -42,7 +42,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),
         '/my': (context) => const MyPage(),
-
+        '/boumann/survey' : (context) => BaumannStartPage(),
+        '/baumann/test' : (context) => BaumannStartPage(),
       },
     );
   }
