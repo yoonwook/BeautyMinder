@@ -1,19 +1,28 @@
+import 'dart:html';
+
 import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/home/home_page.dart';
+import 'package:beautyminder/services/baumann_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class BaumannStartPage extends StatefulWidget {
-  BaumannStartPage({Key? key, this.title}) : super(key: key);
+import '../../dto/baumann_model.dart';
+
+class BaumannStartTestPage extends StatefulWidget {
+  BaumannStartTestPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
   @override
-  _BaumannStartPageState createState() => _BaumannStartPageState();
+  _BaumannStartTestPageState createState() => _BaumannStartTestPageState();
 }
 
 
 
-class _BaumannStartPageState extends State<BaumannStartPage> {
+class _BaumannStartTestPageState extends State<BaumannStartTestPage> {
+
+  bool isApiCallProcess = false;
+  GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,25 +37,25 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
   //바우만 시작페이지 UI
   Widget _baumannStartUI() {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _title(),
-            SizedBox(height: 50,),
-            _baumannStartContent(),
-            SizedBox(height: 50,),
-            _testStartButton(),
-            SizedBox(height: 20,),
-            _testLaterButton(),
-            SizedBox(
-              height: 20,
-            ),
-            // _label()
-          ],
-        ),
-      );
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _title(),
+          SizedBox(height: 50,),
+          _baumannStartContent(),
+          SizedBox(height: 50,),
+          _testStartButton(),
+          SizedBox(height: 20,),
+          _testLaterButton(),
+          SizedBox(
+            height: 20,
+          ),
+          // _label()
+        ],
+      ),
+    );
   }
 
 
@@ -105,13 +114,14 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
 
   //테스트 시작 버튼 UI
   Widget _testStartButton() {
+    double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BaumannTestPage(surveys: [],)));
-      },
+      // onTap: () {
+      //   Navigator.push(
+      //       context, MaterialPageRoute(builder: (context) => BaumannTestPage(surveys: [],)));
+      // },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: screenWidth,
         padding: EdgeInsets.symmetric(vertical: 13),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -129,6 +139,36 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
           style: TextStyle(fontSize: 20, color: Color(0xffffb876)),
         ),
       ),
+      onTap: () async {
+        if(validateAndSave()) {
+          setState(() {
+            isApiCallProcess = true;
+          });
+          try {
+            //바우만 설문 API 호출
+            // final model = Baumann();
+            final result = await BaumannService.getAllSurveys();
+
+            if (result.value == true) {
+              Navigator.pushNamedAndRemoveUntil(
+                context, '/baumann/survey', (route) => false
+              );
+            }
+            else {
+              Fluttertoast.showToast(
+                msg: result.error ?? "설문지 불러오기에 실패하였습니다.",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+              );
+            }
+          }
+          finally {
+            setState(() {
+              isApiCallProcess = false;
+            });
+          }
+        }
+      },
     );
 
   }
@@ -178,6 +218,16 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
         ),
       ),
     );
+  }
+
+  // 입력 유효성 검사
+  bool validateAndSave() {
+    final form = globalFormKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
   }
 
 }
