@@ -41,6 +41,7 @@ class TodoService {
     final refreshToken = await SharedService.getRefreshToken();
     final userId = user?.id ?? '-1';
 
+
     //요청에 집어넣을 쿼리파라미터
     // 실사용시에는 유저로뷰터 입력을 받아야함=
     final queryParameters = {
@@ -48,6 +49,12 @@ class TodoService {
     };
 
     // Create the URI with the query parameter
+    // 형식 : todo/all
+    // 쿼리 파라미터 userId
+    // ?userId = 6522837112b53b37f109a508 형식으로 API 콜 뒤에 이어져야함
+    // ex) todo/all?userId = 6522837112b53b37f109a508
+    // todo model에서  userId를 넣어주면됨
+
     final url =
         Uri.http(Config.apiURL, Config.todoAPI, {'userId': userId}).toString();
 
@@ -92,7 +99,7 @@ class TodoService {
   }
 
   // Add a new Todo
-  static Future<Result<Todo>> addTodo() async {
+  static Future<Result<Todo>> addTodo(Todo todo) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -111,8 +118,19 @@ class TodoService {
       'Cookie': 'XRT=$refreshToken',
     };
 
+    // Post 형식으로 보내야됨
+    // ex) "userId": "6522837112b53b37f109a508",
+    //    "date": "2019-08-01",
+    //    "morningTasks": ["String"],
+    //    "dinnerTasks":["String12"],
+    //  _postJson메서드에서 두번째 파라미터는 Map<String, dynamic> 형식임
+    //  todo_model에 에 있는  toJson을 사용하면 됨
+
+
+    print(todo.toJson());
     try {
-      final response = await _postJson(url, map , headers: headers);
+      final response = await _postJson(url, todo.toJson() , headers: headers);
+      print("response : ${response}");
       return Result.success(Todo.fromJson(jsonDecode(response.data)));
     } catch (e) {
       return Result.failure("An error occurred: $e");
@@ -123,6 +141,12 @@ class TodoService {
   static Future<Result<String>> deleteTodo(String todoId) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
+
+    final queryParameters = {
+      'userId': '6522837112b53b37f109a508',
+    };
+
 
     final url =
         Uri.http(Config.apiURL, Config.todoDelAPI + todoId).toString();
@@ -144,6 +168,7 @@ class TodoService {
       return Result.failure("An error occurred: $e");
     }
   }
+
   static Future<Result<Todo>> getTodo() async {
     final user = await SharedService.getUser();
 // AccessToken가지고오기

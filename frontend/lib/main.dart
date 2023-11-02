@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 
+import 'dto/todo_model.dart';
+import 'dto/user_model.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
@@ -24,16 +26,26 @@ void main() async {
   //
   // setupAuthClient();
 
-  // final result = await TodoService.getTodo();
-  //
-  // // 결과 출력
-  // if (result.value != null) {
-  //   print('Todos: ${result.value}');
-  // } else {
-  //   print('Error: ${result.error}');
-  // }
+  User user = User(
+    id: '6522837112b53b37f109a508',
+    email: 'user@example.com',
+    password: 'securepassword123',
+    nickname: 'JohnDoe',
+    profileImage: 'path/to/image.jpg',
+    createdAt: DateTime.now(),
+    authorities: 'ROLE_USER',
+  );
 
-  final result = await TodoService.addTodo();
+  Todo todo = Todo(
+    id: '123',
+    date: DateTime.now(),
+    morningTasks: ['Task 545', 'Task 2', 'Task 3'],
+    dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
+    user: user,
+    createdAt: DateTime.now(),
+  );
+
+  final result = await TodoService.addTodo(todo);
   if (result.value != null) {
     print('Todos: ${result.value}');
   } else {

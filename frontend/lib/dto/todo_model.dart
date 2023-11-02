@@ -49,7 +49,7 @@ Todo {
       'date': date.toIso8601String(),
       'morningTasks': morningTasks,
       'dinnerTasks': dinnerTasks,
-      'user': user.toJson(), // Assuming you have a toJson in User model
+      'userId': user.id, // Assuming you have a toJson in User model
       'createdAt': createdAt?.toIso8601String(),
     };
   }
