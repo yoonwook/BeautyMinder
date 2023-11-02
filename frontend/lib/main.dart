@@ -2,6 +2,7 @@ import 'package:beautyminder/Observer.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
+import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
@@ -22,6 +23,22 @@ void main() async {
   // }
   //
   // setupAuthClient();
+
+  // final result = await TodoService.getTodo();
+  //
+  // // 결과 출력
+  // if (result.value != null) {
+  //   print('Todos: ${result.value}');
+  // } else {
+  //   print('Error: ${result.error}');
+  // }
+
+  final result = await TodoService.addTodo();
+  if (result.value != null) {
+    print('Todos: ${result.value}');
+  } else {
+    print('Error: ${result.error}');
+  }
 
   runApp(const MyApp());
 }

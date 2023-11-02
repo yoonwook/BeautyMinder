@@ -1,8 +1,12 @@
-import 'package:beautyminder/services/Cosmetic_Recommend_Service.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:beautyminder/services/todo_service.dart';
 
-void main(){
-  test('getAllCosmetics 테스트', () async {
-    final result = await CosmeticSearchService.getAllCosmetics();
-  });
+Future<void> main() async {
+  final result = await TodoService.getAllTodos();
+
+  // 결과 출력
+  if (result.value != null) {
+    print('Todos: ${result.value}');
+  } else {
+    print('Error: ${result.error}');
+  }
 }

@@ -41,6 +41,12 @@ class TodoService {
     final refreshToken = await SharedService.getRefreshToken();
     final userId = user?.id ?? '-1';
 
+    //요청에 집어넣을 쿼리파라미터
+    // 실사용시에는 유저로뷰터 입력을 받아야함=
+    final queryParameters = {
+      'userId': '6522837112b53b37f109a508',
+    };
+
     // Create the URI with the query parameter
     final url =
         Uri.http(Config.apiURL, Config.todoAPI, {'userId': userId}).toString();
@@ -86,9 +92,18 @@ class TodoService {
   }
 
   // Add a new Todo
-  static Future<Result<Todo>> addTodo(Todo todo) async {
+  static Future<Result<Todo>> addTodo() async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
+
+   Map<String, dynamic> map ={
+   "userId": "6522837112b53b37f109a508",
+   "date": "2019-08-01",
+   "morningTasks": ["String"],
+   "dinnerTasks":["String12"],
+   };
+
 
     final url = Uri.http(Config.apiURL, Config.todoAddAPI).toString();
     final headers = {
@@ -97,7 +112,7 @@ class TodoService {
     };
 
     try {
-      final response = await _postJson(url, todo.toJson(), headers: headers);
+      final response = await _postJson(url, map , headers: headers);
       return Result.success(Todo.fromJson(jsonDecode(response.data)));
     } catch (e) {
       return Result.failure("An error occurred: $e");
@@ -129,7 +144,44 @@ class TodoService {
       return Result.failure("An error occurred: $e");
     }
   }
+  static Future<Result<Todo>> getTodo() async {
+    final user = await SharedService.getUser();
+// AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+//refreshToken 가지고오기
+    final refreshToken = await SharedService.getRefreshToken();
+
+// user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
+    final queryParameters = {
+      'userId': '6522837112b53b37f109a508',
+    };
+
+    final url = Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
+    print(url);
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    try{
+      final response = await authClient.get(
+        url,
+          options : _httpOptions('GET', headers)
+      );
+
+      print("response : ${response.data}, statuscode : ${response.statusCode}");
+      return Result.success(response.data);
+    }catch(e){
+      print("Todoservice : ${e}");
+      return Result.failure("error");
+    }
+  }
 }
+
+
 
 // 결과 클래스
 class Result<T> {

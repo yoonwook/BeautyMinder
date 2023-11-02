@@ -44,8 +44,6 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
     await Future.delayed(const Duration(seconds: 1), () async {
       if(state is RecommendLoadedState){
         // 카테고리별로 추천상품 받아오는 로직이 필요
-        List<CosmeticModel> cosmetics = (await CosmeticSearchService.getAllCosmetics()) as List<CosmeticModel>;
-        emit(RecommendLoadedState(category: state.category ,isError: state.isError ,recCosmetics: cosmetics));
       }else{
         emit(const RecommendErrorState(recCosmetics: [], isError: true));
       }

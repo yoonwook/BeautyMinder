@@ -19,6 +19,7 @@ class Config {
   static const userProfileAPI = "/user/me/";
 
   // Todo
+  static const Todo = "/todo";
   static const todoAPI = "/todo/all";
   static const todoAddAPI = "/todo/add";
   static const todoDelAPI = "/todo/delete/";
