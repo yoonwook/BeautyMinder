@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../dto/todo_model.dart';
 
@@ -8,11 +9,13 @@ abstract class TodoState extends Equatable{
   final bool isError;
   final List<Todo>? todos;
   final Todo? todo;// 삭제, 수정에 사용될 객체
+  final Map<String,dynamic>? update_todo;
 
   const TodoState({
     this.isError = false,
     this.todos,
-    this.todo
+    this.todo,
+    this.update_todo
 });
 }
 
@@ -42,7 +45,7 @@ class TodoLoadedState extends TodoState{
 
 // Todo를 추가하려는 상태
 class TodoAddState extends TodoState{
-  TodoAddState({super.todo, super.isError});
+  TodoAddState({ super.todo,super.isError});
 
   @override
   List<Object?> get props =>[ todo, isError];
@@ -59,36 +62,38 @@ class TodoAddedState extends TodoState{
 
 //  update전 상태
 class TodoUpdateState extends TodoState{
-  TodoUpdateState({ super.isError});
+
+
+  TodoUpdateState({ super.isError,
+  super.update_todo});
 
   @override
-  List<Object?> get props =>[todos, todo, isError];
+  List<Object?> get props =>[ update_todo, isError];
 }
 
 // update후 상태
 class TodoUpdatedState extends TodoState{
-  TodoUpdatedState({ super.todo, super.isError});
+
+  TodoUpdatedState({ super.update_todo, super.isError});
 
   @override
-  List<Object?> get props =>[todos, todo, isError];
+  List<Object?> get props =>[ update_todo, isError];
 }
 
 // 삭제중인 상태
 class TodoDeleteState extends TodoState{
   TodoDeleteState({super.todo, super.isError});
 
-
   @override
-  List<Object?> get props =>[todo, isError];
+  List<Object?> get props => [todo, isError];
 }
 
 // 삭제 완료된 상태
 class TodoDeletedState extends TodoState{
   TodoDeletedState({super.todo, super.isError});
 
-
   @override
-  List<Object?> get props =>[todo, isError];
+  List<Object?> get props => [todo, isError];
 }
 
 // Error가 발생했을 때 상태

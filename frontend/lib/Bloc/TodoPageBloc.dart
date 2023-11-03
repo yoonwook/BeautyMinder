@@ -35,7 +35,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
   Future<void> _addEvent(TodoPageAddEvent event, Emitter<TodoState> emit) async{
     if(state is TodoLoadedState){
       // Todo가 로드된 상태에서만 Todo add event가 가능
-      emit(TodoAddState());
+      emit(TodoAddState(todo: state.todo ,isError: state.isError));
 
       try{
         final Todo todo = event.todo;
@@ -43,7 +43,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
         final result = await TodoService.addTodo(todo);
 
         if(result.value != null){
-          emit(TodoAddedState());
+          emit(TodoAddedState(todo: state.todo, isError: state.isError));
           print(todo);
         }else{
           print("Error : ${result.error}");
@@ -58,14 +58,14 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
 
   Future<void> _updateEvent(TodoPageUpdateEvent event, Emitter<TodoState> emit) async{
     if(state is TodoLoadedState){
-      emit(TodoUpdateState());
+      emit(TodoUpdateState(update_todo: state.update_todo, isError: state.isError));
 
       try{
         final Map<String, dynamic> update_todo = event.update_todo;
         final result = await TodoService.taskUpdateTodo(update_todo);
 
         if(result.value != null){
-          emit(TodoUpdatedState());
+          emit(TodoUpdatedState(update_todo: state.update_todo, isError: state.isError));
           print(update_todo);
         }else{
           emit(TodoErrorState(isError: true));
@@ -82,14 +82,14 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
 
   Future<void> _deleteEvent(TodoPageDeleteEvent event, Emitter<TodoState> emit) async{
     if(state is TodoLoadedState){
-      emit(TodoDeleteState());
+      emit(TodoDeleteState(todo: state.todo, isError: state.isError));
 
       try{
         final String? todoid = event.todo.id;
         final result = await TodoService.deleteTodo(todoid);
 
         if(result.value != null){
-          emit(TodoDeletedState());
+          emit(TodoDeletedState(todo: state.todo, isError: state.isError));
           print(todoid);
         }else{
           emit(TodoErrorState(isError: true));
