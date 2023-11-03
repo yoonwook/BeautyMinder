@@ -19,7 +19,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       body: ListView.builder(
         itemCount: widget.data?.length ?? 0,
         itemBuilder: (context, index) {
-          // 데이터 모델에 따라 텍스트를 추출
+          // 데이터 모델에 따라 텍스트를 추출?"
           // String a1Question = widget.data![index].a1?.questionKr ?? 'No question available'; // 필드 이름으로 변경
 
           // return ListTile(

@@ -106,10 +106,10 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
   //테스트 시작 버튼 UI
   Widget _testStartButton() {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BaumannTestPage()));
-      },
+      // onTap: () {
+      //   Navigator.push(
+      //       context, MaterialPageRoute(builder: (context) => BaumannTestPage()));
+      // },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 13),
