@@ -34,6 +34,7 @@ void main() async {
     profileImage: 'path/to/image.jpg',
     createdAt: DateTime.now(),
     authorities: 'ROLE_USER',
+    phoneNumber: '0100101',
   );
 
   Todo todo = Todo(
@@ -46,17 +47,16 @@ void main() async {
   );
 
   Map<String, dynamic> update_todo = {
-
     "todoId": "65445f81f354753415c09cb4",
-    "timeOfDay": "morningTasks",
-    "taskIndex": 0,
-    "newTask": "string"
+    "timeOfDay": "morning",
+    "taskIndex": 2,
+    "newTask": "string111"
   };
 
   //final result = await TodoService.addTodo(todo);
 
 
-  final result = await TodoService.updateTodo(update_todo);
+  final result = await TodoService.taskUpdateTodo(update_todo);
   if (result.value != null) {
     print('Todos: ${result.value}');
   } else {

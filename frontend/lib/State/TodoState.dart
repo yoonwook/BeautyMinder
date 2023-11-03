@@ -7,12 +7,12 @@ abstract class TodoState extends Equatable{
   // 필요한 요소 더 추가해야됨
   final bool isError;
   final List<Todo>? todos;
-  final Todo? addTodo;
+  final Todo? todo;// 삭제, 수정에 사용될 객체
 
   const TodoState({
     this.isError = false,
     this.todos,
-    this.addTodo
+    this.todo
 });
 }
 
@@ -42,21 +42,56 @@ class TodoLoadedState extends TodoState{
 
 // Todo를 추가하려는 상태
 class TodoAddState extends TodoState{
-  TodoAddState({super.todos, super.addTodo, super.isError});
+  TodoAddState({super.todo, super.isError});
 
   @override
-  List<Object?> get props =>[todos, addTodo, isError];
+  List<Object?> get props =>[ todo, isError];
 }
 
 // Todo추가가 성공한 상태
 class TodoAddedState extends TodoState{
-  TodoAddedState({super.todos, super.addTodo, super.isError});
+  TodoAddedState({ super.todo, super.isError});
 
   @override
-  List<Object?> get props =>[todos, addTodo, isError];
+  List<Object?> get props =>[ todo, isError];
 
 }
 
+//  update전 상태
+class TodoUpdateState extends TodoState{
+  TodoUpdateState({ super.isError});
+
+  @override
+  List<Object?> get props =>[todos, todo, isError];
+}
+
+// update후 상태
+class TodoUpdatedState extends TodoState{
+  TodoUpdatedState({ super.todo, super.isError});
+
+  @override
+  List<Object?> get props =>[todos, todo, isError];
+}
+
+// 삭제중인 상태
+class TodoDeleteState extends TodoState{
+  TodoDeleteState({super.todo, super.isError});
+
+
+  @override
+  List<Object?> get props =>[todo, isError];
+}
+
+// 삭제 완료된 상태
+class TodoDeletedState extends TodoState{
+  TodoDeletedState({super.todo, super.isError});
+
+
+  @override
+  List<Object?> get props =>[todo, isError];
+}
+
+// Error가 발생했을 때 상태
 class TodoErrorState extends TodoState{
   TodoErrorState({super.isError});
 

@@ -9,8 +9,8 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
   TodoPageBloc() : super(const TodoInitState()){
     on<TodoPageInitEvent>(_initEvent);
     on<TodoPageAddEvent>(_addEvent);
-    //on<TodoPageUpdateEvent>(_updateEvent);
-    //on<TodoPageDeleteEvent>(_deleteEvent);
+    on<TodoPageUpdateEvent>(_updateEvent);
+    on<TodoPageDeleteEvent>(_deleteEvent);
   }
 
   // Todo를 불러오는 Event
@@ -31,9 +31,75 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
     }
   }
 
+  // Todo를 추가하는 Event
   Future<void> _addEvent(TodoPageAddEvent event, Emitter<TodoState> emit) async{
     if(state is TodoLoadedState){
-      emit(TodoAddState())
+      // Todo가 로드된 상태에서만 Todo add event가 가능
+      emit(TodoAddState());
+
+      try{
+        final Todo todo = event.todo;
+
+        final result = await TodoService.addTodo(todo);
+
+        if(result.value != null){
+          emit(TodoAddedState());
+          print(todo);
+        }else{
+          print("Error : ${result.error}");
+        }
+      }catch(e){
+        print("Error : ${e}");
+      }
+    }else{
+      emit(TodoErrorState(isError: true));
+    }
+  }
+
+  Future<void> _updateEvent(TodoPageUpdateEvent event, Emitter<TodoState> emit) async{
+    if(state is TodoLoadedState){
+      emit(TodoUpdateState());
+
+      try{
+        final Map<String, dynamic> update_todo = event.update_todo;
+        final result = await TodoService.taskUpdateTodo(update_todo);
+
+        if(result.value != null){
+          emit(TodoUpdatedState());
+          print(update_todo);
+        }else{
+          emit(TodoErrorState(isError: true));
+        }
+
+      }catch(e){
+        print("Error : ${e}");
+      }
+
+    }else{
+      emit(TodoErrorState());
+    }
+  }
+
+  Future<void> _deleteEvent(TodoPageDeleteEvent event, Emitter<TodoState> emit) async{
+    if(state is TodoLoadedState){
+      emit(TodoDeleteState());
+
+      try{
+        final String? todoid = event.todo.id;
+        final result = await TodoService.deleteTodo(todoid);
+
+        if(result.value != null){
+          emit(TodoDeletedState());
+          print(todoid);
+        }else{
+          emit(TodoErrorState(isError: true));
+        }
+
+      }catch(e){
+        print("Error: ${e}");
+      }
+    }else{
+      emit(TodoErrorState(isError: true));
     }
   }
 

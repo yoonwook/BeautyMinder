@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../dto/todo_model.dart';
+
 abstract class TodoPageEvent extends Equatable{
   // event는 총4개
   // Init event : API를 통해 Todo를 불러오는 이벤트
@@ -15,16 +17,29 @@ class TodoPageInitEvent extends TodoPageEvent{
 }
 
 class TodoPageAddEvent extends TodoPageEvent{
+  // 추가할 객체를 생성
+  final Todo todo;
+
+  TodoPageAddEvent(this.todo);
+
   @override
-  List<Object?> get props =>[];
+  List<Object?> get props =>[todo];
 }
 
+
 class TodoPageDeleteEvent extends TodoPageEvent{
+  final Todo todo;
+
+  TodoPageDeleteEvent(this.todo);
+
   @override
-  List<Object?> get props =>[];
+  List<Object?> get props =>[todo];
 }
 
 class TodoPageUpdateEvent extends TodoPageEvent{
+  final Map<String, dynamic> update_todo;
+
+  TodoPageUpdateEvent(this.update_todo);
   @override
-  List<Object?> get props =>[];
+  List<Object?> get props =>[update_todo];
 }

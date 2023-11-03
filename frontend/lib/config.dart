@@ -23,7 +23,7 @@ class Config {
   static const todoAPI = "/todo/all";
   static const todoAddAPI = "/todo/add";
   static const todoDelAPI = "/todo/delete/";
-  static const todoUpdateAPI = "/todd/update/";
+  static const todoUpdateAPI = "/todo/update/task";
 
   // Cosmetic
   static const CosmeticAPI = "/cosmetic";

@@ -152,7 +152,7 @@ class TodoService {
 
   // Delete a Todo
   // test성공
-  static Future<Result<String>> deleteTodo(String todoId) async {
+  static Future<Result<String>> deleteTodo(String? todoId) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -163,7 +163,7 @@ class TodoService {
 
 
     final url =
-        Uri.http(Config.apiURL, Config.todoDelAPI + todoId).toString();
+        Uri.http(Config.apiURL, Config.todoDelAPI + todoId!).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -219,9 +219,10 @@ class TodoService {
       return Result.failure("error");
     }
   }
-  
-  static Future<Result<Todo>>updateTodo(Map<String, dynamic> updateTodo) async{
 
+  // API 연동 성공
+  // updateTodo를
+  static Future<Result<Map<String, dynamic>>>taskUpdateTodo(Map<String, dynamic> updateTodo) async{
 
     User user = User(
       id: '65445f81f354753415c09cb4',
@@ -231,6 +232,7 @@ class TodoService {
       profileImage: 'path/to/image.jpg',
       createdAt: DateTime.now(),
       authorities: 'ROLE_USER',
+      phoneNumber: '5641654654',
     );
 
     Todo todo = Todo(
@@ -253,13 +255,19 @@ class TodoService {
 
     try{
 
-      final response = await _putJson(url,updateTodo , headers: headers);
+      final response = await _postJson(url, updateTodo , headers: headers);
       print("response : ${response}");
-      return Result.success(todo);
+      return Result.success(updateTodo);
     }catch(e){
       return Result.failure("An error occurred: $e");
     }
   }
+  
+  
+  // 존재하는 Todo를 수정하는 메서드 구현필요
+  //static Future<Result<Todo>> existingUpdateTodo(Todo todo){
+      
+
 }
 
 
