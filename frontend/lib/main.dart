@@ -27,7 +27,7 @@ void main() async {
   // setupAuthClient();
 
   User user = User(
-    id: '6522837112b53b37f109a508',
+    id: '65445f81f354753415c09cb4',
     email: 'user@example.com',
     password: 'securepassword123',
     nickname: 'JohnDoe',
@@ -39,18 +39,37 @@ void main() async {
   Todo todo = Todo(
     id: '123',
     date: DateTime.now(),
-    morningTasks: ['Task 545', 'Task 2', 'Task 3'],
+    morningTasks: ['Task 5451', 'Task 2', 'Task 3'],
     dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
     user: user,
     createdAt: DateTime.now(),
   );
 
-  final result = await TodoService.addTodo(todo);
+  Map<String, dynamic> update_todo = {
+
+    "todoId": "65445f81f354753415c09cb4",
+    "timeOfDay": "morningTasks",
+    "taskIndex": 0,
+    "newTask": "string"
+  };
+
+  //final result = await TodoService.addTodo(todo);
+
+
+  final result = await TodoService.updateTodo(update_todo);
   if (result.value != null) {
     print('Todos: ${result.value}');
   } else {
     print('Error: ${result.error}');
   }
+  //final result = await TodoService.deleteTodo();
+
+  // if (result.value != null) {
+  //   print('Todos: ${result.value}');
+  // } else {
+  //   print('Error: ${result.error}');
+  // }
+
 
   runApp(const MyApp());
 }

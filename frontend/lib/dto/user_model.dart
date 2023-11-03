@@ -17,6 +17,7 @@ class User {
   late final DateTime createdAt;
   late final String
       authorities; // authorities: [ { authority: ROLE_USER } ] -> ".."
+  late final String phoneNumber;
 
   @override
   String toString() {
@@ -28,7 +29,8 @@ User {
   nickname: $nickname,
   profileImage: $profileImage,
   createdAt: $createdAt,
-  authorities: $authorities
+  authorities: $authorities,
+  phoneNumber: $phoneNumber
 }''';
   }
 

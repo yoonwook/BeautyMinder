@@ -5,6 +5,7 @@ import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
 import '../../config.dart';
 import '../dto/todo_model.dart';
+import '../dto/user_model.dart';
 import 'shared_service.dart';
 
 class TodoService {
@@ -34,7 +35,18 @@ class TodoService {
     );
   }
 
+  // PUT 방식으로 JSON 데이터 전송하는 일반 함수
+  static Future<Response> _putJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}) {
+    return client.put(
+      url,
+      options: _httpOptions('PUT', headers),
+      data: body,
+    );
+  }
+
   // Get All Todos
+  // test 성공
   static Future<Result<List<Todo>>> getAllTodos() async {
     final user = await SharedService.getUser();
     final accessToken = await SharedService.getAccessToken();
@@ -99,6 +111,7 @@ class TodoService {
   }
 
   // Add a new Todo
+  // 테스트 성공
   static Future<Result<Todo>> addTodo(Todo todo) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
@@ -131,13 +144,14 @@ class TodoService {
     try {
       final response = await _postJson(url, todo.toJson() , headers: headers);
       print("response : ${response}");
-      return Result.success(Todo.fromJson(jsonDecode(response.data)));
+      return Result.success(todo);
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
 
   // Delete a Todo
+  // test성공
   static Future<Result<String>> deleteTodo(String todoId) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
@@ -169,6 +183,7 @@ class TodoService {
     }
   }
 
+  // test성공
   static Future<Result<Todo>> getTodo() async {
     final user = await SharedService.getUser();
 // AccessToken가지고오기
@@ -202,6 +217,47 @@ class TodoService {
     }catch(e){
       print("Todoservice : ${e}");
       return Result.failure("error");
+    }
+  }
+  
+  static Future<Result<Todo>>updateTodo(Map<String, dynamic> updateTodo) async{
+
+
+    User user = User(
+      id: '65445f81f354753415c09cb4',
+      email: 'user@example.com',
+      password: 'securepassword123',
+      nickname: 'JohnDoe',
+      profileImage: 'path/to/image.jpg',
+      createdAt: DateTime.now(),
+      authorities: 'ROLE_USER',
+    );
+
+    Todo todo = Todo(
+      id: '123',
+      date: DateTime.now(),
+      morningTasks: ['Task 5451', 'Task 2', 'Task 3'],
+      dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
+      user: user,
+      createdAt: DateTime.now(),
+    );
+
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final url = Uri.http(Config.apiURL, Config.todoUpdateAPI).toString();
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    try{
+
+      final response = await _putJson(url,updateTodo , headers: headers);
+      print("response : ${response}");
+      return Result.success(todo);
+    }catch(e){
+      return Result.failure("An error occurred: $e");
     }
   }
 }
