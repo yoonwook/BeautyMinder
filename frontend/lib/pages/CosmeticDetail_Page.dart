@@ -30,7 +30,7 @@ class _CosmeticPageState extends State<CosmeticPage>{
             // 페이지 전환 로직 추가
             if (index == 0) {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const RecPage_copy()));
+                  MaterialPageRoute(builder: (context) => const RecPage()));
             }
             else if (index == 1) {
               Navigator.of(context).push(

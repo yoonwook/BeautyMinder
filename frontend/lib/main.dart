@@ -18,13 +18,6 @@ import 'pages/register_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = Observer();
-  // Get result of the login function.
-  // bool _result = await SharedService.isLoggedIn();
-  // if (_result) {
-  //   _defaultHome = const HomePage();
-  // }
-  //
-  // setupAuthClient();
 
   User user = User(
     id: '65445f81f354753415c09cb4',
@@ -53,24 +46,6 @@ void main() async {
     "newTask": "string111"
   };
 
-  //final result = await TodoService.addTodo(todo);
-
-
-  final result = await TodoService.taskUpdateTodo(update_todo);
-  if (result.value != null) {
-    print('Todos: ${result.value}');
-  } else {
-    print('Error: ${result.error}');
-  }
-  //final result = await TodoService.deleteTodo();
-
-  // if (result.value != null) {
-  //   print('Todos: ${result.value}');
-  // } else {
-  //   print('Error: ${result.error}');
-  // }
-
-
   runApp(const MyApp());
 }
 
@@ -91,7 +66,7 @@ class MyApp extends StatelessWidget {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/recommend': (context) =>  const RecPage_copy(),
+        '/recommend': (context) =>  const RecPage(),
         '/pouch': (context) => const PouchPage(),
         // '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),

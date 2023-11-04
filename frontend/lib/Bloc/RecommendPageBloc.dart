@@ -16,7 +16,7 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
   }
 
   Future<void> _initEvent(RecommendPageInitEvent event, Emitter<RecommendState> emit) async{
-    await Future.delayed(const Duration(seconds: 1),() async {
+    await Future.delayed(const Duration(seconds: 0),() async {
       emit(RecommendDownloadedState(isError: state.isError));
 
       //추천 상품 받아오기 전체 추천상
@@ -44,6 +44,17 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
     await Future.delayed(const Duration(seconds: 1), () async {
       if(state is RecommendLoadedState){
         // 카테고리별로 추천상품 받아오는 로직이 필요
+        emit(RecommendCategoryChangeState(category: state.category, isError: state.isError, recCosmetics: state.recCosmetics));
+
+        var category = state.recCosmetics?.where((e) {
+          return e.keywords == "스킨케어";
+        }).toList();
+
+        print(category);
+
+        emit(RecommendLoadedState(recCosmetics: category, category: state.category, isError: state.isError));
+
+
       }else{
         emit(const RecommendErrorState(recCosmetics: [], isError: true));
       }

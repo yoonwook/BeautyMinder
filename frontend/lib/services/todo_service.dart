@@ -68,7 +68,7 @@ class TodoService {
     // todo model에서  userId를 넣어주면됨
 
     final url =
-        Uri.http(Config.apiURL, Config.todoAPI, {'userId': userId}).toString();
+        Uri.http(Config.apiURL, Config.todoAPI, /*{'userId': userId}*/ queryParameters).toString();
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -94,7 +94,7 @@ class TodoService {
           return Result.failure("Unexpected response data type");
         }
 
-        print("Todo response: $decodedResponse");
+
         if (decodedResponse.containsKey('todos')) {
           List<dynamic> todoList = decodedResponse['todos'];
           List<Todo> todos =

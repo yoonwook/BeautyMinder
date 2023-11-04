@@ -14,14 +14,14 @@ import '../widget/commonBottomNavigationBar.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 
-class RecPage_copy extends StatefulWidget {
-  const RecPage_copy({Key? key}) : super(key: key);
+class RecPage extends StatefulWidget {
+  const RecPage({Key? key}) : super(key: key);
 
   @override
   _RecPage createState() => _RecPage();
 }
 
-class _RecPage extends State<RecPage_copy> {
+class _RecPage extends State<RecPage> {
 
   int _currentIndex = 1;
 
@@ -82,7 +82,7 @@ class _RecPage extends State<RecPage_copy> {
     onTap: (int index) {
     // 페이지 전환 로직 추가
     if (index == 0) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage_copy()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
     }
     else if (index == 1) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
@@ -102,62 +102,8 @@ class _RecPage extends State<RecPage_copy> {
     ) ,);
 
 
-
-      Scaffold(
-      appBar: CommonAppBar(),
-      body:  Column(
-        children: [
-          ToggleButtons(
-            children: [
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('전체',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('스킨케어',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('클렌징',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('마스크 팩',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('썬케어',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('베이스',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('바디',style: TextStyle(fontSize: 18))),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('헤어',style: TextStyle(fontSize: 18))),
-
-            ], isSelected:isSelected,
-            onPressed: toggleSelect,
-          ),
-          _RecPageImageWidget()
-
-        ],
-      ),
-      bottomNavigationBar: CommonBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (int index) {
-            // 페이지 전환 로직 추가
-            if (index == 0) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage_copy()));
-            }
-            else if (index == 1) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
-            }
-            else if (index == 2) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-            }
-            else if (index == 3) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
-            }
-            else if (index == 4) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
-            }
-          }
-
-      ),
-    );
-
   }
+
   void toggleSelect(int value){
     // 모든 상태를 false로 초기화합니다.
     isAll = false;
@@ -200,6 +146,7 @@ class _RecPage extends State<RecPage_copy> {
     // UI를 업데이트하기 위해 상태를 변경합니다.
     setState(() {
       isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
+
     });
   }
 }
@@ -228,6 +175,7 @@ class _RecPageImageWidget extends StatelessWidget{
               ),
             );
           }else{
+            print("${state} + hello"); //RecommendLoadedState
             print("Container");
             return Expanded(child:  SizedBox(
               height: double.infinity,

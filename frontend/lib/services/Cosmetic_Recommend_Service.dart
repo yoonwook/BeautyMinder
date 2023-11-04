@@ -70,13 +70,9 @@ class CosmeticSearchService{
       print("statuscode : ${response.statusCode}");
 
       if(response.statusCode == 200){
-        print("response.data : ${response.data.runtimeType}");
+
         Map<String, dynamic> decodedResponse;
-        // if(response.data is String){
-        //   print("data is String");
-        //   decodedResponse = jsonDecode(response.data);
-        //   print(decodedResponse);
-        // }
+
         if(response.data is List){
           List<dynamic> dataList = response.data;
           //print("dataList : ${dataList}");
@@ -99,15 +95,6 @@ class CosmeticSearchService{
           return Result.failure("Unexpected response data type");
         }
 
-        // print("Cosmetics response : $decodedResponse");
-        //   if(decodedResponse.containsKey('name')){
-        //     List<dynamic> cosmeticList = decodedResponse['name'];
-        //     List<CosmeticModel> cosmetics =
-        //     cosmeticList.map((data) => CosmeticModel.fromJson(data)).toList();
-        //     // data는 cosmetic각각의 요소를 나타내는 변수임
-        //     print(cosmetics);
-        //     return Result.success(cosmetics);
-        //   }
           return Result.failure("Failed to serach Cosmetics : No cosmetics key in response");
         }
         return Result.failure("Failed to ge cosmeics");

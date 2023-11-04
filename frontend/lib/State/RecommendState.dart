@@ -49,3 +49,10 @@ class RecommendCategoryChangeState extends RecommendState{
   @override
   List<Object?> get props => [category, isError, recCosmetics];
 }
+
+class RecommendedCategoryChangeState extends RecommendState{
+  const RecommendedCategoryChangeState({super.category, super.isError, super.recCosmetics});
+
+  @override
+  List<Object?> get props => [category, isError, recCosmetics];
+}

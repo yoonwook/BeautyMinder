@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureTodoList = TodoService.getAllTodos();
   }
 
   // @override
@@ -95,7 +94,7 @@ class _HomePageState extends State<HomePage> {
           ),
           CustomButton(
             buttonText: 'rec 페이지로 이동',
-            pageRoute: RecPage_copy(),
+            pageRoute: RecPage(),
           ),
           CustomButton(
             buttonText: 'Todo 페이지로 이동',
@@ -112,7 +111,7 @@ class _HomePageState extends State<HomePage> {
         onTap: (int index) {
           // 페이지 전환 로직 추가
           if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage_copy()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
           }
           else if (index == 1) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
