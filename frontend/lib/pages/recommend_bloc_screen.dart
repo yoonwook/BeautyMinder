@@ -35,13 +35,13 @@ class _RecPage extends State<RecPage> {
   bool isBase =false;
   bool isBody =false;
   bool isHair = false;
-  late List<bool> isSelected;
+  //late List<bool> isSelected;
 
-  @override
-  void initState(){
-    isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
-    super.initState();
-  }
+  // @override
+  // void initState(){
+  //   isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,28 +51,28 @@ class _RecPage extends State<RecPage> {
         appBar: CommonAppBar(),
     body:  Column(
     children: [
-    ToggleButtons(
-    children: [
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('전체',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('스킨케어',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('클렌징',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('마스크 팩',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('썬케어',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('베이스',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('바디',style: TextStyle(fontSize: 18))),
-    Padding(padding: EdgeInsets.symmetric(horizontal: 16),
-    child: Text('헤어',style: TextStyle(fontSize: 18))),
-
-    ], isSelected:isSelected,
-    onPressed: toggleSelect,
-    ),
+    // ToggleButtons(
+    // children: [
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('전체',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('스킨케어',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('클렌징',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('마스크 팩',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('썬케어',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('베이스',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('바디',style: TextStyle(fontSize: 18))),
+    // Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+    // child: Text('헤어',style: TextStyle(fontSize: 18))),
+    //
+    // ], isSelected: ,
+    // //onPressed: toggleSelect,
+    // ),
     _RecPageImageWidget()
 
     ],
@@ -145,12 +145,20 @@ class _RecPage extends State<RecPage> {
 
     // UI를 업데이트하기 위해 상태를 변경합니다.
     setState(() {
-      isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
+      //isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
 
     });
   }
 }
+
+
+String keywordsToString(List<String> keywords) {
+  // 리스트의 모든 항목을 쉼표와 공백으로 구분된 하나의 문자열로 변환합니다.
+  return keywords.join(', ');
+}
+
 class _RecPageImageWidget extends StatelessWidget{
+
   @override
   Widget build(BuildContext context){
     return BlocBuilder<RecommendPageBloc, RecommendState>(
@@ -174,7 +182,9 @@ class _RecPageImageWidget extends StatelessWidget{
                 ),
               ),
             );
-          }else{
+          } else{
+            // else일때는 RecommendLoadedState임
+
             print("${state} + hello"); //RecommendLoadedState
             print("Container");
             return Expanded(child:  SizedBox(
@@ -261,9 +271,4 @@ class _RecPageImageWidget extends StatelessWidget{
       ),
     );
   }
-}
-
-String keywordsToString(List<String> keywords) {
-  // 리스트의 모든 항목을 쉼표와 공백으로 구분된 하나의 문자열로 변환합니다.
-  return keywords.join(', ');
 }
