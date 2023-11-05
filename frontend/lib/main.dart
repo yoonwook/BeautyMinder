@@ -32,12 +32,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
       ),
-      // home: const LoginPage(),
-      home: BaumannStartTestPage(),
+      // home: BaumannStartTestPage(),
+      home: const HomePage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
-        '/user/signup': (context) => RegisterPage(),
+        '/user/signup': (context) => const RegisterPage(),
         '/recommend': (context) => const RecPage(),
         '/pouch': (context) => const PouchPage(),
         '/home': (context) => const HomePage(),

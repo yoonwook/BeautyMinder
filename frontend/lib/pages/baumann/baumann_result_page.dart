@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../widget/commonAppBar.dart';
 
-class BaumannTestPage extends StatefulWidget {
-  const BaumannTestPage({Key? key}) : super(key: key);
+class BaumannResultPage extends StatefulWidget {
+  const BaumannResultPage({Key? key}) : super(key: key);
 
   @override
-  _BaumannTestPageState createState() => _BaumannTestPageState();
+  _BaumannResultPageState createState() => _BaumannResultPageState();
 }
 
-class _BaumannTestPageState extends State<BaumannTestPage> {
+class _BaumannResultPageState extends State<BaumannResultPage> {
 
   @override
   Widget build(BuildContext context) {
