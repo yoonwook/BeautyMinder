@@ -224,6 +224,19 @@ class _RecPageImageWidget extends StatelessWidget{
                           ),
                         ))],
                       ),
+                        // 토글 버튼 추가
+                        IconButton(
+                            icon: Icon(
+                              state.isToggled(index) // 여기서 isToggled는 상태를 체크하는 가상의 메소드입니다.
+                                  ? Icons.toggle_on
+                                  : Icons.toggle_off,
+                              size: 30.0,
+                              color: state.isToggled(index) ? Colors.green : Colors.grey,
+                            ),
+                            onPressed: () {
+                              // 토글 상태를 변경하는 이벤트를 발생시킵니다.
+                              context.read<RecommendPageBloc>().add(RecommendPageCategoryChangeEvent());
+                            }),
                         if(index + 1 == state.recCosmetics!.length)...[
                           GestureDetector(
                             onTap: (){
@@ -256,7 +269,9 @@ class _RecPageImageWidget extends StatelessWidget{
                   );
               }
               ),
+
             ));
+
           }
         });
 
@@ -272,3 +287,5 @@ class _RecPageImageWidget extends StatelessWidget{
     );
   }
 }
+
+
