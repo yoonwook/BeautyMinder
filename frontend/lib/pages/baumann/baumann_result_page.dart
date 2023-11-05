@@ -15,7 +15,7 @@ class _BaumannResultPageState extends State<BaumannResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: CommonAppBar(),
+      appBar: CommonAppBar(),
       body: Text('Baumann Result'),
     );
   }

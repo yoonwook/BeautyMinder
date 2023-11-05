@@ -1,10 +1,12 @@
+import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/search/search_result_page.dart';
 
 class SearchAppBar extends AppBar {
-  SearchAppBar({Key? key})
-      : super(
+
+  SearchAppBar({Key? key, required BuildContext context})
+      :super(
     key: key,
     backgroundColor: Color(0xffffecda),
     elevation: 0,
@@ -18,22 +20,20 @@ class SearchAppBar extends AppBar {
         //   color: Color(0xffd86a04),
         // ),
         SizedBox(
-          width: 8,
+          width: 10,
         ),
         Flexible(
           flex: 1,
           child: TextField(
             controller: TextEditingController(),
-            decoration: InputDecoration(
+            onSubmitted: (text) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
+            },
+            decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(
-                vertical: 5,
+                vertical: 3,
                 horizontal: 15,
               ),
-              // border: OutlineInputBorder(
-              //   borderRadius: BorderRadius.all(
-              //     Radius.circular(10),
-              //   ),
-              // ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10), //포커스 시
@@ -57,13 +57,10 @@ class SearchAppBar extends AppBar {
         SizedBox(
           width: 8,
         ),
-        // TextButton(
-        //   onPressed: () {},
-        //   child: Text('검색'),
-        // ),
         IconButton(
           onPressed: () {
-            final text = TextEditingController().text;
+            String text = TextEditingController().text; // TextField에서 입력한 텍스트 가져오기
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text,)),);
           },
           icon: Icon(
             Icons.search,

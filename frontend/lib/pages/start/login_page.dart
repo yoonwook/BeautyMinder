@@ -1,3 +1,4 @@
+import 'package:beautyminder/widget/loginAppBar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -37,21 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(60),
-            child: AppBar(
-              backgroundColor: Color(0xffffecda),
-              elevation: 0,
-              centerTitle: false,
-              title: Text(
-                "BeautyMinder 로그인",
-                style: TextStyle(color: Color(0xffd86a04)),
-              ),
-              iconTheme: IconThemeData(
-                color: Color(0xffd86a04),
-              ),
-            ),
-        ),
+        appBar: LoginAppBar(),
         backgroundColor: Colors.white,
         body: ProgressHUD(
           child: Form(
@@ -64,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
   }
-
 
 
   // 로그인 UI

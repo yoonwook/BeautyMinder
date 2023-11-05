@@ -8,6 +8,7 @@ import '../../config.dart';
 import '../../services/api_service.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import '../../dto/login_request_model.dart';
+import '../../widget/registerAppBar.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -43,21 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          backgroundColor: Color(0xffffecda),
-          elevation: 0,
-          centerTitle: false,
-          title: Text(
-            "BeautyMinder 회원가입",
-            style: TextStyle(color: Color(0xffd86a04)),
-          ),
-          iconTheme: IconThemeData(
-            color: Color(0xffd86a04),
-          ),
-        ),
-      ),
+      appBar: RegisterAppBar(),
       backgroundColor: Colors.white,
       body: ProgressHUD(
         child: Form(

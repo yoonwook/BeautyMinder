@@ -35,124 +35,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(),
+      appBar: SearchAppBar(context: context),
       body: _homePageUI(),
-      // body: Column(
-      //   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //   children: [
-      //     Container(
-      //       margin: EdgeInsets.symmetric(vertical: 20),
-      //       height: 100, // 1번 버튼의 높이
-      //       width: double.infinity, // 가로로 화면을 꽉 채우도록 설정
-      //       //1st Button - 유효기한
-      //       child: ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => PouchPage()));
-      //         },
-      //         style: ElevatedButton.styleFrom(
-      //           primary: Color(0xffffb876), // 버튼의 배경색
-      //         ),
-      //         child: Text(
-      //           '유효기한 임박 화장품',
-      //           style: TextStyle(
-      //             color: Colors.white,
-      //             fontSize: 20,
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //
-      //     Container(
-      //       height: 200, // 2번 버튼의 높이
-      //       child: Row(
-      //         children: [
-      //           //2nd Button - 추천
-      //           Expanded(
-      //             child: ElevatedButton(
-      //               onPressed: () {
-      //                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecPage()));
-      //               },
-      //               style: ElevatedButton.styleFrom(
-      //                 primary: Color(0xffffb876), // 버튼의 배경색
-      //               ),
-      //               child: Text(
-      //                 '추천 리스트',
-      //                 style: TextStyle(
-      //                   color: Colors.white,
-      //                   fontSize: 20,
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //
-      //           Expanded(
-      //             child: Column(
-      //               children: [
-      //                 Expanded(
-      //                     //3rd Button - 바우만
-      //                   child: ElevatedButton(
-      //                     onPressed: () {
-      //                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => PouchPage()));
-      //                     },
-      //                     style: ElevatedButton.styleFrom(
-      //                       primary: Color(0xffffb876), // 버튼의 배경색
-      //                     ),
-      //                     child: Text(
-      //                       '내 피부 타입',
-      //                       style: TextStyle(
-      //                         color: Colors.white,
-      //                         fontSize: 20,
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ),
-      //                 Expanded(
-      //                   //4th Button - 퍼스널 컬러
-      //                   child: ElevatedButton(
-      //                     onPressed: () {
-      //                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => PouchPage()));
-      //                     },
-      //                     style: ElevatedButton.styleFrom(
-      //                       primary: Color(0xffffb876), // 버튼의 배경색
-      //                     ),
-      //                     child: Text(
-      //                       '내 퍼스널 컬러',
-      //                       style: TextStyle(
-      //                         color: Colors.white,
-      //                         fontSize: 20,
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //
-      //     Container(
-      //       height: 100, // 5번 버튼의 높이
-      //       width: double.infinity, // 가로로 화면을 꽉 채우도록 설정
-      //       //5th Button - 투두 리스트
-      //       child: ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => TodoPage()));
-      //         },
-      //         style: ElevatedButton.styleFrom(
-      //           primary: Color(0xffffb876), // 버튼의 배경색
-      //         ),
-      //         child: Text(
-      //           'TODO 리스트',
-      //           style: TextStyle(
-      //             color: Colors.white,
-      //             fontSize: 20,
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       bottomNavigationBar: _underNavigation(),
     );
   }
@@ -170,7 +54,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               _recommendProductBtn(),
               Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   _personalSkinTypeBtn(),
                   _personalColorBtn(),
@@ -178,7 +62,6 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-
           _todoListBtn(),
           // _label()
         ],
@@ -202,7 +85,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
       ),
-      child: Align(
+      child: const Align(
         alignment: Alignment.topLeft,
         child: Text("유통기한 임박 화장품"),
       ),
