@@ -131,14 +131,10 @@ class _BaumannStartTestPageState extends State<BaumannStartTestPage> {
         try {
           // Baumann 데이터를 가져오기 위한 API 호출을 수행
           final result = await BaumannService.getBaumannSurveys();
+          print('survey : ${result.value}');
           if (result.isSuccess) {
             // BaumannTestPage로 이동하고 가져온 데이터를 전달합니다.
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BaumannTestPage(data: result.value!),
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BaumannTestPage(data: result.value!),),);
           }
           else {
             // API 호출 실패를 처리합니다.

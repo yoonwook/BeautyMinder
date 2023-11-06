@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:beautyminder/globalVariable/globals.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Config {
@@ -25,5 +26,5 @@ class Config {
 
   //Baumann
   static const baumannSurveyAPI = "/baumann/survey";
-  static const baumannTestAPI = "/baumann/test";
+  static const baumannTestAPI = "/baumann/test/test@com";
 }

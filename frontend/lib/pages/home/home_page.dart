@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
 
     return ElevatedButton(
       onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xfffe9738), // 버튼의 배경색을 검정색으로 설정
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
 
     return ElevatedButton(
       onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffd1a6), // 버튼의 배경색을 검정색으로 설정
