@@ -37,7 +37,6 @@ class _BaumannStartTestPageState extends State<BaumannStartTestPage> {
   }
 
 
-
   //바우만 시작페이지 UI
   Widget _baumannStartUI() {
     return Container(
@@ -120,10 +119,6 @@ class _BaumannStartTestPageState extends State<BaumannStartTestPage> {
   Widget _testStartButton() {
     double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
-      // onTap: () {
-      //   Navigator.push(
-      //       context, MaterialPageRoute(builder: (context) => BaumannTestPage()));
-      // },
       onTap: () async {
         //이미 API 호출이 진행 중인지 확인
         if (isApiCallProcess) {
@@ -141,7 +136,7 @@ class _BaumannStartTestPageState extends State<BaumannStartTestPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BaumannTestPage(data: result.value),
+                builder: (context) => BaumannTestPage(data: result.value!),
               ),
             );
           }

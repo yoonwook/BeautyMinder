@@ -2,11 +2,9 @@ import 'dart:convert';
 
 import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/services/auth_service.dart';
-import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
+import 'package:dio/dio.dart';
 
 import '../../config.dart';
-import '../dto/baumann_model.dart';
-import '../dto/todo_model.dart';
 import 'shared_service.dart';
 
 class BaumannService {
@@ -36,46 +34,75 @@ class BaumannService {
     );
   }
 
-  // 설문조사 데이터 받기
-  static Future<Result<List<BaumannSurveys>>> getBaumannSurveys() async {
-    // final user = await SharedService.getUser();
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
-    // final userId = user?.id ?? '-1';
-
-    // Create the URI with the query parameter
-    final url =
-    Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
-
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
-    };
+  //new
+  static Future<Result<SurveyWrapper>> getBaumannSurveys() async {
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
 
     try {
-      final response = await authClient.get(
+      // GET 요청
+      final response = await client.get(
         url,
-        options: _httpOptions('GET', headers),
+        // options: _httpOptions('GET', headers),
       );
 
-      print("response: ${response.data} ${response.statusCode}");
-      print("token: $accessToken | $refreshToken");
-
       if (response.statusCode == 200) {
-        // JSON 데이터를 파싱하여 Baumann 모델로 변환
-        final decodedResponse = json.decode(response.data);
-        final baumannData = BaumannSurveys.fromJson(decodedResponse);
-
-        print("Baumann data: $baumannData");
-        return Result.success(baumannData as List<BaumannSurveys>?);
+        // 사용자 정보 파싱
+        final user = SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
+        print(user);
+        return Result.success(user);
       }
-      else {
-        return Result.failure("Failed to get Baumann data");
-      }
+      return Result.failure("Failed to get user profile");
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
+
+
+
+  // // 설문조사 데이터 받기
+  // static Future<Result<List<BaumannSurveys>>> getBaumannSurveys() async {
+  //   // final user = await SharedService.getUser();
+  //   final accessToken = await SharedService.getAccessToken();
+  //   final refreshToken = await SharedService.getRefreshToken();
+  //   // final userId = user?.id ?? '-1';
+  //
+  //   // Create the URI with the query parameter
+  //   final url =
+  //   Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
+  //
+  //   final headers = {
+  //     'Authorization': 'Bearer $accessToken',
+  //     'Cookie': 'XRT=$refreshToken',
+  //   };
+  //
+  //   try {
+  //     final response = await authClient.get(
+  //       url,
+  //       options: _httpOptions('GET', headers),
+  //     );
+  //
+  //     print("response: ${response.data} ${response.statusCode}");
+  //     print("token: $accessToken | $refreshToken");
+  //
+  //     if (response.statusCode == 200) {
+  //       // JSON 데이터를 파싱하여 Baumann 모델로 변환
+  //       // final decodedResponse = json.decode(json.encode(response.data));
+  //       // final decodedResponse = json.decode(response.data);
+  //       // final baumannData = BaumannSurveys.fromJson(decodedResponse);
+  //       final baumannData = BaumannSurveys.fromJson(response.data);
+  //
+  //       print("Baumann data: $baumannData");
+  //       return Result.success(baumannData as List<BaumannSurveys>?);
+  //     }
+  //     else {
+  //       return Result.failure("Failed to get Baumann data");
+  //     }
+  //   } catch (e) {
+  //     print("error : ${e}");
+  //     return Result.failure("An error occurred: $e");
+  //   }
+  // }
 }
 
 // 결과 클래스

@@ -24,13 +24,13 @@ class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 2;
 
-  late Future<Result<List<Todo>>> futureTodoList;
+  // late Future<Result<List<Todo>>> futureTodoList;
 
-  @override
-  void initState() {
-    super.initState();
-    futureTodoList = TodoService.getAllTodos();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureTodoList = TodoService.getAllTodos();
+  // }
 
   @override
   Widget build(BuildContext context) {
