@@ -1,4 +1,5 @@
 import 'package:beautyminder/pages/baumann/baumannStartPageTest.dart';
+import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_start_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';

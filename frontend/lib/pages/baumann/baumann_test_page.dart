@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:beautyminder/dto/baumann_model.dart';
 
 class BaumannTestPage extends StatefulWidget {
-  BaumannTestPage({required this.data});
+  const BaumannTestPage({Key? key, required this.data}) : super(key: key);
 
   final SurveyWrapper data;
 
@@ -13,8 +13,10 @@ class BaumannTestPage extends StatefulWidget {
 }
 
 class _BaumannTestPageState extends State<BaumannTestPage> {
+
   int currentPage = 0; // 현재 페이지 인덱스
   List<QuestionPage> pages = [];
+  List<int?> selectedOptionIndices = [];
 
   @override
   void initState() {
@@ -24,8 +26,10 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     for (String surveyKey in widget.data.surveys.keys) {
       BaumannSurveys survey = widget.data.surveys[surveyKey]!;
       pages.add(QuestionPage(surveyKey, survey.questionKr, survey.options));
+      selectedOptionIndices.add(null);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     if (pages.isEmpty) {
       return Scaffold(
         appBar: BaumannTestAppBar(),
-        body: Center(
+        body: const Center(
           child: Text('페이지가 없습니다.'),
         ),
       );
@@ -45,6 +49,102 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     );
   }
 
+
+  Widget baumannTestUI() {
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _textUIs(),
+        _btnSort(),
+      ],
+    );
+  }
+
+
+  Widget _textUIs() {
+    QuestionPage currentPageData = pages[currentPage];
+
+    int? selectedOptionIndex = selectedOptionIndices[currentPage];
+
+    return ListTile(
+      title: Text('문항 번호 : ${currentPageData.surveyKey}'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('문제 : ${currentPageData.question}'),
+          const Text('선택지 :'),
+          Column(
+            children: currentPageData.options.asMap().entries.map((entry) {
+              int index = entry.key;
+              Option option = entry.value;
+              return RadioListTile(
+                  value: index,
+                  groupValue: selectedOptionIndex,
+                  onChanged: (int? value) {
+                    setState(() {
+                      selectedOptionIndices[currentPage] = value;
+                    });
+                  },
+                title: Text('선택지 ${option.option} : ${option.description}'),
+                // secondary: selectedOptionIndex == index ? Icon(Icons.check) : null,
+              );
+            }).toList(),
+          )
+        ],
+      ),
+    );
+  }
+
+
+  Widget _btnSort() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        if (currentPage > 0 && currentPage != pages.length - 1)
+          _prevBtn(),
+
+        if (currentPage < pages.length - 1)
+          _nextBtn(),
+
+        if (currentPage == pages.length - 1)
+          _resultBtn(),
+      ],
+    );
+  }
+
+
+  Widget _prevBtn() {
+    return ElevatedButton(
+      onPressed: previousPage,
+      child: const Text('이전'),
+    );
+  }
+
+
+  Widget _nextBtn() {
+    return ElevatedButton(
+      onPressed: nextPage,
+      child: const Text('다음'),
+    );
+  }
+
+
+  Widget _resultBtn() {
+    return ElevatedButton(
+      onPressed: () {
+        print('Selected Option Indices : ');
+        for (int i = 0; i < selectedOptionIndices.length; i++) {
+          print('Question ${i + 1}: ${selectedOptionIndices[i]}');
+        }
+
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+        },
+      child: const Text('결과보기'),
+    );
+  }
+
+
   void nextPage() {
     setState(() {
       if (currentPage < pages.length - 1) {
@@ -52,6 +152,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       }
     });
   }
+
 
   void previousPage() {
     setState(() {
@@ -61,56 +162,8 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     });
   }
 
-
-  Widget baumannTestUI() {
-
-    QuestionPage currentPageData = pages[currentPage];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          title: Text('Survey Key: ${currentPageData.surveyKey}'),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Question: ${currentPageData.question}'),
-              Text('Options:'),
-              Column(
-                children: currentPageData.options.map((option) {
-                  return Text('Option ${option.option}: ${option.description}');
-                }).toList(),
-              ),
-            ],
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            if (currentPage > 0 && currentPage != pages.length - 1)
-              ElevatedButton(
-                onPressed: previousPage,
-                child: Text('이전'),
-              ),
-            if (currentPage < pages.length - 1)
-              ElevatedButton(
-                onPressed: nextPage,
-                child: Text('다음'),
-              ),
-            if (currentPage == pages.length - 1)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage()));
-                },
-                child: Text('결과보기'),
-              ),
-          ],
-        ),
-      ],
-    );
 }
 
-}
 
 class QuestionPage {
   final String surveyKey;
