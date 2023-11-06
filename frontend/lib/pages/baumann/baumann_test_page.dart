@@ -2,6 +2,7 @@ import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/widget/baumannTestAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:beautyminder/dto/baumann_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class BaumannTestPage extends StatefulWidget {
   const BaumannTestPage({Key? key, required this.data}) : super(key: key);
@@ -16,7 +17,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
 
   int currentPage = 0; // 현재 페이지 인덱스
   List<QuestionPage> pages = [];
-  List<int?> selectedOptionIndices = [];
+  Map<String, int?> selectedOptionIndices = {};
 
   @override
   void initState() {
@@ -26,7 +27,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     for (String surveyKey in widget.data.surveys.keys) {
       BaumannSurveys survey = widget.data.surveys[surveyKey]!;
       pages.add(QuestionPage(surveyKey, survey.questionKr, survey.options));
-      selectedOptionIndices.add(null);
+      selectedOptionIndices[surveyKey] = null;
     }
   }
 
@@ -64,8 +65,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
 
   Widget _textUIs() {
     QuestionPage currentPageData = pages[currentPage];
-
-    int? selectedOptionIndex = selectedOptionIndices[currentPage];
+    int? selectedOptionIndex = selectedOptionIndices[currentPageData.surveyKey];
 
     return ListTile(
       title: Text('문항 번호 : ${currentPageData.surveyKey}'),
@@ -83,11 +83,10 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
                   groupValue: selectedOptionIndex,
                   onChanged: (int? value) {
                     setState(() {
-                      selectedOptionIndices[currentPage] = value;
+                      selectedOptionIndices[currentPageData.surveyKey] = value;
                     });
                   },
                 title: Text('선택지 ${option.option} : ${option.description}'),
-                // secondary: selectedOptionIndex == index ? Icon(Icons.check) : null,
               );
             }).toList(),
           )
@@ -134,9 +133,12 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     return ElevatedButton(
       onPressed: () {
         print('Selected Option Indices : ');
-        for (int i = 0; i < selectedOptionIndices.length; i++) {
-          print('Question ${i + 1}: ${selectedOptionIndices[i]}');
-        }
+        selectedOptionIndices.forEach((key, value) {
+          print('$key: ${value != null ? value + 1 : null}');
+        });
+        // for (int i = 0; i < selectedOptionIndices.length; i++) {
+        //   print('Question ${i + 1}: ${selectedOptionIndices[i]}');
+        // }
 
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
         },
@@ -146,11 +148,25 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
 
 
   void nextPage() {
-    setState(() {
-      if (currentPage < pages.length - 1) {
-        currentPage++;
-      }
-    });
+    int? selectedOptionIndex = selectedOptionIndices[pages[currentPage].surveyKey];
+
+    if (selectedOptionIndex == null) {
+      // 옵션이 선택되지 않았을 때 Toast 메시지 표시
+      Fluttertoast.showToast(
+        msg: '항목이 선택되지 않았습니다',
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+    else {
+      setState(() {
+        if (currentPage < pages.length - 1) {
+          currentPage++;
+        }
+      });
+    }
   }
 
 
