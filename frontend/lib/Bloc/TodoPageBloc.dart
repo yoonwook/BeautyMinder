@@ -40,7 +40,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
       try{
         final Todo todo = event.todo;
 
-        final result = await TodoService.addTodo(todo);
+        final result = await TodoService.addTodo(/*todo*/);
 
         if(result.value != null){
           emit(TodoAddedState(todo: state.todo, isError: state.isError));

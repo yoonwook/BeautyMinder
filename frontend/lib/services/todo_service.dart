@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/services/auth_service.dart';
 import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
@@ -47,6 +48,7 @@ class TodoService {
 
   // Get All Todos
   // test 성공
+  // queryParmeter로 userId가 필요함
   static Future<Result<List<Todo>>> getAllTodos() async {
     final user = await SharedService.getUser();
     final accessToken = await SharedService.getAccessToken();
@@ -57,7 +59,7 @@ class TodoService {
     //요청에 집어넣을 쿼리파라미터
     // 실사용시에는 유저로뷰터 입력을 받아야함=
     final queryParameters = {
-      'userId': '6522837112b53b37f109a508',
+      'userId': '65499d8316f366541e3cc0a2',
     };
 
     // Create the URI with the query parameter
@@ -110,19 +112,45 @@ class TodoService {
     }
   }
 
+
   // Add a new Todo
+  // Todo를 추가
   // 테스트 성공
   static Future<Result<Todo>> addTodo(Todo todo) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
 
-   Map<String, dynamic> map ={
-   "userId": "6522837112b53b37f109a508",
-   "date": "2019-08-01",
-   "morningTasks": ["String"],
-   "dinnerTasks":["String12"],
-   };
+  //   // 첫 번째 Task 객체 생성
+  //   Task tas1 = Task(
+  //     taskId: 'task_001',
+  //     category: 'morning',
+  //     description: '밥묵재이~',
+  //     done: false,
+  //   );
+  //
+  //
+  //   List<Task> tasks = [tas1];
+  //
+  //   User user = User(
+  //     id: '65499d8316f366541e3cc0a2',
+  //     email: 'user@example.com',
+  //     password: 'securepassword123',
+  //     nickname: 'JohnDoe',
+  //     profileImage: 'path/to/image.jpg',
+  //     createdAt: DateTime.now(),
+  //     authorities: 'ROLE_USER',
+  //     phoneNumber: '0100101',
+  //   );
+  //
+  //   Todo todo = Todo(
+  //     id :'ddaa11',
+  //     user: user,
+  //     date: DateTime.now(),
+  //     tasks: tasks,
+  //     createdAt: DateTime.now()
+  //   );
+  // print(todo.toJson());
 
 
     final url = Uri.http(Config.apiURL, Config.todoAddAPI).toString();
@@ -131,16 +159,7 @@ class TodoService {
       'Cookie': 'XRT=$refreshToken',
     };
 
-    // Post 형식으로 보내야됨
-    // ex) "userId": "6522837112b53b37f109a508",
-    //    "date": "2019-08-01",
-    //    "morningTasks": ["String"],
-    //    "dinnerTasks":["String12"],
-    //  _postJson메서드에서 두번째 파라미터는 Map<String, dynamic> 형식임
-    //  todo_model에 에 있는  toJson을 사용하면 됨
 
-
-    print(todo.toJson());
     try {
       final response = await _postJson(url, todo.toJson() , headers: headers);
       print("response : ${response}");
@@ -163,7 +182,7 @@ class TodoService {
 
 
     final url =
-        Uri.http(Config.apiURL, Config.todoDelAPI + todoId!).toString();
+        Uri.http(Config.apiURL, Config.todoDelAPI + todoId! /*"654a1d2a3df3381bf37bbbfd"*/).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -224,38 +243,40 @@ class TodoService {
   // updateTodo를
   static Future<Result<Map<String, dynamic>>>taskUpdateTodo(Map<String, dynamic> updateTodo) async{
 
-    User user = User(
-      id: '65445f81f354753415c09cb4',
-      email: 'user@example.com',
-      password: 'securepassword123',
-      nickname: 'JohnDoe',
-      profileImage: 'path/to/image.jpg',
-      createdAt: DateTime.now(),
-      authorities: 'ROLE_USER',
-      phoneNumber: '5641654654',
-    );
-
-    Todo todo = Todo(
-      id: '123',
-      date: DateTime.now(),
-      morningTasks: ['Task 5451', 'Task 2', 'Task 3'],
-      dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
-      user: user,
-      createdAt: DateTime.now(),
-    );
-
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final url = Uri.http(Config.apiURL, Config.todoUpdateAPI).toString();
+    final url = Uri.http(Config.apiURL, "${Config.todoUpdateAPI}/654a083c247cdf2886c149cb",).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
     };
 
+    Map<String, dynamic> up = {
+      "tasksToUpdate": [
+        {
+          "taskId": "fe310992-590e-48d4-b24b-5b86dbb7b803",
+          "description": "Submit report",
+          "category": "Work",
+          "isDone": true
+        },
+        // 여기에 더 많은 tasksToUpdate 객체를 추가할 수 있습니다.
+      ],
+      "tasksToAdd": [
+        // tasksToAdd 객체를 추가하고 싶다면 여기에 추가합니다.
+      ],
+      "taskIdsToDelete": [
+        "a59a6692-f9a0-4349-8ce0-6cd420e91b6e",
+        "9203bd54-6eea-4261-a8ef-7ab356491d5c"
+        // 여기에 더 많은 taskIdsToDelete를 추가할 수 있습니다.
+      ],
+    };
+
+
+
     try{
 
-      final response = await _postJson(url, updateTodo , headers: headers);
+      final response = await _putJson(url, up , headers: headers);
       print("response : ${response}");
       return Result.success(updateTodo);
     }catch(e){

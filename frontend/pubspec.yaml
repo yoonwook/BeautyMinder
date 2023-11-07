@@ -36,6 +36,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   bloc_test: ^9.0.3
   mockito : ^5.0.16
+  intl: ^0.18.1
 
   fluttertoast: ^8.2.2
 

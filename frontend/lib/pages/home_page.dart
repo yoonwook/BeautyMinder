@@ -178,8 +178,6 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Date: ${todo.date.toString()}"),
-                  Text("Morning Tasks: ${todo.morningTasks.join(', ')}"),
-                  Text("Dinner Tasks: ${todo.dinnerTasks.join(', ')}"),
                 ],
               ),
               trailing: IconButton(

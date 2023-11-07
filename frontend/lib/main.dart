@@ -30,14 +30,14 @@ void main() async {
     phoneNumber: '0100101',
   );
 
-  Todo todo = Todo(
-    id: '123',
-    date: DateTime.now(),
-    morningTasks: ['Task 5451', 'Task 2', 'Task 3'],
-    dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
-    user: user,
-    createdAt: DateTime.now(),
-  );
+  // Todo todo = Todo(
+  //   id: '123',
+  //   date: DateTime.now(),
+  //   morningTasks: ['Task 5451', 'Task 2', 'Task 3'],
+  //   dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
+  //   user: user,
+  //   createdAt: DateTime.now(),
+  // );
 
   Map<String, dynamic> update_todo = {
     "todoId": "65445f81f354753415c09cb4",
@@ -45,6 +45,20 @@ void main() async {
     "taskIndex": 2,
     "newTask": "string111"
   };
+
+  Map<String, dynamic> k = {
+    'name' : 'heesnag'
+  };
+
+  //final result = await TodoService.getAllTodos();
+  //final result = await TodoService.addTodo();
+  //final result = await TodoService.deleteTodo("sss");
+  //final result = await TodoService.taskUpdateTodo(k);
+
+
+  //print(result.value);
+
+
 
   runApp(const MyApp());
 }
