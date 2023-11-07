@@ -29,14 +29,6 @@ class BaumannService {
       data: body,
     );
   }
-  // static Future<Response> postJson(String url, dynamic body,
-  //     {Map<String, String>? headers}) {
-  //   return client.post(
-  //     url,
-  //     options: _httpOptions('POST', headers),
-  //     data: body,
-  //   );
-  // }
 
   static Future<Result<SurveyWrapper>> getBaumannSurveys() async {
     // URL 생성

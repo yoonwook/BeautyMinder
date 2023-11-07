@@ -124,7 +124,7 @@ class _BaumannStartTestPageState extends State<BaumannStartTestPage> {
         if (isApiCallProcess) {
           return;
         }
-        //// API 호출 중임을 표시
+        // API 호출 중임을 표시
         setState(() {
           isApiCallProcess = true;
         });

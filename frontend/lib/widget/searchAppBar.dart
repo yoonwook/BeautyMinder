@@ -15,10 +15,6 @@ class SearchAppBar extends AppBar {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        // Icon(
-        //   Icons.search,
-        //   color: Color(0xffd86a04),
-        // ),
         SizedBox(
           width: 10,
         ),

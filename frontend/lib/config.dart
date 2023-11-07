@@ -27,4 +27,7 @@ class Config {
   //Baumann
   static const baumannSurveyAPI = "/baumann/survey";
   static const baumannTestAPI = "/baumann/test/65499d8316f366541e3cc0a2";
+
+  //rank
+  static const keywordRankAPI = "/redis/top/keywords";
 }

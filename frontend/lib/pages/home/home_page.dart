@@ -3,8 +3,11 @@ import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
+import 'package:beautyminder/services/keywordRank_service.dart';
+import 'package:beautyminder/widget/homepageAppBar.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../dto/user_model.dart';
 import '../../services/shared_service.dart';
 import '../../services/todo_service.dart';
@@ -12,6 +15,7 @@ import '../../dto/todo_model.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../my/my_page.dart';
+import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,6 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 2;
+  bool isApiCallProcess = false;
 
   // late Future<Result<List<Todo>>> futureTodoList;
 
@@ -35,7 +40,43 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(context: context),
+      appBar: HomepageAppBar(actions: <Widget> [
+        IconButton(
+          icon:Icon(Icons.search),
+          onPressed: () async {
+            //이미 API 호출이 진행 중인지 확인
+            if (isApiCallProcess) {
+              return;
+            }
+            // API 호출 중임을 표시
+            setState(() {
+              isApiCallProcess = true;
+            });
+            try {
+              final result = await KeywordRankService.getKeywordRank();
+              print('keyword rank : ${result.value}');
+              if (result.isSuccess) {
+                // BaumannTestPage로 이동하고 가져온 데이터를 전달합니다.
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: result.value!),),);
+              }
+              else {
+                // API 호출 실패를 처리합니다.
+                Fluttertoast.showToast(
+                  msg: result.error ?? '바우만 데이터 가져오기 실패',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                );
+              }
+            }
+            finally {
+              // API 호출 상태를 초기화합니다.
+              setState(() {
+                isApiCallProcess = false;
+              });
+            }
+          },
+        ),
+      ]),
       body: _homePageUI(),
       bottomNavigationBar: _underNavigation(),
     );
