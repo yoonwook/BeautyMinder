@@ -26,4 +26,9 @@ class CosmeticModel{
       name: json["name"]);
  }
 
+ @override
+ String toString() {
+   return 'CosmeticModel{id: $id, name: $name, brand: $brand, images: ${images?.join(', ')}, category: $category, keywords: ${keywords?.join(', ')}}';
+ }
+
 }

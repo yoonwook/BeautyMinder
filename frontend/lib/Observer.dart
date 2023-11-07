@@ -4,7 +4,7 @@ class Observer extends BlocObserver{
 
   @override
   void onCreate(BlocBase bloc){
-    //print("Create :: $bloc");
+   // print("Create :: $bloc");
     //super.onCreate(bloc);
   }
 
@@ -17,7 +17,7 @@ class Observer extends BlocObserver{
 
   @override
   void onChange(BlocBase bloc, Change change){
-   // print(change);
-   // super.onChange(bloc, change);
+    //print(change);
+    //super.onChange(bloc, change);
   }
 }

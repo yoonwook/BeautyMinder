@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/CosmeticModel.dart';
+
 abstract class RecommendPageEvent extends Equatable{
 
   final String? category;

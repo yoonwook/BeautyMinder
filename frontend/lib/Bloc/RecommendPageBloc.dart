@@ -42,30 +42,38 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
     }
 
   Future<void> _categoryChangeEvent(RecommendPageCategoryChangeEvent event , Emitter<RecommendState> emit) async{
-    await Future.delayed(const Duration(seconds: 1), () async {
+    await Future.delayed(const Duration(seconds: 0), () async {
+
+      print("category change event call");
 
       if(state is RecommendLoadedState){
+        print(" RecommendLoadedState in _categoryChangeEvent");
         // 카테고리별로 추천상품 받아오는 로직이 필요
+        print("event.category : ${event.category}");
 
         //print("RecommendPageBloc e.category:${event.category}");
         if(event.category == null){
+          print("event.categorys is all");
           emit(RecommendCategoryChangeState(category: state.category, isError: state.isError, recCosmetics: AllCosmetics));
         }else{
+          print("event.categorys is skincare");
           emit(RecommendCategoryChangeState(category: event.category, isError: state.isError, recCosmetics: AllCosmetics));
         }
 
 
         //print("this is categoryChageEvent");
-        //print(state.recCosmetics);
-        print("RecommendPageBloc category : ${state.category}");
+        //print("state.recCosmetics in category change : ${state.recCosmetics}");
+        //print("RecommendPageBloc category : ${state.category}");
 
-        List<CosmeticModel>? category_select = state.recCosmetics?.where((e) {
-          return e.keywords == "스킨케어";
-        }).toList();
-
-
-        emit(RecommendLoadedState(recCosmetics: category_select, category: state.category, isError: state.isError));
-
+        if(event.category == "전체"){
+          emit(RecommendLoadedState(recCosmetics:AllCosmetics, category: state.category, isError: state.isError));
+        }else{
+          List<CosmeticModel>? categorySelect = state.recCosmetics?.where((e) {
+            return e.category == event.category;
+          }).toList();
+          //print("category_select : $categorySelect");
+          emit(RecommendLoadedState(recCosmetics: categorySelect, category: state.category, isError: state.isError));
+        }
 
       }else{
         emit(const RecommendErrorState(recCosmetics: [], isError: true));

@@ -10,20 +10,27 @@ import 'home_page.dart';
 import 'my_page.dart';
 
 class CosmeticPage extends StatefulWidget{
-  const CosmeticPage({Key? key}) : super(key:key);
+
+  final String name;
+
+  const CosmeticPage({Key? key, required this.name}) : super(key: key);
+
 
   @override
   _CosmeticPageState createState() => _CosmeticPageState();
 }
 
 class _CosmeticPageState extends State<CosmeticPage>{
+
   int _currentIndex = 1;
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      body: Text('CosmeticDetail'),
+      body: Text(widget.name),
       bottomNavigationBar: CommonBottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (int index) {

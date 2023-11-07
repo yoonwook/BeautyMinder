@@ -21,17 +21,17 @@ abstract class RecommendState extends Equatable {
 
 
 class RecommendInitState extends RecommendState{
-  const RecommendInitState();
+  const RecommendInitState({super.category, super.isError, super.recCosmetics});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [category, isError, recCosmetics];
 }
 
 class RecommendDownloadedState extends RecommendState{
-  const RecommendDownloadedState({super.isError});
+  const RecommendDownloadedState({super.isError, super.category, super.recCosmetics});
 
   @override
-  List<Object?> get props => [isError];
+  List<Object?> get props => [isError, category, recCosmetics];
 }
 
 class RecommendLoadedState extends RecommendState{
