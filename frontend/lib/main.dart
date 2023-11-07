@@ -33,8 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
       ),
-      home: BaumannStartTestPage(),
-      // home: const HomePage(),
+      home: const HomePage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),
         '/my': (context) => const MyPage(),
-        // '/baumann/survey' : (context) => BaumannTestPage(data: [],),
+        // '/baumann/survey' : (context) => BaumannTestPage(),
         '/baumann/test' : (context) => BaumannStartPage(),
       },
     );
