@@ -142,7 +142,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
         // 새로 추가한 함수 호출: 선택된 데이터를 백엔드로 보내기
         await sendSurveyToBackend(selectedOptionIndices);
 
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
       },
       child: const Text('결과보기'),
     );
@@ -165,10 +165,11 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
 
       // 응답 처리
       if (response.statusCode == 200) {
-        print(jsonData);
         // 성공적으로 전송됨
         // 이후 결과 페이지로 이동하거나 다른 작업을 수행
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage(resultData: response!)));
+        print(response);
+
       } else {
         // 전송 실패 또는 오류 발생
         // 오류 메시지를 사용자에게 표시
