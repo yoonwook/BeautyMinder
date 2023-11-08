@@ -1,4 +1,5 @@
 import 'package:beautyminder/Observer.dart';
+import 'package:beautyminder/pages/Todo_Add_Page.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
@@ -58,26 +59,26 @@ void main() async {
 
   // TodoPageBloc을 생성하고 초기화 이벤트를 추가합니다.
   final TodoPageBloc todoBloc = TodoPageBloc(todoService: todoService);
-  print(todo);
+
  // todoBloc.add(TodoPageAddEvent(todo));
-  todoBloc.add(TodoPageInitEvent());// 불러오기 까지 성공
+  //todoBloc.add(TodoPageInitEvent());// 불러오기 까지 성공
   //todoBloc.add(TodoPageAddEvent(todo));
 
   // todoBloc.add(TodoPageAddEvent(todo));
 
 
-  // 초기화 이벤트를 추가합니다.
-   todoBloc.add(TodoPageInitEvent());
-  // BlocListener 혹은 BlocConsumer를 사용하여 상태 변화를 감지합니다.
-  // 여기에서는 예시를 위해 콘솔 출력을 사용합니다.
-  todoBloc.stream.listen((state) {
-    //print(state);
-    if (state is TodoLoadedState) {
-      // 이 상태가 TodoLoadedState로 변경되면 다음 이벤트를 추가합니다.
-      print('InitEvent 처리 완료, AddEvent 추가');
-      todoBloc.add(TodoPageAddEvent(todo));
-    }
-  });
+  // // 초기화 이벤트를 추가합니다.
+  //  todoBloc.add(TodoPageInitEvent());
+  // // BlocListener 혹은 BlocConsumer를 사용하여 상태 변화를 감지합니다.
+  // // 여기에서는 예시를 위해 콘솔 출력을 사용합니다.
+  // todoBloc.stream.listen((state) {
+  //   //print(state);
+  //   if (state is TodoLoadedState) {
+  //     // 이 상태가 TodoLoadedState로 변경되면 다음 이벤트를 추가합니다.
+  //     print('InitEvent 처리 완료, AddEvent 추가');
+  //     todoBloc.add(TodoPageAddEvent(todo));
+  //   }
+  // });
 
   Map<String, dynamic> update_todo = {
     "todoId": "65445f81f354753415c09cb4",
@@ -100,7 +101,10 @@ void main() async {
 
 
 
-  runApp(const MyApp());
+  //runApp(const MyApp());
+
+  runApp(MaterialApp(home:TodoAddPage()));
+
 }
 
 class MyApp extends StatelessWidget {
