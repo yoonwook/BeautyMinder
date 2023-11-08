@@ -33,10 +33,13 @@ Todo {
   }
 
   factory Todo.fromJson(Map<String, dynamic> json) {
+
+    List<Task> tasksList = (json['tasks'] as List).map((taskJson) => Task.fromJson(taskJson)).toList();
+
     return Todo(
       id: json['id'],
       date: DateTime.parse(json['date']),
-      tasks: json['tasks'],
+      tasks: tasksList,
       user: User.fromJson(json['user']),
       createdAt: DateTime.parse(json['createdAt']),
     );
@@ -51,8 +54,7 @@ Todo {
       //'userId': user.id,
       'userId' : '65499d8316f366541e3cc0a2',
       'date': date,
-      'tasks' : tasksJson,
-      'userId': user.id, // Assuming you have a toJson in User model
+      'tasks' : tasksJson, // Assuming you have a toJson in User model
       'createdAt': createdAt?.toIso8601String(),
     };
   }

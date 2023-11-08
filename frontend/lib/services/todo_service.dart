@@ -55,7 +55,6 @@ class TodoService {
     final refreshToken = await SharedService.getRefreshToken();
     final userId = user?.id ?? '-1';
 
-
     //요청에 집어넣을 쿼리파라미터
     // 실사용시에는 유저로뷰터 입력을 받아야함=
     final queryParameters = {
@@ -69,8 +68,9 @@ class TodoService {
     // ex) todo/all?userId = 6522837112b53b37f109a508
     // todo model에서  userId를 넣어주면됨
 
-    final url =
-        Uri.http(Config.apiURL, Config.todoAPI, /*{'userId': userId}*/ queryParameters).toString();
+    final url = Uri.http(Config.apiURL, Config.todoAPI,
+            /*{'userId': userId}*/ queryParameters)
+        .toString();
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -83,7 +83,8 @@ class TodoService {
         options: _httpOptions('GET', headers),
       );
 
-      print("response: ${response.data} ${response.statusCode}");
+      //print("response: ${response.data} ${response.statusCode}");
+      print("statusCode : ${response.statusCode}");
       print("token: $accessToken | $refreshToken");
 
       if (response.statusCode == 200) {
@@ -96,13 +97,15 @@ class TodoService {
           return Result.failure("Unexpected response data type");
         }
 
-
         if (decodedResponse.containsKey('todos')) {
           List<dynamic> todoList = decodedResponse['todos'];
-          List<Todo> todos =
-              todoList.map((data) => Todo.fromJson(data)).toList();
-          print(todos);
-          return Result.success(todos);
+          try {
+            List<Todo> todos =
+                todoList.map((data) => Todo.fromJson(data)).toList();
+            return Result.success(todos);
+          } catch (e) {
+            print("Error : ${e}");
+          }
         }
         return Result.failure("Failed to get todos: No todos key in response");
       }
@@ -112,7 +115,6 @@ class TodoService {
     }
   }
 
-
   // Add a new Todo
   // Todo를 추가
   // 테스트 성공
@@ -120,38 +122,36 @@ class TodoService {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-
-  //   // 첫 번째 Task 객체 생성
-  //   Task tas1 = Task(
-  //     taskId: 'task_001',
-  //     category: 'morning',
-  //     description: '밥묵재이~',
-  //     done: false,
-  //   );
-  //
-  //
-  //   List<Task> tasks = [tas1];
-  //
-  //   User user = User(
-  //     id: '65499d8316f366541e3cc0a2',
-  //     email: 'user@example.com',
-  //     password: 'securepassword123',
-  //     nickname: 'JohnDoe',
-  //     profileImage: 'path/to/image.jpg',
-  //     createdAt: DateTime.now(),
-  //     authorities: 'ROLE_USER',
-  //     phoneNumber: '0100101',
-  //   );
-  //
-  //   Todo todo = Todo(
-  //     id :'ddaa11',
-  //     user: user,
-  //     date: DateTime.now(),
-  //     tasks: tasks,
-  //     createdAt: DateTime.now()
-  //   );
-  // print(todo.toJson());
-
+    //   // 첫 번째 Task 객체 생성
+    //   Task tas1 = Task(
+    //     taskId: 'task_001',
+    //     category: 'morning',
+    //     description: '밥묵재이~',
+    //     done: false,
+    //   );
+    //
+    //
+    //   List<Task> tasks = [tas1];
+    //
+    //   User user = User(
+    //     id: '65499d8316f366541e3cc0a2',
+    //     email: 'user@example.com',
+    //     password: 'securepassword123',
+    //     nickname: 'JohnDoe',
+    //     profileImage: 'path/to/image.jpg',
+    //     createdAt: DateTime.now(),
+    //     authorities: 'ROLE_USER',
+    //     phoneNumber: '0100101',
+    //   );
+    //
+    //   Todo todo = Todo(
+    //     id :'ddaa11',
+    //     user: user,
+    //     date: DateTime.now(),
+    //     tasks: tasks,
+    //     createdAt: DateTime.now()
+    //   );
+    print("addTodo ${todo.toJson()}");
 
     final url = Uri.http(Config.apiURL, Config.todoAddAPI).toString();
     final headers = {
@@ -159,9 +159,25 @@ class TodoService {
       'Cookie': 'XRT=$refreshToken',
     };
 
+    Map<String, dynamic> k = {
+      "userId": "65499d8316f366541e3cc0a2",
+      "date": "2023-09-23",
+      "tasks": [
+        {
+          "taskId": "String",
+          "description": "캡디테스트23",
+          "category": "morning",
+          "done": false
+        }
+      ],
+      "createdAt": "2023-11-08T14:19:03.325"
+    };
 
+    //print(jsonEncode(k));
     try {
-      final response = await _postJson(url, todo.toJson() , headers: headers);
+      print("요청 보낸");
+      final response =
+          await _postJson(url, /*todo.toJson()*/ k, headers: headers);
       print("response : ${response}");
       return Result.success(todo);
     } catch (e) {
@@ -175,14 +191,13 @@ class TodoService {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-
     final queryParameters = {
       'userId': '6522837112b53b37f109a508',
     };
 
-
-    final url =
-        Uri.http(Config.apiURL, Config.todoDelAPI + todoId! /*"654a1d2a3df3381bf37bbbfd"*/).toString();
+    final url = Uri.http(Config.apiURL,
+            Config.todoDelAPI + todoId! /*"654a1d2a3df3381bf37bbbfd"*/)
+        .toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -217,7 +232,8 @@ class TodoService {
       'userId': '6522837112b53b37f109a508',
     };
 
-    final url = Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
+    final url =
+        Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
     print(url);
 
     final headers = {
@@ -225,15 +241,13 @@ class TodoService {
       'Cookie': 'XRT=$refreshToken',
     };
 
-    try{
-      final response = await authClient.get(
-        url,
-          options : _httpOptions('GET', headers)
-      );
+    try {
+      final response =
+          await authClient.get(url, options: _httpOptions('GET', headers));
 
       print("response : ${response.data}, statuscode : ${response.statusCode}");
       return Result.success(response.data);
-    }catch(e){
+    } catch (e) {
       print("Todoservice : ${e}");
       return Result.failure("error");
     }
@@ -241,12 +255,15 @@ class TodoService {
 
   // API 연동 성공
   // updateTodo를
-  static Future<Result<Map<String, dynamic>>>taskUpdateTodo(Map<String, dynamic> updateTodo) async{
-
+  static Future<Result<Map<String, dynamic>>> taskUpdateTodo(
+      Map<String, dynamic> updateTodo) async {
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final url = Uri.http(Config.apiURL, "${Config.todoUpdateAPI}/654a083c247cdf2886c149cb",).toString();
+    final url = Uri.http(
+      Config.apiURL,
+      "${Config.todoUpdateAPI}/654a083c247cdf2886c149cb",
+    ).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -272,26 +289,18 @@ class TodoService {
       ],
     };
 
-
-
-    try{
-
-      final response = await _putJson(url, up , headers: headers);
+    try {
+      final response = await _putJson(url, up, headers: headers);
       print("response : ${response}");
       return Result.success(updateTodo);
-    }catch(e){
+    } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
-  
-  
+
   // 존재하는 Todo를 수정하는 메서드 구현필요
   //static Future<Result<Todo>> existingUpdateTodo(Todo todo){
-      
-
 }
-
-
 
 // 결과 클래스
 class Result<T> {

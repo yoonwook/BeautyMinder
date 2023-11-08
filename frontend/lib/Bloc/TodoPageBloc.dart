@@ -16,35 +16,48 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
   // Todo를 불러오는 Event
   Future<void> _initEvent(TodoPageInitEvent event, Emitter<TodoState> emit) async{
     emit(TodoDownloadedState(isError: state.isError));
+    print("initEvent");
 
     // userId를 통해서 todo받아오기
     // 없으면 아무것도 노출 안됨
     final result = (await TodoService.getAllTodos());
 
-    List<Todo>? todos = result.value;
+    print("result.value : ${result.value}");
 
-    if(todos != null){
-      //정상적으로 데이터를 받아옴
-      emit(TodoLoadedState(todos: todos, isError: state.isError));
-    }else{
-      emit(TodoErrorState(isError: state.isError));
+    try{
+      List<Todo>? todos = result.value;
+      if(todos != null){
+        print("TodoLoadedState");
+        //정상적으로 데이터를 받아옴
+        emit(TodoLoadedState(todos: todos, isError: state.isError));
+      }else{
+        print("TodoErrorState");
+        emit(TodoErrorState(isError: state.isError));
+      }
+    }catch(e){
+      print("Error : ${e}");
     }
+
   }
 
   // Todo를 추가하는 Event
   Future<void> _addEvent(TodoPageAddEvent event, Emitter<TodoState> emit) async{
-    if(state is TodoLoadedState){
+    print("addevent");
+    if(state is TodoState){
+      print("TodoLoadedstate in addevent");
       // Todo가 로드된 상태에서만 Todo add event가 가능
       emit(TodoAddState(todo: state.todo ,isError: state.isError));
 
       try{
         final Todo todo = event.todo;
-
-        final result = await TodoService.addTodo(/*todo*/);
+        print("call addTodo in addEvent");
+        final result = await TodoService.addTodo(todo);
+        print("result.value : ${result.value}");
 
         if(result.value != null){
           emit(TodoAddedState(todo: state.todo, isError: state.isError));
           print(todo);
+          emit(TodoLoadedState(todos: state.todos, isError: state.isError));
         }else{
           print("Error : ${result.error}");
         }
