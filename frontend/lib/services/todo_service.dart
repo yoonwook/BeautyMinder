@@ -175,9 +175,8 @@ class TodoService {
 
     //print(jsonEncode(k));
     try {
-      print("요청 보낸");
-      final response =
-          await _postJson(url, /*todo.toJson()*/ k, headers: headers);
+      print("요청 send");
+      final response = await _postJson(url, todo.toJson(), headers: headers);
       print("response : ${response}");
       return Result.success(todo);
     } catch (e) {

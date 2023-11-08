@@ -43,13 +43,14 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
   // Todo를 추가하는 Event
   Future<void> _addEvent(TodoPageAddEvent event, Emitter<TodoState> emit) async{
     print("addevent");
-    if(state is TodoState){
+    if(state is TodoLoadedState){
       print("TodoLoadedstate in addevent");
       // Todo가 로드된 상태에서만 Todo add event가 가능
       emit(TodoAddState(todo: state.todo ,isError: state.isError));
-
+      print("state.todo : ${state.todo}");
       try{
         final Todo todo = event.todo;
+        print("event.todo : ${event.todo}");
         print("call addTodo in addEvent");
         final result = await TodoService.addTodo(todo);
         print("result.value : ${result.value}");

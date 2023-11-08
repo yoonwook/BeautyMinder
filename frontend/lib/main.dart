@@ -58,48 +58,26 @@ void main() async {
 
   // TodoPageBloc을 생성하고 초기화 이벤트를 추가합니다.
   final TodoPageBloc todoBloc = TodoPageBloc(todoService: todoService);
-  todoBloc.add(TodoPageAddEvent(todo));
-  // todoBloc.add(TodoPageInitEvent());
-  //
+  print(todo);
+ // todoBloc.add(TodoPageAddEvent(todo));
+  todoBloc.add(TodoPageInitEvent());// 불러오기 까지 성공
+  //todoBloc.add(TodoPageAddEvent(todo));
+
   // todoBloc.add(TodoPageAddEvent(todo));
 
 
-  // // 초기화 이벤트를 추가합니다.
-  //  todoBloc.add(TodoPageInitEvent());
-  // // BlocListener 혹은 BlocConsumer를 사용하여 상태 변화를 감지합니다.
-  // // 여기에서는 예시를 위해 콘솔 출력을 사용합니다.
-  // todoBloc.stream.listen((state) {
-  //   //print(state);
-  //   if (state is TodoLoadedState) {
-  //     // 이 상태가 TodoLoadedState로 변경되면 다음 이벤트를 추가합니다.
-  //     print('InitEvent 처리 완료, AddEvent 추가');
-  //     todoBloc.add(TodoPageAddEvent(todo));
-  //   } else if (state is TodoAddedState) {
-  //     // TodoAddedState 상태가 되면 다음 작업을 수행할 수 있습니다.
-  //     print('AddEvent 처리 완료');
-  //     // 여기에서 추가적인 이벤트를 추가할 수 있습니다.
-  //   }
-  // });
-
-  // User user = User(
-  //   id: '65445f81f354753415c09cb4',
-  //   email: 'user@example.com',
-  //   password: 'securepassword123',
-  //   nickname: 'JohnDoe',
-  //   profileImage: 'path/to/image.jpg',
-  //   createdAt: DateTime.now(),
-  //   authorities: 'ROLE_USER',
-  //   phoneNumber: '0100101',
-  // );
-
-  // Todo todo = Todo(
-  //   id: '123',
-  //   date: DateTime.now(),
-  //   morningTasks: ['Task 5451', 'Task 2', 'Task 3'],
-  //   dinnerTasks: ['Task 4', 'Task 5', 'Task 6'],
-  //   user: user,
-  //   createdAt: DateTime.now(),
-  // );
+  // 초기화 이벤트를 추가합니다.
+   todoBloc.add(TodoPageInitEvent());
+  // BlocListener 혹은 BlocConsumer를 사용하여 상태 변화를 감지합니다.
+  // 여기에서는 예시를 위해 콘솔 출력을 사용합니다.
+  todoBloc.stream.listen((state) {
+    //print(state);
+    if (state is TodoLoadedState) {
+      // 이 상태가 TodoLoadedState로 변경되면 다음 이벤트를 추가합니다.
+      print('InitEvent 처리 완료, AddEvent 추가');
+      todoBloc.add(TodoPageAddEvent(todo));
+    }
+  });
 
   Map<String, dynamic> update_todo = {
     "todoId": "65445f81f354753415c09cb4",
