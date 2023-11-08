@@ -20,77 +20,128 @@ class _RecPage extends State<RecPage> {
   String result = '';
 
   bool isAll = true;
-  bool isSkinCare = false;
-  bool isSunCare = false;
-  bool isCleanSing = false;
-  bool isMaskPack = false;
+  bool isSkincare = false;
+  bool isCleansing = false;
+  bool isSuncare = false;
   bool isBase = false;
-  bool isBody = false;
-  bool isHair = false;
-  //late List<bool> isSelected;
 
-  // @override
-  // void initState(){
-  //   isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
-  //   super.initState();
-  // }
+  late List<bool> isSelected = [
+    isAll,
+    isSkincare,
+    isCleansing,
+    isSuncare,
+    isBase
+  ];
+
+  String? toggleSelect(int value) {
+    isAll = false;
+    isSkincare = false;
+    isCleansing = false;
+    isSuncare = false;
+    isBase = false;
+
+    if (value == 0) {
+      isAll = true;
+      setState(() {
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
+      });
+      print("toggleSelect : null");
+      return "전체";
+    } else if (value == 1) {
+      isSkincare = true;
+      setState(() {
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
+      });
+      return "스킨케어";
+    } else if (value == 2) {
+      isCleansing = true;
+      setState(() {
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
+      });
+      return "클렌징";
+    } else if (value == 3) {
+      isSuncare = true;
+      setState(() {
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
+      });
+      return "선케어";
+    } else {
+      isBase = true;
+      setState(() {
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
+      });
+      return "베이스/프라이머";
+
+      ;
+    }
+  }
+
+  @override
+  void initState() {
+    isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => RecommendPageBloc()..add(RecommendPageInitEvent()),
       child: Scaffold(
-        appBar: CommonAppBar(),
-        body: Column(
-          children: [RecPageImageWidget()],
-        ),
-      ),
+          appBar: CommonAppBar(),
+          body: Column(
+            children: [
+              // ToggleButtons(
+              //   children: [
+              //     Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 16),
+              //         child: Text('전체', style: TextStyle(fontSize: 18))),
+              //     Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 16),
+              //         child: Text('스킨케어', style: TextStyle(fontSize: 18))),
+              //     Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 16),
+              //         child: Text('클렌징', style: TextStyle(fontSize: 18))),
+              //     Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 16),
+              //         child: Text('선케어', style: TextStyle(fontSize: 18))),
+              //     Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 16),
+              //         child: Text('베이스', style: TextStyle(fontSize: 18))),
+              //   ],
+              //   isSelected: [isAll, isSkincare, isCleansing, isSuncare, isBase],
+              //   onPressed: (int index) => {
+              //     print({"index : $index"}),
+              //     print(toggleSelect),
+              //     context.read<RecommendPageBloc>().add(
+              //         RecommendPageCategoryChangeEvent(
+              //             category: toggleSelect(index)))
+              //   },
+              // ),
+              RecPageImageWidget()
+            ],
+          ),
+          bottomNavigationBar: CommonBottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (int index) {
+                // 페이지 전환 로직 추가
+                if (index == 0) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const RecPage()));
+                } else if (index == 1) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const PouchPage()));
+                } else if (index == 2) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const HomePage()));
+                } else if (index == 3) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const TodoPage()));
+                } else if (index == 4) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const MyPage()));
+                }
+              })),
     );
-  }
-
-  void toggleSelect(int value) {
-    // 모든 상태를 false로 초기화합니다.
-    isAll = false;
-    isSkinCare = false;
-    isSunCare = false;
-    isCleanSing = false;
-    isMaskPack = false;
-    isBase = false;
-    isBody = false;
-    isHair = false;
-
-    // 선택된 버튼의 인덱스에 따라 해당 상태를 true로 설정합니다.
-    switch (value) {
-      case 0:
-        isAll = true;
-        break;
-      case 1:
-        isSkinCare = true;
-        break;
-      case 2:
-        isCleanSing = true;
-        break;
-      case 3:
-        isMaskPack = true;
-        break;
-      case 4:
-        isSunCare = true;
-        break;
-      case 5:
-        isBase = true;
-        break;
-      case 6:
-        isBody = true;
-        break;
-      case 7:
-        isHair = true;
-        break;
-    }
-
-    // UI를 업데이트하기 위해 상태를 변경합니다.
-    setState(() {
-      //isSelected = [isAll, isSkinCare,  isCleanSing, isMaskPack,isSunCare,  isBase, isBody, isHair];
-    });
   }
 }
 
@@ -115,50 +166,55 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
   bool isAll = true;
   bool isSkincare = false;
   bool isCleansing = false;
-  bool isSuncare =false;
+  bool isSuncare = false;
   bool isBase = false;
 
-  late List<bool> isSelected = [isAll, isSkincare];
+  late List<bool> isSelected = [
+    isAll,
+    isSkincare,
+    isCleansing,
+    isSuncare,
+    isBase
+  ];
 
-  int _currentIndex=1;
+  int _currentIndex = 1;
 
   String? toggleSelect(int value) {
     isAll = false;
     isSkincare = false;
-    isCleansing =false;
+    isCleansing = false;
     isSuncare = false;
-    isBase =false;
-
+    isBase = false;
 
     if (value == 0) {
       isAll = true;
       setState(() {
-        isSelected = [isAll, isSkincare,isCleansing, isSuncare, isBase];
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
       });
       print("toggleSelect : null");
       return "전체";
-    } else if(value == 1){
+    } else if (value == 1) {
       isSkincare = true;
       setState(() {
-        isSelected = [isAll, isSkincare,isCleansing, isSuncare, isBase];
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
       });
       return "스킨케어";
-    }else if(value == 2){
+    } else if (value == 2) {
       isCleansing = true;
       setState(() {
-        isSelected = [isAll, isSkincare,isCleansing, isSuncare, isBase];
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
       });
       return "클렌징";
-    }else if(value == 3){
+    } else if (value == 3) {
       isSuncare = true;
       setState(() {
-        isSelected = [isAll, isSkincare,isCleansing, isSuncare, isBase];
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
       });
       return "선케어";
     } else {
       isBase = true;
       setState(() {
-        isSelected = [isAll, isSkincare,isCleansing, isSuncare, isBase];
+        isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
       });
       return "베이스/프라이머";
 
@@ -168,7 +224,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
 
   @override
   void initState() {
-    isSelected = [isAll, isSkincare];
+    isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
     super.initState();
   }
 
@@ -201,7 +257,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
         // print("Container");
 
         return Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             ToggleButtons(
               children: [
@@ -221,7 +277,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Text('베이스', style: TextStyle(fontSize: 18))),
               ],
-              isSelected: [isAll, isSkincare, isCleansing, isSuncare , isBase],
+              isSelected: [isAll, isSkincare, isCleansing, isSuncare, isBase],
               onPressed: (int index) => {
                 print({"index : $index"}),
                 print(toggleSelect),
@@ -231,7 +287,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
               },
             ),
             SizedBox(
-              height: 700,
+              height: MediaQuery.of(context).size.height - 163,
               child: ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
@@ -267,8 +323,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                                             )
                                           : Container(),
                                     ),
-                                    Expanded(
-                                        child: Container(
+                                    Container(
                                       height: 100,
                                       color: const Color.fromRGBO(0, 0, 0, 0),
                                       child: Column(
@@ -283,7 +338,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                                               .recCosmetics![index].keywords!)),
                                         ],
                                       ),
-                                    ))
+                                    )
                                   ],
                                 ),
                                 if (index + 1 ==
@@ -326,27 +381,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
             ),
           ],
         );
-      }bottomNavigationBar: CommonBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (int index) {
-            // 페이지 전환 로직 추가
-            if (index == 0) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const RecPage()));
-            } else if (index == 1) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const PouchPage()));
-            } else if (index == 2) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            } else if (index == 3) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const TodoPage()));
-            } else if (index == 4) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const MyPage()));
-            }
-          });
+      }
     });
   }
 
