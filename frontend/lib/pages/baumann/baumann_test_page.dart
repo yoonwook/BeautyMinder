@@ -52,18 +52,34 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       appBar: BaumannTestAppBar(),
       body: baumannTestUI(),
     );
+
   }
 
 
   Widget baumannTestUI() {
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _textUIs(),
-        _btnType(),
-      ],
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10), // 좌우 여백 10
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 60), // 위 여백 추가
+          _textUIs(),
+          SizedBox(height: 80), // 아래 여백 추가
+          _btnType(),
+        ],
+      ),
     );
+
+    // return Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   children: [
+    //     SizedBox(height: 100), // 여백 추가
+    //     _textUIs(),
+    //     SizedBox(height: 80), // 여백 추가
+    //     _btnType(),
+    //   ],
+    // );
   }
 
 
@@ -72,12 +88,27 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     int? selectedOptionIndex = selectedOptionIndices[currentPageData.surveyKey];
 
     return ListTile(
-      title: Text('문항 번호 : ${currentPageData.surveyKey}'),
+      title: Text(
+        '문항 번호 : ${currentPageData.surveyKey}',
+        style: TextStyle(
+          color: Color(0xffd86a04),
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('문제 : ${currentPageData.question}'),
-          const Text('선택지 :'),
+          SizedBox(height: 30), // 여백 추가
+          Text(
+            '문제 : ${currentPageData.question}',
+            style: TextStyle(
+              color: Color(0xff545454),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 80), // 여백 추가
           Column(
             children: currentPageData.options.asMap().entries.map((entry) {
               int index = entry.key+1;
@@ -90,7 +121,13 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
                     selectedOptionIndices[currentPageData.surveyKey] = value;
                   });
                 },
-                title: Text('선택지 ${option.option} : ${option.description}'),
+                title: Text(
+                  '선택지 ${option.option} : ${option.description}',
+                  style: TextStyle(
+                    color: Color(0xff545454),
+                    fontSize: 18,
+                  ),
+                ),
               );
             }).toList(),
           )
@@ -115,7 +152,17 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
   Widget _prevBtn() {
     return ElevatedButton(
       onPressed: previousPage,
-      child: const Text('이전'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xffff820e),
+        elevation: 0,
+      ),
+      child: const Text(
+        '이전',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
     );
   }
 
@@ -123,7 +170,17 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
   Widget _nextBtn() {
     return ElevatedButton(
       onPressed: nextPage,
-      child: const Text('다음'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xffff820e),
+        elevation: 0,
+      ),
+      child: const Text(
+        '다음',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
     );
   }
 
@@ -141,7 +198,17 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
 
         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
       },
-      child: const Text('결과보기'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xffff820e),
+        elevation: 0,
+      ),
+      child: const Text(
+        '결과보기',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
     );
   }
 
@@ -164,7 +231,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       if (response.statusCode == 200) {
         // 성공적으로 전송됨
         // 이후 결과 페이지로 이동하거나 다른 작업을 수행
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage(resultData: response!)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage(resultData: response)));
         print(response);
 
       } else {
@@ -192,7 +259,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       Fluttertoast.showToast(
         msg: '항목이 선택되지 않았습니다',
         gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xffd86a04),
         textColor: Colors.white,
       );
       return;
@@ -214,7 +281,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       }
     });
   }
-
 }
 
 

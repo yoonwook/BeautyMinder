@@ -23,7 +23,7 @@ class _RecPageState extends State<RecPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      body: Text('pouch'),
+      body: Text('recommend'),
       bottomNavigationBar: CommonBottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (int index) {

@@ -26,66 +26,68 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(title:
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              width: 10,
-            ),
-            Flexible(
-              flex: 1,
-              child: TextField(
-                controller: textController,
-                // onSubmitted: (text) {
-                //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
-                // },
-                onChanged: (text) {
-                  searchQuery = text;
-                },
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 3,
-                    horizontal: 15,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10), //포커스 시
-                    ),
-                    borderSide: BorderSide(
-                      color: Color(0xffd86a04),
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10), // 활성화 상태 모서리를 둥글게 조정
-                    ),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  hintText: "검색 키워드를 입력해주세요.",
+      appBar: SearchAppBar(title:_title()),
+      body: _searchPageUI(),
+    );
+  }
+
+  Widget _title() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        SizedBox(
+          width: 10,
+        ),
+        Flexible(
+          flex: 1,
+          child: TextField(
+            controller: textController,
+            // onSubmitted: (text) {
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
+            // },
+            onChanged: (text) {
+              searchQuery = text;
+            },
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 3,
+                horizontal: 15,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10), //포커스 시
+                ),
+                borderSide: BorderSide(
+                  color: Color(0xffd86a04),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery)),);
-                print('////////////searchQuery : $searchQuery');
-              },
-              icon: Icon(
-                Icons.search,
-                color: Color(0xffd86a04),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10), // 활성화 상태 모서리를 둥글게 조정
+                ),
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                ),
               ),
+              hintText: "검색 키워드를 입력해주세요.",
             ),
-          ],
+          ),
         ),
-      ),
-      body: _searchPageUI(),
+        SizedBox(
+          width: 8,
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery)),);
+            print('////////////searchQuery : $searchQuery');
+          },
+          icon: Icon(
+            Icons.search,
+            color: Color(0xffd86a04),
+          ),
+        ),
+      ],
     );
   }
 

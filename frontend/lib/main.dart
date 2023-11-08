@@ -1,6 +1,5 @@
-import 'package:beautyminder/pages/baumann/baumannStartPageTest.dart';
+import 'package:beautyminder/pages/baumann/baumann_test_start_age.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
-import 'package:beautyminder/pages/baumann/baumann_start_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
       ),
-      home: const HomePage(),
+      home: BaumannStartPage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
