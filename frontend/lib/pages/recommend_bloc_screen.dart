@@ -323,7 +323,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                     );
                   },
                   itemCount: state.recCosmetics!.length),
-            )
+            ),
           ],
         );
       }bottomNavigationBar: CommonBottomNavigationBar(
