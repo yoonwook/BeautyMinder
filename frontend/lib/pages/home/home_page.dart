@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:beautyminder/dto/keywordRank_model.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
@@ -56,13 +57,13 @@ class _HomePageState extends State<HomePage> {
               final result = await KeywordRankService.getKeywordRank();
               print('keyword rank : ${result.value}');
               if (result.isSuccess) {
-                // BaumannTestPage로 이동하고 가져온 데이터를 전달합니다.
+                // SearchPage로 이동하고 가져온 데이터를 전달합니다.
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: result.value!),),);
               }
               else {
                 // API 호출 실패를 처리합니다.
                 Fluttertoast.showToast(
-                  msg: result.error ?? '바우만 데이터 가져오기 실패',
+                  msg: result.error ?? '키워드 랭킹 가져오는 데 실패하였습니다.',
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                 );

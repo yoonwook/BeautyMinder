@@ -4,6 +4,8 @@ import 'package:beautyminder/widget/searchAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/homeSearch_service.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, required this.data}) : super(key: key);
 
@@ -78,7 +80,13 @@ class _SearchPageState extends State<SearchPage> {
           width: 8,
         ),
         IconButton(
-          onPressed: () {
+          onPressed: () async {
+            try {
+              final result = await SearchService.searchAnything(searchQuery);
+              print(result);
+              } catch (e) {
+                print('Error searching anything: $e');
+              }
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery)),);
             print('////////////searchQuery : $searchQuery');
           },
@@ -113,4 +121,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 
 
+}
+
+// 결과 클래스
+class Result<T> {
+  final T? value;
+  final String? error;
+
+  Result.success(this.value) : error = null; // 성공
+  Result.failure(this.error) : value = null; // 실패
+
+  bool get isSuccess => value != null;
 }

@@ -30,4 +30,7 @@ class Config {
 
   //rank
   static const keywordRankAPI = "/redis/top/keywords";
+
+  //search
+  static const homeSearchKeywordAPI = "/search";
 }

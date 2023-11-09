@@ -1,9 +1,11 @@
-import 'package:beautyminder/pages/baumann/baumann_test_start_age.dart';
+import 'package:beautyminder/dto/keywordRank_model.dart';
+import 'package:beautyminder/pages/baumann/baumann_test_start_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
+import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:beautyminder/pages/start/splash_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/pages/start/welcome_page.dart';
@@ -32,7 +34,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
       ),
-      home: BaumannStartPage(),
+      // home: BaumannStartPage(),
+      home: HomePage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
