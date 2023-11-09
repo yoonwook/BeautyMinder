@@ -1,5 +1,5 @@
 import 'package:beautyminder/Observer.dart';
-import 'package:beautyminder/pages/Todo_Add_Page.dart';
+import 'package:beautyminder/pages/Todo_Add_Page_Test.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
@@ -98,9 +98,17 @@ void main() async {
 
 
 
-  runApp(const MyApp());
+  //runApp(const MyApp());
 
-  //runApp(MaterialApp(home:TodoAddPage()));
+  runApp(MaterialApp(
+      title: 'BeautyMinder',
+      theme: ThemeData(
+        primaryColor: const Color(0xffffb876),
+      ),
+      home:TodoAddPage(),
+    )
+
+  );
 
 }
 
