@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../dto/cosmetic_model.dart';
 import '../../widget/commonAppBar.dart';
 
 class SearchResultPage extends StatefulWidget {
+  final List<Cosmetic> searchResults;
   final String searchQuery;
 
-  const SearchResultPage({Key? key, required this.searchQuery}) : super(key: key);
+  const SearchResultPage({Key? key, required this.searchQuery, required this.searchResults}) : super(key: key);
 
   @override
   _SearchResultPageState createState() => _SearchResultPageState();
@@ -29,12 +31,29 @@ class _SearchResultPageState extends State<SearchResultPage> {
       child: Column(
         children: <Widget>[
           _resultText(),
+          _productList(),
         ],
       )
     );
   }
 
   Widget _resultText() {
-    return Text("검색된 결과입니다 : ${widget.searchQuery}");
+    return Text("검색된 결과입니다 : ${widget.searchQuery}, ${widget.searchResults.length}개의 제품");
+  }
+
+  Widget _productList() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: widget.searchResults.length,
+        itemBuilder: (context, index) {
+          final product = widget.searchResults[index];
+          return ListTile(
+            leading: Image.network(product.images![0]), // 이미지 표시
+            title: Text(product.name), // 이름 표시
+            // 다른 정보도 필요하다면 여기에 추가
+          );
+        },
+      ),
+    );
   }
 }

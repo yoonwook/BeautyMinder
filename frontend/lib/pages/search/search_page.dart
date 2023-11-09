@@ -84,11 +84,12 @@ class _SearchPageState extends State<SearchPage> {
             try {
               final result = await SearchService.searchAnything(searchQuery);
               print(result);
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery, searchResults: result, )),);
+              print('////////////searchQuery : $searchQuery');
               } catch (e) {
                 print('Error searching anything: $e');
               }
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery)),);
-            print('////////////searchQuery : $searchQuery');
           },
           icon: Icon(
             Icons.search,
@@ -112,11 +113,34 @@ class _SearchPageState extends State<SearchPage> {
         itemBuilder: (context, index) {
           final word = widget.data.keywords![index];
           final rank = index + 1;
-          return ListTile(
-              title: Text('${rank}순위 : ${word}')
+          return GestureDetector(
+            onTap: () async {
+              _navigateToSearchResultPage(word);
+            },
+            child: ListTile(
+              title: Text('${rank}순위 : ${word}'),
+            ),
           );
         },
       );
+    }
+  }
+
+
+  void _navigateToSearchResultPage(String keyword) async {
+    try {
+      final result = await SearchService.searchAnything(keyword);
+      print(result);
+
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SearchResultPage(
+          searchQuery: keyword,
+          searchResults: result,
+        ),
+      ));
+      print('////////////searchQuery : $searchQuery');
+    } catch (e) {
+      print('Error searching anything: $e');
     }
   }
 

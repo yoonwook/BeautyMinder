@@ -71,29 +71,27 @@ class SearchService {
   }
 
   // 일반 검색
-  static Future<String> searchAnything(String anything) async {
+  static Future<List<Cosmetic>> searchAnything(String anything) async {
 
     final parameters={
       'anything' : '$anything',
     };
-    // final url = '${Config.apiURL}/search?anything=$anything;
-    // URL 생성
+
     final url = Uri.http(Config.apiURL, Config.homeSearchKeywordAPI, parameters).toString();
-    print("** :\n");
+
     try {
       final response = await client.get(url);
 
       if (response.statusCode == 200) {
-        print("**** :\n");
         List<dynamic> jsonData = response.data;
-        print("***** :\n");
-        return "hellohello $jsonData";
+        return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
       } else {
-        print("********* :\n");
         throw Exception("Failed to search cosmetics by keyword");
       }
     } catch (e) {
-      return "An error occurred: $e";
+      print("Error during cosmetics search: $e");
+      // return []; // 빈 리스트를 반환하거나 다른 적절한 기본값을 반환할 수 있어요.
+      return [];
     }
 
   }
