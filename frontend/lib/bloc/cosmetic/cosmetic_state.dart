@@ -9,6 +9,11 @@ class CosmeticLoaded extends CosmeticState {
   CosmeticLoaded(this.cosmetics);
 }
 
+class CosmeticSearched extends CosmeticState {
+  final List<Cosmetic> cosmetics;
+  CosmeticSearched(this.cosmetics);
+}
+
 class CosmeticError extends CosmeticState {
   final String message;
   CosmeticError(this.message);

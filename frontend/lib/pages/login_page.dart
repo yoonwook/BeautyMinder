@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
-import 'package:snippet_coder_utils/hex_color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/bloc/login/login_bloc.dart';
 import '/bloc/login/login_state.dart';
+import '/bloc/login/login_event.dart';
 import '/dto/login_request_model.dart';
 import 'package:flutter/gestures.dart';
 import '/services/api_service.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,7 +19,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool hidePassword = true;
-  bool isApiCallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   String? email;
   String? password;
@@ -28,8 +26,24 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      // AppBar 추가
       child: Scaffold(
-        backgroundColor: HexColor("#283B71"),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: AppBar(
+            backgroundColor: Color(0xffffecda),
+            elevation: 0,
+            centerTitle: false,
+            title: Text(
+              "BeautyMinder 로그인",
+              style: TextStyle(color: Color(0xffd86a04)),
+            ),
+            iconTheme: IconThemeData(
+              color: Color(0xffd86a04),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,  // 배경색 변경
         body: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
@@ -90,40 +104,50 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildEmailField() {
-    return FormHelper.inputFieldWidget(
-      context,
-      "email",
-      "Email",
-          (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
-          (val) => email = val,
-      obscureText: false,
-      textColor: Colors.white,
-      hintColor: Colors.white.withOpacity(0.7),
-      prefixIcon: const Icon(Icons.person),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        initialValue: email,
+        decoration: InputDecoration(
+          labelText: "Email",
+          hintText: "email",
+          prefixIcon: const Icon(Icons.person),
+          fillColor: Colors.white.withOpacity(0.7),
+          filled: true,
+        ),
+        validator: (val) => val!.isEmpty ? 'Email can\'t be empty.' : null,
+        onChanged: (val) => setState(() { email = val; }),
+      ),
     );
   }
 
+
   Widget _buildPasswordField() {
-    return FormHelper.inputFieldWidget(
-      context,
-      "password",
-      "Password",
-          (val) => val.isEmpty ? 'Password can\'t be empty.' : null,
-          (val) => password = val,
-      obscureText: hidePassword,
-      textColor: Colors.white,
-      hintColor: Colors.white.withOpacity(0.7),
-      prefixIcon: const Icon(Icons.lock),
-      suffixIcon: IconButton(
-        onPressed: () {
-          setState(() {
-            hidePassword = !hidePassword;
-          });
-        },
-        color: Colors.white.withOpacity(0.7),
-        icon: Icon(
-          hidePassword ? Icons.visibility_off : Icons.visibility,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        initialValue: password,
+        decoration: InputDecoration(
+          labelText: "Password",
+          hintText: "password",
+          prefixIcon: const Icon(Icons.lock),
+          fillColor: Colors.white.withOpacity(0.7),
+          filled: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                hidePassword = !hidePassword;
+              });
+            },
+            color: Colors.white.withOpacity(0.7),
+            icon: Icon(
+              hidePassword ? Icons.visibility_off : Icons.visibility,
+            ),
+          ),
         ),
+        validator: (val) => val!.isEmpty ? 'Password can\'t be empty.' : null,
+        obscureText: hidePassword,
+        onChanged: (val) => setState(() { password = val; }),
       ),
     );
   }
@@ -140,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
               TextSpan(
                 text: 'Forget Password ?',
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   decoration: TextDecoration.underline,
                 ),
                 recognizer: TapGestureRecognizer()..onTap = () {},
@@ -153,56 +177,42 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginButton() {
-    return Center(
-      child: FormHelper.submitButton("Login", () async {
-        if (validateAndSave()) {
-          setState(() {
-            isApiCallProcess = true;
-          });
-          // Null Check 추가
-          if (email != null && password != null) {
-            try {
-              // 로그인 API 호출
-              final model = LoginRequestModel(email: email!, password: password!);  // Non-null assertion 사용
-              final result = await APIService.login(model);
+    double screenWidth = MediaQuery.of(context).size.width;
 
-              if (result.value == true) {
-                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-              } else {
-                // 에러 토스트 메시지
-                Fluttertoast.showToast(
-                  msg: result.error ?? "Login Failed",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                );
-              }
-            } finally {
-              setState(() {
-                isApiCallProcess = false;
-              });
-            }
-          } else {
-            // 이메일 또는 비밀번호가 null인 경우 처리
-            Fluttertoast.showToast(
-              msg: "Email or Password is missing.",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-            );
-          }
+    return InkWell(
+      child: Container(
+        width: screenWidth,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Color(0xfffe9738),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Text(
+            "로그인",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        if (validateAndSave()) {
+          // 로그인 시작 이벤트 전달
+          context.read<LoginBloc>().add(LoginStarted(email: email!, password: password!));
         }
-      }),
+      },
     );
   }
-
 
   Widget _buildOrText() {
     return const Center(
       child: Text(
         "OR",
         style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: Colors.white,
+          fontSize: 15,
+          color: Colors.black,
         ),
       ),
     );
@@ -215,13 +225,13 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.only(right: 25),
         child: RichText(
           text: TextSpan(
-            style: const TextStyle(color: Colors.white, fontSize: 14.0),
+            style: const TextStyle(color: Colors.black, fontSize: 14.0),
             children: <TextSpan>[
-              const TextSpan(text: 'Don\'t have an account? '),
+              const TextSpan(text: '등록된 계정이 없으신가요? '),
               TextSpan(
-                text: 'Sign up',
+                text: '회원 가입',
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Color(0xffd86a04),
                   fontWeight: FontWeight.bold,
                 ),
                 recognizer: TapGestureRecognizer()
@@ -236,7 +246,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
+
   bool validateAndSave() {
+    return true;
     final form = globalFormKey.currentState;
     if (form!.validate()) {
       form.save();

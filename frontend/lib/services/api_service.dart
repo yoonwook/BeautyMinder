@@ -3,22 +3,19 @@ import 'package:beautyminder/dto/login_response_model.dart';
 import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:beautyminder/dto/register_response_model.dart';
 import 'package:dio/dio.dart';  // DIO 패키지를 이용해 HTTP 통신
-import 'dart:convert';
 
 import '../../config.dart';
 import '../dto/user_model.dart';
 import 'shared_service.dart';
+import 'package:beautyminder/util/result.dart';
 
 class APIService {
-  // Dio 객체 생성
   static final Dio client = Dio();
 
-  // JSON 헤더 설정
   static const Map<String, String> jsonHeaders = {
     'Content-Type': 'application/json',
   };
 
-  // 공통 HTTP 옵션 설정 함수
   static Options _httpOptions(String method, Map<String, String>? headers) {
     return Options(
       method: method,
@@ -26,7 +23,6 @@ class APIService {
     );
   }
 
-  // POST 방식으로 JSON 데이터 전송하는 일반 함수
   static Future<Response> _postJson(String url, Map<String, dynamic> body,
       {Map<String, String>? headers}) {
     return client.post(
@@ -36,7 +32,6 @@ class APIService {
     );
   }
 
-  // POST 방식으로 FormData 데이터 전송하는 일반 함수
   static Future<Response> _postForm(
       String url, FormData body, {Map<String, String>? headers}) {
     return client.post(
@@ -46,104 +41,85 @@ class APIService {
     );
   }
 
-  // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
-    // URL 생성
-    final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
-    // FormData 생성
+    print("sfdf1d");
+    final url = Uri.parse('${Config.apiURL}${Config.loginAPI}').toString();
+    print("${model.email} is ${model.password}");
     final formData = FormData.fromMap({
       'email': model.email ?? '',
       'password': model.password ?? '',
     });
+    print("sfdfd");
 
     try {
-      // POST 요청
       final response = await _postForm(url, formData);
       if (response.statusCode == 200) {
         await SharedService.setLoginDetails(loginResponseJson(response.data));
         return Result.success(true);
       }
-      return Result.failure("Login failed");
+      return _handleFailure<bool>(response);
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
 
-  // 회원가입 함수
   static Future<Result<RegisterResponseModel>> register(RegisterRequestModel model) async {
-    // URL 생성
-    final url = Uri.http(Config.apiURL, Config.registerAPI).toString();
+    final url = '${Config.apiURL}${Config.registerAPI}';
 
     try {
-      // POST 요청
       final response = await _postJson(url, model.toJson());
-      return Result.success(
-          registerResponseJson(response.data as Map<String, dynamic>));
+      if (response.statusCode == 200) {
+        return Result.success(
+            registerResponseJson(response.data as Map<String, dynamic>));
+      }
+      return _handleFailure<RegisterResponseModel>(response);
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
 
-  // 사용자 프로필 조회 함수
   static Future<Result<User>> getUserProfile() async {
-    // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
     final userId = user?.id ?? '-1';
 
-    // URL 생성
-    final url = Uri.http(Config.apiURL, Config.userProfileAPI + userId).toString();
+    final url = '${Config.apiURL}${Config.userProfileAPI}$userId';
 
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',  // 리프레시 토큰 적용
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      // GET 요청
       final response = await client.get(
         url,
         options: _httpOptions('GET', headers),
       );
 
       if (response.statusCode == 200) {
-        // 사용자 정보 파싱
         final user = User.fromJson(response.data as Map<String, dynamic>);
         return Result.success(user);
       }
-      return Result.failure("Failed to get user profile");
+      return _handleFailure<User>(response);
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
 
-  static Future<bool> updateExpiration(int cosmeticId, DateTime expirationDate) async {
-    Map<String, String> requestHeaders = {
-      'Content-Type': 'application/json',
-      // 인증 토큰
-    };
 
-    var url = Uri.http(Config.apiURL, '/api/cosmetics/$cosmeticId/expiration').toString();
-
-
-    var response = await client.patch(
-      url,
-      options: Options(headers: requestHeaders),
-      data: jsonEncode({"expirationDate": expirationDate.toIso8601String()}),
-    );
-
-    return response.statusCode == 200;
+  static Result<T> _handleFailure<T>(Response response) {
+    if ((response.statusCode ?? 0) >= 400 && (response.statusCode ?? 0) < 500) {
+      String errorMessage = "Client request error";
+      if (response.data != null && response.data.containsKey('message')) {
+        errorMessage = response.data['message'];
+      }
+      return Result.failure(errorMessage);
+    } else if ((response.statusCode ?? 0) >= 500) {
+      return Result.failure("Server error");
+    }
+    return Result.failure("An error occurred.");
   }
-
 }
 
-// 결과 클래스
-class Result<T> {
-  final T? value;
-  final String? error;
 
-  Result.success(this.value) : error = null;  // 성공
-  Result.failure(this.error) : value = null;  // 실패
-}

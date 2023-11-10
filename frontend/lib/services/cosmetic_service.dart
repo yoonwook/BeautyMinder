@@ -10,8 +10,9 @@ class CosmeticService {
 
   // 모든 화장품 정보 가져오기
   static Future<List<Cosmetic>> getAllCosmetics() async {
-    final url = Uri.http(Config.apiURL, 'cosmetic').toString();
+    final url = '${Config.apiURL}${Config.cosmeticAPI}';
     final response = await client.get(url, options: _httpOptions('GET', jsonHeaders));
+    print('Server Response: ${response.data}');  // 서버 응답을 출력
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
@@ -22,7 +23,7 @@ class CosmeticService {
 
   // 특정 화장품 정보 가져오기
   static Future<Cosmetic> getCosmeticById(String id) async {
-    final url = Uri.http(Config.apiURL, 'cosmetic/$id').toString();
+    final url = '${Config.apiURL}${Config.cosmeticByIdAPI}$id';
     final response = await client.get(url, options: _httpOptions('GET', jsonHeaders));
     if (response.statusCode == 200) {
       return Cosmetic.fromJson(response.data);
@@ -33,7 +34,7 @@ class CosmeticService {
 
   // 화장품 추가하기
   static Future<Cosmetic> addCosmetic(Cosmetic cosmetic) async {
-    final url = Uri.http(Config.apiURL, 'cosmetic').toString();
+    final url = '${Config.apiURL}${Config.cosmeticAddAPI}';
     final response = await client.post(url, options: _httpOptions('POST', jsonHeaders), data: cosmetic.toJson());
     if (response.statusCode == 200) {
       return Cosmetic.fromJson(response.data);
@@ -44,7 +45,7 @@ class CosmeticService {
 
   // 화장품 수정하기
   static Future<Cosmetic> updateCosmetic(String id, Cosmetic cosmetic) async {
-    final url = Uri.http(Config.apiURL, 'cosmetic/$id').toString();
+    final url = '${Config.apiURL}${Config.cosmeticUpdateAPI}$id';
     final response = await client.put(url, options: _httpOptions('PUT', jsonHeaders), data: cosmetic.toJson());
     if (response.statusCode == 200) {
       return Cosmetic.fromJson(response.data);
@@ -55,7 +56,7 @@ class CosmeticService {
 
   // 화장품 삭제하기
   static Future<void> deleteCosmetic(String id) async {
-    final url = Uri.http(Config.apiURL, 'cosmetic/$id').toString();
+    final url = '${Config.apiURL}${Config.cosmeticDeleteAPI}$id';
     final response = await client.delete(url, options: _httpOptions('DELETE', jsonHeaders));
     if (response.statusCode != 200) {
       throw Exception("Failed to delete cosmetic");
@@ -68,5 +69,6 @@ class CosmeticService {
       headers: headers,
     );
   }
-}
 
+  
+}

@@ -69,12 +69,29 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
-      bottomNavigationBar: ElevatedButton(
-        child: Text('화장품 페이지로 이동'),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/cosmetic'); // 화장품 페이지 라우트로 이동
-        },
-      ),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,  // 버튼들을 공간을 고르게 분배
+        children: [
+          ElevatedButton(
+            child: Text('화장품 페이지로 이동'),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/cosmetic');  // 화장품 페이지 라우트로 이동
+            },
+          ),
+          ElevatedButton(
+            child: Text('유통기한 페이지로 이동'),  // 새로운 버튼 추가
+            onPressed: () {
+              Navigator.of(context).pushNamed('/cosmetic-expiry');  // 유통기한 페이지 라우트로 이동
+            },
+          ),
+          ElevatedButton(
+            child: Text('리뷰 페이지로 이동'),  // 새로운 버튼 추가
+            onPressed: () {
+              Navigator.of(context).pushNamed('/review');  // 리뷰 페이지 라우트로 이동
+            },
+          ),
+        ],
+      )
 
     );
   }

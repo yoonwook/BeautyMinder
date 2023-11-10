@@ -1,105 +1,74 @@
 class Cosmetic {
-  final int id;
+  final String id;
   final String name;
+  final String? brand;
+  final List<String> images;
+  final String? glowpickUrl;
   final DateTime? expirationDate;
-  final DateTime createdDate;
+  final DateTime createdAt;
   final DateTime? purchasedDate;
-  final Category category;
-  final Status status;
-  final int userId;
+  final String category;
+  double averageRating;
+  int reviewCount;
+  int totalRating;
+  final List<String> keywords;
 
   Cosmetic({
     required this.id,
     required this.name,
+    this.brand,
+    required this.images,
+    this.glowpickUrl,
     this.expirationDate,
-    required this.createdDate,
+    required this.createdAt,
     this.purchasedDate,
     required this.category,
-    required this.status,
-    required this.userId,
+    required this.averageRating,
+    required this.reviewCount,
+    required this.totalRating,
+    required this.keywords,
   });
 
   factory Cosmetic.fromJson(Map<String, dynamic> json) {
     return Cosmetic(
-      id: json['id'],
-      name: json['name'],
-      expirationDate: DateTime.tryParse(json['expirationDate'] ?? ''),
-      createdDate: DateTime.parse(json['createdDate']),
-      purchasedDate: DateTime.tryParse(json['purchasedDate'] ?? ''),
-      category: categoryFromJson(json['category']),
-      status: statusFromJson(json['status']),
-      userId: json['user_id'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      brand: json['brand'],
+      images: List<String>.from(json['images'] ?? []),
+      glowpickUrl: json['glowpickUrl'],
+      expirationDate: json['expirationDate'] != null ? DateTime.tryParse(json['expirationDate']) : null,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      purchasedDate: json['purchasedDate'] != null ? DateTime.tryParse(json['purchasedDate']) : null,
+      category: json['category'] ?? 'Unknown',
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: json['reviewCount'] as int? ?? 0,
+      totalRating: json['totalRating'] as int? ?? 0,
+      keywords: List<String>.from(json['keywords'] ?? []),
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'expirationDate': expirationDate?.toIso8601String(),
-    'createdDate': createdDate.toIso8601String(),
-    'purchasedDate': purchasedDate?.toIso8601String(),
-    'category': categoryToJson(category),
-    'status': statusToJson(status),
-    'user_id': userId,
-  };
-}
-
-enum Category {
-  skincare,
-  cleansing,
-  mask,
-  suncare,
-  base,
-  eye,
-  lib,
-  body,
-  hair,
-  nail,
-  perfume,
-}
-
-enum Status {
-  opened,
-  unopened,
-}
-
-Category categoryFromJson(String json) {
-  return Category.values.firstWhere(
-          (e) => e.toString() == 'Category.$json',
-      orElse: () => Category.skincare); // default value
-}
-
-String categoryToJson(Category category) => categoryToString(category);
-
-String categoryToString(Category category) {
-  switch (category) {
-    case Category.skincare:
-      return '스킨케어';
-    case Category.cleansing:
-      return '클렌징필링';
-    case Category.mask:
-      return '마스크팩';
-  // ... 다른 카테고리들 ...
-    default:
-      return '스킨케어';  // 기본 값
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'brand': brand,
+      'images': images,
+      'glowpickUrl': glowpickUrl,
+      'expirationDate': expirationDate?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'purchasedDate': purchasedDate?.toIso8601String(),
+      'category': category,
+      'averageRating': averageRating,
+      'reviewCount': reviewCount,
+      'totalRating': totalRating,
+      'keywords': keywords,
+    };
   }
-}
 
-Status statusFromJson(String json) {
-  return Status.values.firstWhere(
-          (e) => statusToString(e) == json,
-      orElse: () => Status.opened); // 기본 값
-}
-
-String statusToJson(Status status) => statusToString(status);
-
-String statusToString(Status status) {
-  switch (status) {
-    case Status.opened:
-      return '개봉';
-    case Status.unopened:
-      return '미개봉';
-    default:
-      return '개봉';  // 기본 값
+  void updateAverageRating(int newRating) {
+    reviewCount++;
+    totalRating += newRating;
+    averageRating = totalRating / reviewCount;
+    averageRating = (averageRating * 100).roundToDouble() / 100;  // Round to 2 decimal places
   }
 }

@@ -5,12 +5,12 @@ class Config {
   static const String appName = "BeautyMinder";
   static String get apiURL {
     if (kIsWeb) {
-      return "118.34.170.132:8080";
+      return "http://211.221.220.124:8080";
     }
     if (Platform.isAndroid) {
-      return '118.34.170.132:8080';
+      return 'http://211.221.220.124:8080';
     } else {
-      return '118.34.170.132:8080';
+      return 'http://211.221.220.124:8080';
     }
   }
 
@@ -23,5 +23,14 @@ class Config {
   static const todoAddAPI = "/todo/add";
   static const todoDelAPI = "/todo/delete/";
 
+  // Cosmetic
+  static const cosmeticAPI = "/cosmetic";
+  static const cosmeticByIdAPI = "/cosmetic/";  //
+  static const cosmeticAddAPI = "/cosmetic";    //
+  static const cosmeticUpdateAPI = "/cosmetic/"; //
+  static const cosmeticDeleteAPI = "/cosmetic/"; //
+
+
 }
+
 
