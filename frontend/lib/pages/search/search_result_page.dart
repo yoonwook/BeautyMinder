@@ -48,7 +48,13 @@ class _SearchResultPageState extends State<SearchResultPage> {
         itemBuilder: (context, index) {
           final product = widget.searchResults[index];
           return ListTile(
-            leading: Image.network(product.images![0]), // 이미지 표시
+            leading:(product?.images != null && product.images!.isNotEmpty)
+                ? Image.network(product.images![0])
+                : Container(
+                    width: 55.0,
+                    height: 55.0,
+                    color: Colors.white,
+                  ),
             title: Text(product.name), // 이름 표시
             // 다른 정보도 필요하다면 여기에 추가
           );
