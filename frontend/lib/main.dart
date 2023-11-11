@@ -58,7 +58,7 @@ void main() async {
 
 
   // TodoPageBloc을 생성하고 초기화 이벤트를 추가합니다.
-  final TodoPageBloc todoBloc = TodoPageBloc(todoService: todoService);
+  final TodoPageBloc todoBloc = TodoPageBloc();
 
  // todoBloc.add(TodoPageAddEvent(todo));
   //todoBloc.add(TodoPageInitEvent());// 불러오기 까지 성공

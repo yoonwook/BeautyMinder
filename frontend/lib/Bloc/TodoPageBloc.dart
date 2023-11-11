@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
 
-  TodoPageBloc({required todoService}) : super(const TodoInitState()){
+  TodoPageBloc() : super(const TodoInitState()){
     on<TodoPageInitEvent>(_initEvent);
     on<TodoPageAddEvent>(_addEvent);
     on<TodoPageUpdateEvent>(_updateEvent);

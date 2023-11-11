@@ -37,7 +37,7 @@ dependencies:
   bloc_test: ^9.0.3
   mockito : ^5.0.16
   intl: ^0.18.1
-
+  table_calendar: ^3.0.9
   fluttertoast: ^8.2.2
 
 
@@ -47,6 +47,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_slidable: ^3.0.1
   test: ^1.24.1
   #google_fonts: ˆ5.1.0
 
