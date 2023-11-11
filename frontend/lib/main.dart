@@ -4,6 +4,7 @@ import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
+import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
 import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:beautyminder/pages/start/splash_page.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xffffb876),
       ),
       // home: BaumannStartPage(),
-      home: HomePage(),
+      // home: HomePage(),
+      home: ProductDetailPage(),
       routes: {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
