@@ -1,13 +1,9 @@
 import 'package:beautyminder/dto/cosmetic_model.dart';
-import 'package:beautyminder/pages/recommend/recommend_page.dart';
-import 'package:beautyminder/pages/todo/todo_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../widget/commonAppBar.dart';
-import '../../widget/commonBottomNavigationBar.dart';
-import '../home/home_page.dart';
-import '../my/my_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({Key? key, required this.searchResults}) : super(key: key);
@@ -25,53 +21,84 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return Scaffold(
       appBar: CommonAppBar(),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Displaying Name
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.searchResults.name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            // Displaying Image
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.network(
-                widget.searchResults.images![0],
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            // Displaying Brand
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Brand: ${widget.searchResults.brand}',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            // Displaying Category
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Category: ${widget.searchResults.category}',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            // Displaying Keywords
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Keywords: ${widget.searchResults.keywords}',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ],
+        child: _productDetailPageUI(),
+      ),
+    );
+  }
+
+  Widget _productDetailPageUI() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _displayingName(),
+        _displayImages(),
+        _displayBrand(),
+        _displayCategory(),
+        _displayKeywords(),
+      ],
+    );
+  }
+
+  Widget _displayingName() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        widget.searchResults.name,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _displayImages() {
+    return Container(
+      height: 200,
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: 500,
+          enableInfiniteScroll: false, //무한스크롤 비활성
+          viewportFraction: 1.0, //이미지 전체 화면 사용
+          aspectRatio: 16/9, //가로 세로 비율 유지
         ),
+        items: widget.searchResults.images!.map((image) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.network(
+              image,
+              width: double.infinity,
+              fit: BoxFit.contain,
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _displayBrand() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        'Brand: ${widget.searchResults.brand}, 이미지 개수: ${widget.searchResults.images!.length}',
+        style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _displayCategory() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        'Category: ${widget.searchResults.category}',
+        style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _displayKeywords() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        'Keywords: ${widget.searchResults.keywords}',
+        style: TextStyle(fontSize: 16),
       ),
     );
   }
