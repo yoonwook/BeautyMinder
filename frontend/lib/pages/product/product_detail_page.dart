@@ -1,3 +1,4 @@
+import 'package:beautyminder/dto/cosmetic_model.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,9 @@ import '../home/home_page.dart';
 import '../my/my_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
-  const ProductDetailPage({Key? key}) : super(key: key);
+  const ProductDetailPage({Key? key, required this.searchResults}) : super(key: key);
+
+  final Cosmetic searchResults;
 
   @override
   _ProductDetailPageState createState() => _ProductDetailPageState();
@@ -17,34 +20,58 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
 
-  int _currentIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      body: Text('pouch'),
-      bottomNavigationBar: CommonBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (int index) {
-            // 페이지 전환 로직 추가
-            if (index == 0) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
-            }
-            // else if (index == 1) {
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
-            // }
-            else if (index == 2) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-            }
-            else if (index == 3) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
-            }
-            else if (index == 4) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
-            }
-          }
-
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Displaying Name
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.searchResults.name,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            // Displaying Image
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.network(
+                widget.searchResults.images![0],
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            // Displaying Brand
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Brand: ${widget.searchResults.brand}',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            // Displaying Category
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Category: ${widget.searchResults.category}',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            // Displaying Keywords
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Keywords: ${widget.searchResults.keywords}',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

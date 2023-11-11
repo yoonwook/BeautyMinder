@@ -1,3 +1,4 @@
+import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -117,8 +118,12 @@ class _SearchResultPageState extends State<SearchResultPage> {
       child: ListView.builder(
         itemCount: widget.searchResults.length,
         itemBuilder: (context, index) {
-          final product = widget.searchResults[index];
-          return ListTile(
+          final product = widget.searchResults![index];
+          return GestureDetector(
+            onTap: () async {
+              _navigateToProductDetailPage(product);
+            },
+            child: ListTile(
             leading:(product?.images != null && product.images!.isNotEmpty)
                 ? Image.network(product.images![0])
                 : Container(
@@ -126,11 +131,40 @@ class _SearchResultPageState extends State<SearchResultPage> {
                     height: 55.0,
                     color: Colors.white,
                   ),
-            title: Text(product.name), // 이름 표시
-            // 다른 정보도 필요하다면 여기에 추가
+              title: Text(product.name), // 이름 표시
+              // 다른 정보도 필요하다면 여기에 추가
+            ),
           );
+          // return ListTile(
+          //   leading:(product?.images != null && product.images!.isNotEmpty)
+          //       ? Image.network(product.images![0])
+          //       : Container(
+          //           width: 55.0,
+          //           height: 55.0,
+          //           color: Colors.white,
+          //         ),
+          //   title: Text(product.name), // 이름 표시
+          //   // 다른 정보도 필요하다면 여기에 추가
+          // );
         },
       ),
     );
+  }
+
+  void _navigateToProductDetailPage(Cosmetic product) async {
+    try {
+      // final result = await SearchService.searchAnything(product);
+      // print(result);
+      print(product);
+
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProductDetailPage(
+          searchResults: product,
+        ),
+      ));
+      print('////////////searchQuery : $searchQuery');
+    } catch (e) {
+      print('Error searching anything: $e');
+    }
   }
 }
