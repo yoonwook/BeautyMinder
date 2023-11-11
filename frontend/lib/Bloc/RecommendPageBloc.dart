@@ -19,6 +19,7 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState>{
 
   Future<void> _initEvent(RecommendPageInitEvent event, Emitter<RecommendState> emit) async{
     await Future.delayed(const Duration(seconds: 0),() async {
+      print("호");
       emit(RecommendDownloadedState(isError: state.isError));
 
       //추천 상품 받아오기 전체 추천상

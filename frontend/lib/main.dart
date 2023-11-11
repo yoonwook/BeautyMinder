@@ -118,7 +118,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return
+      MaterialApp(
       title: 'BeautyMinder',
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),

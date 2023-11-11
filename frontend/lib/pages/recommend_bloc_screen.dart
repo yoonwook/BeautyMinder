@@ -14,8 +14,15 @@ import '../widget/commonBottomNavigationBar.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 
+class RecPage extends StatefulWidget {
+  const RecPage({Key? key}) : super(key: key);
+
+  @override
+  _RecPage createState() => _RecPage();
+}
+
 class _RecPage extends State<RecPage> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   String result = '';
 
@@ -32,6 +39,7 @@ class _RecPage extends State<RecPage> {
     isSuncare,
     isBase
   ];
+
 
   String? toggleSelect(int value) {
     isAll = false;
@@ -72,7 +80,7 @@ class _RecPage extends State<RecPage> {
       });
       return "베이스/프라이머";
 
-      ;
+
     }
   }
 
@@ -90,33 +98,37 @@ class _RecPage extends State<RecPage> {
           appBar: CommonAppBar(),
           body: Column(
             children: [
-              // ToggleButtons(
-              //   children: [
-              //     Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: 16),
-              //         child: Text('전체', style: TextStyle(fontSize: 18))),
-              //     Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: 16),
-              //         child: Text('스킨케어', style: TextStyle(fontSize: 18))),
-              //     Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: 16),
-              //         child: Text('클렌징', style: TextStyle(fontSize: 18))),
-              //     Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: 16),
-              //         child: Text('선케어', style: TextStyle(fontSize: 18))),
-              //     Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: 16),
-              //         child: Text('베이스', style: TextStyle(fontSize: 18))),
-              //   ],
-              //   isSelected: [isAll, isSkincare, isCleansing, isSuncare, isBase],
-              //   onPressed: (int index) => {
-              //     print({"index : $index"}),
-              //     print(toggleSelect),
-              //     context.read<RecommendPageBloc>().add(
-              //         RecommendPageCategoryChangeEvent(
-              //             category: toggleSelect(index)))
-              //   },
-              // ),
+              BlocBuilder<RecommendPageBloc, RecommendState>(builder: (context, state) {
+                return ToggleButtons(
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('전체', style: TextStyle(fontSize: 18))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('스킨케어', style: TextStyle(fontSize: 18))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('클렌징', style: TextStyle(fontSize: 18))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('선케어', style: TextStyle(fontSize: 18))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('베이스', style: TextStyle(fontSize: 18))),
+                  ],
+                  isSelected: [isAll, isSkincare, isCleansing, isSuncare, isBase],
+                  onPressed: (int index) => {
+                    print({"index : $index"}),
+                    toggleSelect(index),
+                    context.read<RecommendPageBloc>().add(
+                        RecommendPageCategoryChangeEvent(
+                            category: toggleSelect(index)))
+
+                  },
+                );
+              })
+              ,
               RecPageImageWidget()
             ],
           ),
@@ -145,12 +157,7 @@ class _RecPage extends State<RecPage> {
   }
 }
 
-class RecPage extends StatefulWidget {
-  const RecPage({Key? key}) : super(key: key);
 
-  @override
-  _RecPage createState() => _RecPage();
-}
 
 String keywordsToString(List<String> keywords) {
   // 리스트의 모든 항목을 쉼표와 공백으로 구분된 하나의 문자열로 변환합니다.
@@ -217,10 +224,12 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
         isSelected = [isAll, isSkincare, isCleansing, isSuncare, isBase];
       });
       return "베이스/프라이머";
-
-      ;
     }
+
+
+
   }
+
 
   @override
   void initState() {
@@ -237,10 +246,10 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
           width: MediaQuery.of(context).size.width,
           height: 100,
           child: GestureDetector(
-            onTap: () {
-              HapticFeedback.mediumImpact();
-              context.read<RecommendPageBloc>().add(RecommendPageInitEvent());
-            },
+            // onTap: () {
+            //   HapticFeedback.mediumImpact();
+            //   context.read<RecommendPageBloc>().add(RecommendPageInitEvent());
+            //},
             child: Icon(
               state is RecommendLoadedState
                   ? Icons.download_done_rounded
@@ -259,33 +268,33 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
         return Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            ToggleButtons(
-              children: [
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('전체', style: TextStyle(fontSize: 18))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('스킨케어', style: TextStyle(fontSize: 18))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('클렌징', style: TextStyle(fontSize: 18))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('선케어', style: TextStyle(fontSize: 18))),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('베이스', style: TextStyle(fontSize: 18))),
-              ],
-              isSelected: [isAll, isSkincare, isCleansing, isSuncare, isBase],
-              onPressed: (int index) => {
-                print({"index : $index"}),
-                print(toggleSelect),
-                context.read<RecommendPageBloc>().add(
-                    RecommendPageCategoryChangeEvent(
-                        category: toggleSelect(index)))
-              },
-            ),
+            // ToggleButtons(
+            //   children: [
+            //     Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 16),
+            //         child: Text('전체', style: TextStyle(fontSize: 18))),
+            //     Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 16),
+            //         child: Text('스킨케어', style: TextStyle(fontSize: 18))),
+            //     Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 16),
+            //         child: Text('클렌징', style: TextStyle(fontSize: 18))),
+            //     Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 16),
+            //         child: Text('선케어', style: TextStyle(fontSize: 18))),
+            //     Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 16),
+            //         child: Text('베이스', style: TextStyle(fontSize: 18))),
+            //   ],
+            //   isSelected: [isAll, isSkincare, isCleansing, isSuncare, isBase],
+            //   onPressed: (int index) => {
+            //     print({"index : $index"}),
+            //     print(toggleSelect),
+            //     context.read<RecommendPageBloc>().add(
+            //         RecommendPageCategoryChangeEvent(
+            //             category: toggleSelect(index)))
+            //   },
+            // ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 163,
               child: ListView.separated(
