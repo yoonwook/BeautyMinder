@@ -1,8 +1,10 @@
 import 'package:beautyminder/dto/cosmetic_model.dart';
+import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../dto/gptReview_model.dart';
 import '../../widget/commonAppBar.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -15,6 +17,13 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
+  late Future<Result<GPTReviewInfo>> _gptReviewInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _gptReviewInfo = GPTReviewService.getGPTReviews(widget.searchResults.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +40,36 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _displayingName(),
+        const SizedBox(height: 50),
         _displayImages(),
+        const SizedBox(height: 50),
         _displayBrand(),
+        const SizedBox(height: 50),
         _displayCategory(),
+        const SizedBox(height: 50),
         _displayKeywords(),
+        const SizedBox(height: 50),
+        _displayGPTReviewText(),
+        const SizedBox(height: 50),
+        // _displayGPTReview(),
+        FutureBuilder<Result<GPTReviewInfo>>(
+            future: _gptReviewInfo,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              else if (!snapshot.hasData || !snapshot.data!.isSuccess) {
+                return Text('Failed to load GPT review information');
+              }
+              else {
+                final gptReviewInfo = snapshot.data!.value!;
+                return _displayGPTReview(gptReviewInfo);
+              }
+            },
+        ),
       ],
     );
   }
@@ -100,6 +135,48 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         'Keywords: ${widget.searchResults.keywords}',
         style: TextStyle(fontSize: 16),
       ),
+    );
+  }
+
+  Widget _displayGPTReviewText() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        'ChatGPT-4 리뷰 요약',
+        style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _displayGPTReview(GPTReviewInfo gptReviewInfo) {
+    print('GPTReviewInfo - Positive Review: ${gptReviewInfo.positive}');
+    print('GPTReviewInfo - Negative Review: ${gptReviewInfo.negative}');
+    print('GPTReviewInfo - GPT Version: ${gptReviewInfo.gptVersion}');
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Positive Review: ${gptReviewInfo.positive}',
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Negative Review: ${gptReviewInfo.negative}',
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'GPT Version: ${gptReviewInfo.gptVersion}',
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }

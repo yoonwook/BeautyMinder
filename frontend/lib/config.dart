@@ -33,4 +33,7 @@ class Config {
 
   //search
   static const homeSearchKeywordAPI = "/search";
+
+  //gpt review
+  static const getGPTReviewAPI = "gpt/review";
 }

@@ -20,7 +20,7 @@ class Cosmetic{
     return Cosmetic(
         id: json["id"],
         images: List<String>.from(json["images"]),
-        brand: json["brand"],
+        brand: json["brand"] ?? "",
         category: json["category"],
         keywords: List<String>.from(json["keywords"]),
         name: json["name"]);

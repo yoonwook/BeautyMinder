@@ -135,17 +135,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
               // 다른 정보도 필요하다면 여기에 추가
             ),
           );
-          // return ListTile(
-          //   leading:(product?.images != null && product.images!.isNotEmpty)
-          //       ? Image.network(product.images![0])
-          //       : Container(
-          //           width: 55.0,
-          //           height: 55.0,
-          //           color: Colors.white,
-          //         ),
-          //   title: Text(product.name), // 이름 표시
-          //   // 다른 정보도 필요하다면 여기에 추가
-          // );
         },
       ),
     );
