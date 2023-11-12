@@ -8,13 +8,13 @@ class KeyWordRank{
 
   factory KeyWordRank.fromJson(List<dynamic> json){
     return KeyWordRank(
-        keywords: List<String>.from(json)
+      keywords: List<String>.from(json),
     );
   }
 
   @override
   String toString() {
-    return 'KeyWordRank{keywords: ${keywords?.join(', ')}}';
+    return 'KeyWordRank{keywords: ${keywords?.join(', ')}';
   }
 
 }

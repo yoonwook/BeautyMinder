@@ -18,6 +18,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   late Future<Result<GPTReviewInfo>> _gptReviewInfo;
+  bool showPositiveReview = true;
 
   @override
   void initState() {
@@ -36,23 +37,25 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Widget _productDetailPageUI() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _displayingName(),
-        const SizedBox(height: 50),
-        _displayImages(),
-        const SizedBox(height: 50),
-        _displayBrand(),
-        const SizedBox(height: 50),
-        _displayCategory(),
-        const SizedBox(height: 50),
-        _displayKeywords(),
-        const SizedBox(height: 50),
-        _displayGPTReviewText(),
-        const SizedBox(height: 50),
-        // _displayGPTReview(),
-        FutureBuilder<Result<GPTReviewInfo>>(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 40),
+          _displayingName(),
+          const SizedBox(height: 50),
+          _displayImages(),
+          const SizedBox(height: 50),
+          _displayBrand(),
+          const SizedBox(height: 50),
+          _displayCategory(),
+          const SizedBox(height: 50),
+          _displayKeywords(),
+          const SizedBox(height: 50),
+          _displayGPTReviewText(),
+          const SizedBox(height: 50),
+          FutureBuilder<Result<GPTReviewInfo>>(
             future: _gptReviewInfo,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -69,8 +72,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 return _displayGPTReview(gptReviewInfo);
               }
             },
-        ),
-      ],
+          ),
+          const SizedBox(height: 50),
+        ],
+      ),
     );
   }
 
@@ -157,16 +162,37 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Positive Review: ${gptReviewInfo.positive}',
-            style: TextStyle(fontSize: 16),
-          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: ToggleButtons(
+                  children: [
+                    Text('Positive Review'),
+                    Text('Negative Review'),
+                  ],
+                  isSelected: [showPositiveReview, !showPositiveReview],
+                  onPressed: (index) {
+                    setState(() {
+                      showPositiveReview = index == 0;
+                    });
+                  },
+                ),
+              ),
+            ],
+          )
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Negative Review: ${gptReviewInfo.negative}',
-            style: TextStyle(fontSize: 16),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              showPositiveReview ? gptReviewInfo.positive : gptReviewInfo.negative,
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ),
         Padding(

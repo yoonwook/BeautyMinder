@@ -1,5 +1,6 @@
 import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../dto/cosmetic_model.dart';
@@ -102,7 +103,10 @@ class _SearchResultPageState extends State<SearchResultPage> {
     return Container(
       child: Column(
         children: <Widget>[
+          const SizedBox(height: 40),
           _resultText(),
+          _divider(),
+          const SizedBox(height: 20),
           _productList(),
         ],
       )
@@ -110,7 +114,29 @@ class _SearchResultPageState extends State<SearchResultPage> {
   }
 
   Widget _resultText() {
-    return Text("검색된 결과입니다 : ${widget.searchQuery}, ${widget.searchResults.length}개의 제품");
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "검색 결과 : ${widget.searchQuery}",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xffd86a04),
+            ),
+          ),
+          Text(
+            "${widget.searchResults.length}개의 제품",
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _productList() {
@@ -123,16 +149,34 @@ class _SearchResultPageState extends State<SearchResultPage> {
             onTap: () async {
               _navigateToProductDetailPage(product);
             },
-            child: ListTile(
-            leading:(product?.images != null && product.images!.isNotEmpty)
-                ? Image.network(product.images![0])
-                : Container(
-                    width: 55.0,
-                    height: 55.0,
-                    color: Colors.white,
+            child: Container(
+              height: 80,
+              child: ListTile(
+                leading:(product?.images != null && product.images!.isNotEmpty)
+                    ? Container(
+                        width: 80,
+                        height: 80,
+                        child: Image.network(
+                          product.images![0],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        width: 80.0,
+                        height: 80.0,
+                        color: Colors.white,
+                      ),
+                title: Text(
+                  product.name,
+                  style: TextStyle(
+                    fontSize: 18,
+                    letterSpacing: 0,
                   ),
-              title: Text(product.name), // 이름 표시
-              // 다른 정보도 필요하다면 여기에 추가
+                ), // 이름 표시
+                // 다른 정보도 필요하다면 여기에 추가
+              ),
             ),
           );
         },
@@ -142,8 +186,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
 
   void _navigateToProductDetailPage(Cosmetic product) async {
     try {
-      // final result = await SearchService.searchAnything(product);
-      // print(result);
       print(product);
 
       Navigator.of(context).push(MaterialPageRoute(
@@ -155,5 +197,15 @@ class _SearchResultPageState extends State<SearchResultPage> {
     } catch (e) {
       print('Error searching anything: $e');
     }
+  }
+
+  Widget _divider() {
+    return const Divider(
+      height: 20,
+      thickness: 1,
+      indent: 20,
+      endIndent: 20,
+      color: Colors.grey,
+    );
   }
 }

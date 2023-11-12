@@ -108,21 +108,64 @@ class _SearchPageState extends State<SearchPage> {
       );
     }
     else {
-      return ListView.builder(
-        itemCount: widget.data.keywords?.length,
-        itemBuilder: (context, index) {
-          final word = widget.data.keywords![index];
-          final rank = index + 1;
-          return GestureDetector(
-            onTap: () async {
-              _navigateToSearchResultPage(word);
-            },
-            child: ListTile(
-              title: Text('${rank}순위 : ${word}'),
+      return Column(
+        children: [
+          const SizedBox(height: 40),
+          const Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '실시간 검색 랭킹',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffd86a04),
+                  ),
+                ),
+              ],
             ),
-          );
-        },
+          ),
+          _divider(),
+          SizedBox(
+            // height: 300, // Set a finite height for the ListView
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.data.keywords?.length,
+              itemBuilder: (context, index) {
+                final word = widget.data.keywords![index];
+                final rank = index + 1;
+                return Column(
+                  children: [
+                    ListTile(
+                      title: Text('${rank}순위 : ${word}'),
+                      onTap: () async {
+                        _navigateToSearchResultPage(word);
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       );
+      // return ListView.builder(
+      //   itemCount: widget.data.keywords?.length,
+      //   itemBuilder: (context, index) {
+      //     final word = widget.data.keywords![index];
+      //     final rank = index + 1;
+      //     return GestureDetector(
+      //       onTap: () async {
+      //         _navigateToSearchResultPage(word);
+      //       },
+      //       child: ListTile(
+      //         title: Text('${rank}순위 : ${word}'),
+      //       ),
+      //     );
+      //   },
+      // );
     }
   }
 
@@ -142,6 +185,16 @@ class _SearchPageState extends State<SearchPage> {
     } catch (e) {
       print('Error searching anything: $e');
     }
+  }
+
+  Widget _divider() {
+    return const Divider(
+      height: 20,
+      thickness: 1,
+      indent: 20,
+      endIndent: 20,
+      color: Colors.grey,
+    );
   }
 
 
