@@ -24,7 +24,6 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   List<ReviewResponse> _cosmeticReviews = []; // ReviewResponse 리스트로 변경
   bool _isLoading = false;
   String _selectedCosmeticId = '';
-  final ImagePicker _picker = ImagePicker();
   List<PlatformFile>? _imageFiles;
 
   @override
@@ -64,18 +63,13 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
 
   void getImages() async {
     try {
-
       _imageFiles = (await FilePicker.platform.pickFiles(
         type: FileType.custom,
         onFileLoading: (FilePickerStatus status) => print(status),
         allowMultiple: false,
         allowedExtensions: ['png', 'jpg', 'jpeg', 'heic'],
       ))
-      ?.files;
-
-      // setState(() {
-      //   _imageFiles = paths;
-      // });
+          ?.files;
     } on PlatformException catch (e) {
       log('Unsupported operation' + e.toString());
     } catch (e) {
@@ -83,139 +77,129 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     }
   }
 
-  // Future<void> _selectImages() async {
-  //   final List<XFile>? selectedImages = await _picker.pickMultiImage();
-  //   if (selectedImages != null && selectedImages.isNotEmpty) {
-  //     setState(() {
-  //       _imageFiles = selectedImages;
-  //     });
-  //   }
-  // }
-
   void _addOrEditReview(ReviewResponse? review) async {
     User? user = await SharedService.getUser();
     if (user != null) {
-      // 로그인한 사용자의 ID를 가져옵니다.
       String userId = user.id;
       _showReviewDialog(reviewToUpdate: review, userId: userId);
     } else {
-      // 사용자 정보를 가져오지 못했을 때의 처리
       _showSnackBar('You need to be logged in to add a review.');
     }
   }
 
   void _showReviewDialog({ReviewResponse? reviewToUpdate, required String userId}) async {
     final _contentController = TextEditingController();
-    int _rating = reviewToUpdate?.rating ?? 1;
+    int _localRating = reviewToUpdate?.rating ?? 1; // 로컬 변수로 변경
     if (reviewToUpdate != null) {
       _contentController.text = reviewToUpdate.content;
     }
 
-
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(reviewToUpdate == null ? 'Write a Review' : 'Edit Review'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: _contentController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your review here',
-                  ),
-                  maxLines: 3,
-                ),
-                SizedBox(height: 20),
-                DropdownButton<int>(
-                  value: _rating,
-                  items: List.generate(
-                    5,
-                        (index) => DropdownMenuItem(
-                      value: index + 1,
-                      child: Text('${index + 1} Stars'),
+        return StatefulBuilder( // StatefulBuilder 추가
+          builder: (BuildContext context, StateSetter setDialogState) {
+            return AlertDialog(
+              title: Text(reviewToUpdate == null ? 'Write a Review' : 'Edit Review'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _contentController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your review here',
+                      ),
+                      maxLines: 3,
                     ),
-                  ),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _rating = value;
-                      });
+                    SizedBox(height: 20),
+                    DropdownButton<int>(
+                      value: _localRating,
+                      items: List.generate(
+                        5,
+                            (index) => DropdownMenuItem(
+                          value: index + 1,
+                          child: Text('${index + 1} Stars'),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setDialogState(() {
+                            _localRating = value;
+                          });
+                        }
+                      },
+                    ),
+                    ElevatedButton(
+                      onPressed: getImages,
+                      child: Text('Select Images'),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                TextButton(
+                  child: Text('Submit'),
+                  onPressed: () async {
+                    final String content = _contentController.text;
+                    if (content.isNotEmpty && _selectedCosmeticId.isNotEmpty) {
+                      ReviewRequest newReviewRequest = ReviewRequest(
+                        content: content,
+                        rating: _localRating, // 여기에서 _localRating 사용
+                        cosmeticId: _selectedCosmeticId,
+                        userId: userId,
+                      );
+
+                      try {
+                        ReviewResponse responseReview;
+                        if (reviewToUpdate == null) {
+                          responseReview = await ReviewService.addReview(newReviewRequest, _imageFiles!);
+                        } else {
+                          // 기존 리뷰 수정 로직
+                          responseReview = await ReviewService.updateReview(
+                              reviewToUpdate.id, newReviewRequest, _imageFiles!
+                          );
+                          // UI 업데이트
+                          int index = _cosmeticReviews.indexWhere((review) => review.id == responseReview.id);
+                          if (index != -1) {
+                            _cosmeticReviews[index] = responseReview;
+                          }
+                        }
+
+                        setState(() {
+                          if (reviewToUpdate == null) {
+                            _cosmeticReviews.add(responseReview);
+                          } else {
+                            int index = _cosmeticReviews.indexWhere((review) => review.id == responseReview.id);
+                            if (index != -1) {
+                              _cosmeticReviews[index] = responseReview;
+                            }
+                          }
+                          _searchResults.clear();
+                          _searchController.clear();
+                        });
+                        Navigator.of(context).pop();
+                        _showSnackBar(reviewToUpdate == null ? 'Review added successfully' : 'Review updated successfully');
+                      } catch (e) {
+                        Navigator.of(context).pop();
+                        _showSnackBar('Failed to add/update review: $e');
+                      }
+                    } else {
+                      _showSnackBar('Review content cannot be empty');
                     }
                   },
                 ),
-                ElevatedButton(
-                  onPressed: getImages,
-                  child: Text('Select Images'),
-                ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: Text('Submit'),
-              onPressed: () async {
-                final String content = _contentController.text;
-                if (content.isNotEmpty && _selectedCosmeticId.isNotEmpty) {
-                  // 이미지 파일 경로 리스트를 생성합니다.
-                  // List<File> imageFiles = _imageFiles?.map((xFile) => File(xFile.path)).toList() ?? [];
-
-                  // 새로운 리뷰 요청 객체 생성
-                  ReviewRequest newReviewRequest = ReviewRequest(
-                    content: content,
-                    rating: _rating,
-                    cosmeticId: _selectedCosmeticId, // 선택한 화장품의 ID
-                    userId: userId, // 사용자의 ID
-                  );
-
-
-                  try {
-                    // 리뷰를 추가하거나 업데이트합니다.
-                    ReviewResponse responseReview;
-                    if (reviewToUpdate == null) {
-                      // 새 리뷰 추가
-                      responseReview = await ReviewService.addReview(newReviewRequest, _imageFiles!);
-                    } else {
-                      // 기존 리뷰 업데이트 (세 개의 위치 인자를 전달)
-                      responseReview = await ReviewService.updateReview(reviewToUpdate.id, newReviewRequest, _imageFiles!);
-                    }
-
-                    setState(() {
-                      if (reviewToUpdate == null) {
-                        _cosmeticReviews.add(responseReview);
-                      } else {
-                        int index = _cosmeticReviews.indexWhere((review) => review.id == responseReview.id);
-                        if (index != -1) {
-                          _cosmeticReviews[index] = responseReview;
-                        }
-                      }
-                      _searchResults.clear();
-                      _searchController.clear();
-                    });
-                    Navigator.of(context).pop();
-                    _showSnackBar(reviewToUpdate == null ? 'Review added successfully' : 'Review updated successfully');
-                  } catch (e) {
-                    Navigator.of(context).pop();
-                    _showSnackBar('Failed to add/update review: $e');
-                  }
-                } else {
-                  _showSnackBar('Review content cannot be empty');
-                }
-              },
-            ),
-          ],
+            );
+          },
         );
       },
     );
   }
-
-
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -260,7 +244,9 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   Future<void> _deleteReview(String reviewId) async {
     setState(() => _isLoading = true);
     try {
-      // await ReviewService.deleteReview(reviewId);
+      // ReviewService를 사용하여 서버에 삭제 요청
+      await ReviewService.deleteReview(reviewId);
+      // UI의 리뷰 목록에서 해당 리뷰를 제거
       setState(() {
         _cosmeticReviews.removeWhere((review) => review.id == reviewId);
         _isLoading = false;
@@ -271,6 +257,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       _showSnackBar('Failed to delete review: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

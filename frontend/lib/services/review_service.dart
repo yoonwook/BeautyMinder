@@ -1,14 +1,15 @@
 import 'dart:developer';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+
 import '../config.dart';
+
 import '../dto/review_request_model.dart';
 import '../dto/review_response_model.dart';
-import 'dart:convert';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:path/path.dart';
+
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
@@ -113,23 +114,29 @@ class ReviewService {
     final url = '/review/$reviewId';
     var formData = FormData();
 
-    // 리뷰 텍스트 데이터를 JSON 문자열로 변환하고 추가
+    // 리뷰 텍스트 데이터를 JSON 문자열로 변환
     String reviewJson = jsonEncode(reviewRequest.toJson());
-    formData.fields..add(MapEntry('review', reviewJson));
 
-    // 이미지 파일을 FormData에 추가합니다.
-    // List<MultipartFile> multipartImageList =
-    //     await Future.wait(imageFiles.map((file) async {
-    //   final byteData = await fileHandler.readFileAsBytes(file);
-    //   final mimeTypeData = lookupMimeType(fileHandler.getFileName(file),
-    //           headerBytes: byteData) ??
-    //       'application/octet-stream';
-    //   return MultipartFile.fromBytes(
-    //     byteData,
-    //     filename: fileHandler.getFileName(file),
-    //     contentType: MediaType.parse(mimeTypeData),
-    //   );
-    // }));
+    // 이미지 파일을 MultipartFile 객체로 변환하고 FormData에 추가
+    List<MultipartFile> multipartImageList = imageFiles.map((file) {
+      final MediaType contentType = MediaType.parse(lookupMimeType(file.name) ?? 'application/octet-stream');
+      return MultipartFile.fromBytes(
+        file.bytes!,
+        filename: file.name,
+        contentType: contentType,
+      );
+    }).toList();
+
+    // 리뷰 JSON과 이미지 파일을 FormData에 추가
+    formData.files.add(MapEntry(
+      'review', // 서버에서 기대하는 필드 이름
+      MultipartFile.fromString(
+        reviewJson,
+        filename: 'review.json', // JSON 파일 이름 지정
+        contentType: MediaType('application', 'json'),
+      ),
+    ));
+    formData.files.addAll(multipartImageList.map((file) => MapEntry('images', file)));
 
     // Dio 클라이언트를 사용하여 서버로 요청을 보내고 응답을 받습니다.
     var response = await client.put(url, data: formData);
@@ -139,4 +146,5 @@ class ReviewService {
       throw Exception('Failed to update review: ${response.statusMessage}');
     }
   }
+
 }
