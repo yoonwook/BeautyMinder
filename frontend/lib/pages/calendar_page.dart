@@ -1,6 +1,9 @@
 import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/event/TodoPageEvent.dart';
 import 'package:beautyminder/pages/Todo_Add_Page_Test.dart';
+import 'package:beautyminder/pages/pouch_page.dart';
+import 'package:beautyminder/pages/recommend_bloc_screen.dart';
+import 'package:beautyminder/pages/todo_page.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,13 +13,19 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:beautyminder/services/todo_service.dart';
 
 import '../../State/TodoState.dart';
+import '../widget/commonBottomNavigationBar.dart';
+import 'home_page.dart';
+import 'my_page.dart';
 
 class CalendarPage extends StatefulWidget {
+  const CalendarPage({Key? key}) : super(key: key);
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  int _currentIndex = 3;
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
   DateTime _focusedDay = DateTime.now();
@@ -34,6 +43,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return BlocProvider(
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
     child: Scaffold(
+      appBar: CommonAppBar(),
       body: Column(
         children: [
           BlocBuilder<TodoPageBloc, TodoState>(builder:
@@ -43,6 +53,27 @@ class _CalendarPageState extends State<CalendarPage> {
           })
         ],
       ),
+        bottomNavigationBar: CommonBottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (int index) {
+              // 페이지 전환 로직 추가
+              if (index == 0) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const RecPage()));
+              } else if (index == 1) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const PouchPage()));
+              } else if (index == 2) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const HomePage()));
+              } else if (index == 3) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TodoPage()));
+              } else if (index == 4) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const MyPage()));
+              }
+            })
     ));
 
     // child: SingleChildScrollView(
@@ -66,6 +97,7 @@ class _CalendarPageState extends State<CalendarPage> {
     //   ],
     // ));
   }
+
 
   Widget _calendar() {
     return TableCalendar(
@@ -92,6 +124,7 @@ class _CalendarPageState extends State<CalendarPage> {
       },
     );
   }
+
 
   Widget _todoList() {
     return Padding(
@@ -209,5 +242,18 @@ class _CalendarPageState extends State<CalendarPage> {
         },
       ),
     );
+  }
+}
+
+class todoListWidget extends StatefulWidget{
+  @override
+  _todoListWidget createState() => _todoListWidget();
+}
+
+class _todoListWidget extends State<todoListWidget>{
+
+  @override
+  Widget build(BuildContext context){
+    
   }
 }

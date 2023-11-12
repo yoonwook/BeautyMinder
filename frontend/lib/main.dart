@@ -1,5 +1,6 @@
 import 'package:beautyminder/Observer.dart';
 import 'package:beautyminder/pages/Todo_Add_Page_Test.dart';
+import 'package:beautyminder/pages/calendar_page.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
@@ -105,7 +106,7 @@ void main() async {
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
       ),
-      home:TodoAddPage(),
+      home:CalendarPage(),
     )
 
   );
@@ -133,7 +134,7 @@ class MyApp extends StatelessWidget {
         '/recommend': (context) =>  const RecPage(),
         '/pouch': (context) => const PouchPage(),
         // '/home': (context) => const HomePage(),
-        '/todo': (context) => const TodoPage(),
+        '/todo': (context) => const CalendarPage(),
         '/my': (context) => const MyPage(),
 
       },
