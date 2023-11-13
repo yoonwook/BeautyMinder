@@ -6,6 +6,7 @@ import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
 import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_page.dart';
+import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:beautyminder/pages/start/splash_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';

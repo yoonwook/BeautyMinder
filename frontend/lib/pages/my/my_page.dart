@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
+import '../recommend_bloc_screen.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);

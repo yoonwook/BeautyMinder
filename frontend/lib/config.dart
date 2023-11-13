@@ -37,4 +37,10 @@ class Config {
 
   //gpt review
   static const getGPTReviewAPI = "gpt/review";
+
+  // Cosmetic
+  static const CosmeticAPI = "/cosmetic";
+
+  // Recommend
+  static const RecommendAPI = "/recommend/";
 }
