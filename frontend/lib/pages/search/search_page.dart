@@ -3,6 +3,7 @@ import 'package:beautyminder/pages/search/search_result_page.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../services/homeSearch_service.dart';
 
@@ -34,11 +35,12 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _title() {
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Flexible(
@@ -76,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
         IconButton(
@@ -91,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
                 print('Error searching anything: $e');
               }
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.search,
             color: Color(0xffd86a04),
           ),
@@ -110,8 +112,8 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             _keywordRanking(),
-            const SizedBox(height: 20),
             _productRanking(),
+            const SizedBox(height: 20),
           ],
         ),
       );
@@ -123,7 +125,7 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           const SizedBox(height: 40),
           const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -140,7 +142,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           _divider(),
           SizedBox(height: 40),
-          Center(
+          const Center(
             child: Text(
               '실시간 랭킹 순위를 불러올 수 없습니다.',
               style: TextStyle(
@@ -154,15 +156,17 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _keywordRanking() {
+    final formattedDate = _formatDateTime(widget.data?.updatedAt);
+
     return Column(
       children: [
         const SizedBox(height: 40),
-        const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 '실시간 검색 랭킹',
                 style: TextStyle(
                   fontSize: 18,
@@ -170,35 +174,79 @@ class _SearchPageState extends State<SearchPage> {
                   color: Color(0xffd86a04),
                 ),
               ),
+              Text(
+                formattedDate,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
+                ),
+              ),
             ],
           ),
         ),
         _divider(),
-        SizedBox(
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(), // Disable scrolling
-            shrinkWrap: true,
-            itemCount: widget.data?.keywords?.length,
-            itemBuilder: (context, index) {
-              final word = widget.data?.keywords![index];
-              final rank = index + 1;
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text('${rank}순위 : ${word}'),
-                    onTap: () async {
-                      if(word!=null) {
-                        _navigateToSearchResultPage(word);
-                      }
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child:
+            Row(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                    shrinkWrap: true,
+                    itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
+                    itemBuilder: (context, index) {
+                      final keyword = widget.data?.keywords![index];
+                      final rank = index + 1;
+                      return ListTile(
+                        title: Text('${rank}순위 : $keyword'),
+                        onTap: () async {
+                          if (keyword != null) {
+                            _navigateToSearchResultPage(keyword);
+                          }
+                        },
+                      );
                     },
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                    shrinkWrap: true,
+                    itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
+                    itemBuilder: (context, index) {
+                      final startIndex = (widget.data?.keywords?.length ?? 0) ~/ 2 + index;
+                      final keyword = widget.data?.keywords![startIndex];
+                      final rank = startIndex + 1;
+                      return ListTile(
+                        title: Text('${rank}순위 : $keyword'),
+                        onTap: () async {
+                          if (keyword != null) {
+                            _navigateToSearchResultPage(keyword);
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
         ),
       ],
     );
+  }
+
+  String _formatDateTime(String? dateTimeString) {
+    if (dateTimeString == null) {
+      return '';
+    }
+
+    final dateTime = DateTime.parse(dateTimeString);
+    final formattedDate = DateFormat('yyyy년 MM월 dd일 HH시 mm분 기준').format(dateTime);
+
+    return formattedDate;
   }
 
 
@@ -224,29 +272,49 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         _divider(),
-        SizedBox(
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(), // Disable scrolling
-            shrinkWrap: true,
-            itemCount: widget.data?.keywords?.length,
-            itemBuilder: (context, index) {
-              final word = widget.data?.keywords![index];
-              final rank = index + 1;
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text('${rank}순위 : ${word}'),
+        Row(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                shrinkWrap: true,
+                itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
+                itemBuilder: (context, index) {
+                  final keyword = widget.data?.keywords![index];
+                  final rank = index + 1;
+                  return ListTile(
+                    title: Text('${rank}순위 : $keyword'),
                     onTap: () async {
-                      if(word != null)
-                        {
-                          _navigateToSearchResultPage(word);
-                        }
+                      if (keyword != null) {
+                        _navigateToSearchResultPage(keyword);
+                      }
                     },
-                  ),
-                ],
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                shrinkWrap: true,
+                itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
+                itemBuilder: (context, index) {
+                  final startIndex = (widget.data?.keywords?.length ?? 0) ~/ 2 + index;
+                  final keyword = widget.data?.keywords![startIndex];
+                  final rank = startIndex + 1;
+                  return ListTile(
+                    title: Text('${rank}순위 : $keyword'),
+                    onTap: () async {
+                      if (keyword != null) {
+                        _navigateToSearchResultPage(keyword);
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );
