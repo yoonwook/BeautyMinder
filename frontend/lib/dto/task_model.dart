@@ -39,8 +39,8 @@ class Task {
 
   factory Task.fromJson(Map<String, dynamic>json){
     return Task(taskId: json['taskId'],
-        category: json['description'],
-        description: json['category'],
+        category: json['category'],
+        description: json['description'],
         done: json['done']);
   }
 }

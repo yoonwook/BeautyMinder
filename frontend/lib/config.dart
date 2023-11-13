@@ -27,4 +27,7 @@ class Config {
 
   // Cosmetic
   static const CosmeticAPI = "/cosmetic";
+
+  // Recommend
+  static const RecommendAPI = "/recommend/";
 }

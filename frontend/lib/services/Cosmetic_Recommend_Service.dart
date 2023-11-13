@@ -44,7 +44,10 @@ class CosmeticSearchService{
      // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
      final userId = user?.id ?? '-1';
 
-     final url = Uri.http(Config.apiURL, Config.CosmeticAPI).toString();
+    // final url = Uri.http(Config.apiURL, Config.CosmeticAPI).toString();
+    final url = Uri.http(Config.apiURL, "${Config.RecommendAPI}6515128b7a33fd3cc5dbebf5").toString();
+
+    //print("url1: ${url1}");
     // (new) Uri Uri.http(
      // String authority,
      // [   String unencodedPath,
@@ -64,7 +67,7 @@ class CosmeticSearchService{
           options : _httpOptions('GET', headers),
       );
 
-      //print("response : ${response.data}, statuscode : ${response.statusCode}");
+      print("response : ${response.data}, statuscode : ${response.statusCode}");
 
       //print("token : $accessToken | $refreshToken");
       print("statuscode : ${response.statusCode}");

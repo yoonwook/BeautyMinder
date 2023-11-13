@@ -11,8 +11,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:beautyminder/services/todo_service.dart';
+import 'package:test/test.dart';
 
 import '../../State/TodoState.dart';
+import '../dto/todo_model.dart';
 import '../widget/commonBottomNavigationBar.dart';
 import 'home_page.dart';
 import 'my_page.dart';
@@ -35,46 +37,43 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
-    child: Scaffold(
-      appBar: CommonAppBar(),
-      body: Column(
-        children: [
-          BlocBuilder<TodoPageBloc, TodoState>(builder:
-          (context, state){
-            return _todoList();
-              //_calendar();
-          })
-        ],
-      ),
-        bottomNavigationBar: CommonBottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (int index) {
-              // 페이지 전환 로직 추가
-              if (index == 0) {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const RecPage()));
-              } else if (index == 1) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const PouchPage()));
-              } else if (index == 2) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const HomePage()));
-              } else if (index == 3) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TodoPage()));
-              } else if (index == 4) {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const MyPage()));
-              }
-            })
-    ));
+        child: Scaffold(
+            appBar: CommonAppBar(),
+            body: Column(
+              children: [
+                BlocBuilder<TodoPageBloc, TodoState>(builder: (context, state) {
+                  return todoListWidget();
+                  //_calendar();
+                })
+              ],
+            ),
+            bottomNavigationBar: CommonBottomNavigationBar(
+                currentIndex: _currentIndex,
+                onTap: (int index) {
+                  // 페이지 전환 로직 추가
+                  if (index == 0) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const RecPage()));
+                  } else if (index == 1) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const PouchPage()));
+                  } else if (index == 2) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const HomePage()));
+                  } else if (index == 3) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const TodoPage()));
+                  } else if (index == 4) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const MyPage()));
+                  }
+                })));
 
     // child: SingleChildScrollView(
     //   child: Column(
@@ -97,7 +96,6 @@ class _CalendarPageState extends State<CalendarPage> {
     //   ],
     // ));
   }
-
 
   Widget _calendar() {
     return TableCalendar(
@@ -125,7 +123,6 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-
   Widget _todoList() {
     return Padding(
         padding: EdgeInsets.all(16),
@@ -138,7 +135,8 @@ class _CalendarPageState extends State<CalendarPage> {
     List<Widget> _children = [];
     List<Widget> _morningTasks = [];
     List<Widget> _dinnerTasks = [];
-    var todos = TodoService.getAllTodos();
+    //var todos = TodoService.getAllTodos();
+
     List taskList = [
       {"description": "설명", "category": "morning", "isDone": false},
       {"description": "설명2", "category": "morning", "isDone": true},
@@ -245,15 +243,225 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 }
 
-class todoListWidget extends StatefulWidget{
+class todoListWidget extends StatefulWidget {
   @override
   _todoListWidget createState() => _todoListWidget();
 }
 
-class _todoListWidget extends State<todoListWidget>{
+class _todoListWidget extends State<todoListWidget> {
+
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
   @override
-  Widget build(BuildContext context){
-    
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+  }
+
+
+  Widget _todoList(List<Map<String, dynamic>>? todos) {
+    return Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: _buildChildren(todos),
+
+        ));
+  }
+
+  List<Widget> _buildChildren(List<Map<String, dynamic>>? todos) {
+    List<Widget> _children = [];
+    List<Widget> _morningTasks = [];
+    List<Widget> _dinnerTasks = [];
+    //var todos = TodoService.getAllTodos();
+
+    print("_buildChidren");
+    print("todos : ${todos}");
+
+    List<Map<String, dynamic>> taskList = todos != null
+        ? todos.map((todo) => (todo['tasks'] as List).map((task) => {
+      'description': task['description'],
+      'category': task['category'],
+      'isDone': task['done']
+    }))
+        .expand((element) => element).toList()
+        : [];
+
+
+    print("taskList : ${taskList}");
+
+    // [
+    //   {"description": "설명", "category": "morning", "isDone": false},
+    //   {"description": "설명2", "category": "morning", "isDone": true},
+    //   {"description": "다같이", "category": "dinner", "isDone": false}
+    // ];
+
+    for (int i = 0; i < taskList.length; i++) {
+      if (taskList[i]['category'] == 'morning') {
+        _morningTasks
+            .add(_todo(taskList[i]['description'], taskList[i]['isDone']));
+      } else if (taskList[i]['category'] == 'dinner') {
+        _dinnerTasks
+            .add(_todo(taskList[i]['description'], taskList[i]['isDone']));
+      }
+    }
+
+    _children.add(_row('morning'));
+    _children.addAll(_morningTasks);
+    _children.add(_row('dinner'));
+    _children.addAll(_dinnerTasks);
+
+    return _children;
+  }
+
+
+  Widget _calendar() {
+    return TableCalendar(
+      firstDay: DateTime.utc(2010, 10, 16),
+      lastDay: DateTime.utc(2030, 3, 14),
+      focusedDay: _focusedDay,
+      selectedDayPredicate: (day) {
+        return isSameDay(_selectedDay, day);
+      },
+      onDaySelected: (selectedDay, focusedDay) {
+        setState(() {
+          _selectedDay = selectedDay;
+          _focusedDay = focusedDay;
+        });
+      },
+      calendarFormat: _calendarFormat,
+      onFormatChanged: (format) {
+        setState(() {
+          _calendarFormat = format;
+        });
+      },
+      onPageChanged: (focusedDay) {
+        _focusedDay = focusedDay;
+      },
+    );
+  }
+
+  Widget _row(String name) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Container(
+            width: 100,
+            height: 35,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Center(
+              child: Text(name),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _todo(String title, bool isDone) {
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.25,
+        dragDismissible: false,
+        children: [
+          SlidableAction(
+            label: 'Update',
+            backgroundColor: Colors.orange,
+            icon: Icons.archive,
+            onPressed: (context) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => TodoAddPage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.25,
+        dragDismissible: false,
+        dismissible: DismissiblePane(onDismissed: () {}),
+        children: [
+          SlidableAction(
+            label: 'Delete',
+            backgroundColor: Colors.red,
+            icon: Icons.delete,
+            onPressed: (context) async {
+              // context.read<TodoPageBloc>().add(
+              //   TodoPageDeleteEvent());
+              // )
+            },
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(
+            decoration: isDone ? TextDecoration.lineThrough : null,
+          ),
+        ),
+        leading: Checkbox(
+          value: isDone,
+          onChanged: (bool? newValue) {},
+        ),
+        onTap: () {
+          setState(() {
+            isDone = !isDone;
+            print(isDone);
+          });
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: BlocBuilder<TodoPageBloc, TodoState>(
+        builder: (context, state) {
+          if (state is TodoInitState || state is TodoDownloadedState) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 100,
+              child: GestureDetector(
+                // onTap: () {
+                //   HapticFeedback.mediumImpact();
+                //   context.read<RecommendPageBloc>().add(RecommendPageInitEvent());
+                //},
+                child: Icon(
+                  state is TodoLoadedState
+                      ? Icons.download_done_rounded
+                      : Icons.download_rounded,
+                  size: 50,
+                ),
+              ),
+            );
+          } else if (state is TodoLoadedState) {
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _calendar(),
+                //Text("${state.todos}"),
+                _todoList(state.todos?.map((e) => e.toJson()).toList() ?? []),
+              ],
+            );
+          } else {
+            return Scaffold(
+              body: Text("else"),
+            );
+          }
+        },
+      ),
+    );
   }
 }

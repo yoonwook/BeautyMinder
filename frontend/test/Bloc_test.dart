@@ -25,7 +25,7 @@ void main() {
       // getAllTodos가 호출될 때 Todo 리스트를 반환하도록 설정합니다.
       when(mockTodoService.getAllTodos()).thenAnswer((_) async => mockTodos);
 
-      todoPageBloc = TodoPageBloc(todoService: mockTodoService);
+      todoPageBloc = TodoPageBloc();
     });
 
     blocTest<TodoPageBloc, TodoState>(

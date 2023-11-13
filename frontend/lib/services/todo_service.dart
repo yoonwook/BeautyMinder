@@ -51,8 +51,10 @@ class TodoService {
   // queryParmeter로 userId가 필요함
   static Future<Result<List<Todo>>> getAllTodos() async {
     final user = await SharedService.getUser();
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk3OTg0NTEsImV4cCI6MTcwMDQwMzI1MSwic3ViIjoidGVzdEBjb20iLCJpZCI6IjY1MjI4MzcxMTJiNTNiMzdmMTA5YTUwOCJ9.nQj1UUu4OeNSmhtGlygKxAB5RjHWPxjkZwut5ZvO5VY";
+    //await SharedService.getAccessToken();
+    final refreshToken = "MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk3OTg0NTEsImV4cCI6MTcwMTAwODA1MSwic3ViIjoidGVzdEBjb20iLCJpZCI6IjY1MjI4MzcxMTJiNTNiMzdmMTA5YTUwOCJ9.7e50R-GX3AeukjBKg5bAr5CfFHLUkOuT3Ufp8FjTiPw";
+    //await SharedService.getRefreshToken();
     final userId = user?.id ?? '-1';
 
     //요청에 집어넣을 쿼리파라미터
@@ -68,8 +70,7 @@ class TodoService {
     // ex) todo/all?userId = 6522837112b53b37f109a508
     // todo model에서  userId를 넣어주면됨
 
-    final url = Uri.http(Config.apiURL, Config.todoAPI,
-            /*{'userId': userId}*/ queryParameters)
+    final url = Uri.http(Config.apiURL, Config.todoAPI)
         .toString();
 
     final headers = {
@@ -83,7 +84,7 @@ class TodoService {
         options: _httpOptions('GET', headers),
       );
 
-      //print("response: ${response.data} ${response.statusCode}");
+      print("response: ${response.data} ${response.statusCode}");
       print("statusCode : ${response.statusCode}");
       print("token: $accessToken | $refreshToken");
 
@@ -119,9 +120,10 @@ class TodoService {
   // Todo를 추가
   // 테스트 성공
   static Future<Result<Todo>> addTodo(Todo todo) async {
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
-
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk3OTg0NTEsImV4cCI6MTcwMDQwMzI1MSwic3ViIjoidGVzdEBjb20iLCJpZCI6IjY1MjI4MzcxMTJiNTNiMzdmMTA5YTUwOCJ9.nQj1UUu4OeNSmhtGlygKxAB5RjHWPxjkZwut5ZvO5VY";
+    //await SharedService.getAccessToken();
+    final refreshToken = "MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk3OTg0NTEsImV4cCI6MTcwMTAwODA1MSwic3ViIjoidGVzdEBjb20iLCJpZCI6IjY1MjI4MzcxMTJiNTNiMzdmMTA5YTUwOCJ9.7e50R-GX3AeukjBKg5bAr5CfFHLUkOuT3Ufp8FjTiPw";
+    //await SharedService.getRefreshToken();
     //   // 첫 번째 Task 객체 생성
     //   Task tas1 = Task(
     //     taskId: 'task_001',

@@ -34,9 +34,61 @@ void main() async {
       description: '캡디테스트입니다.',
       done: false,
     );
+  Task tas2 = Task(
+    taskId: 'task_001',
+    category: 'morning',
+    description: '캡디테스트입니다.',
+    done: false,
+  );
+  Task tas3 = Task(
+    taskId: 'task_001',
+    category: 'morning',
+    description: '캡디테스트입니다.',
+    done: false,
+  );
+  Task tas4 = Task(
+    taskId: 'task_001',
+    category: 'morning',
+    description: '캡디테스트입니다.',
+    done: false,
+  );
+  Task tas5 = Task(
+    taskId: 'task_001',
+    category: 'morning',
+    description: '캡디테스트입니다.',
+    done: false,
+  );
+  Task tas6 = Task(
+    taskId: 'task_001',
+    category: 'morning',
+    description: '캡디테스트입니다.',
+    done: false,
+  );
 
 
-    List<Task> tasks = [tas1];
+  Task tas7 = Task(
+    taskId: 'task_001',
+    category: 'dinner',
+    description: '캡디테스트입니다. dinner',
+    done: false,
+  );
+
+  Task tas8 = Task(
+    taskId: 'task_001',
+    category: 'dinner',
+    description: '캡디테스트입니다. dinner',
+    done: false,
+  );
+
+  Task tas9 = Task(
+    taskId: 'task_001',
+    category: 'dinner',
+    description: '캡디테스트입니다. dinner',
+    done: false,
+  );
+
+
+    List<Task> tasks = [tas1, tas2, tas3, tas4,tas5, tas6, tas7, tas8, tas9];
 
     User user = User(
       id: '65499d8316f366541e3cc0a2',
@@ -90,12 +142,12 @@ void main() async {
 
 
   //final result = await TodoService.getAllTodos();
-  //final result = await TodoService.addTodo(todo);
+  final result = await TodoService.addTodo(todo);
   //final result = await TodoService.deleteTodo("sss");
   //final result = await TodoService.taskUpdateTodo(k);
 
 
-  //print(result.value);
+  print("result.value : ${result.value}");
 
 
 
@@ -106,7 +158,8 @@ void main() async {
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
       ),
-      home:CalendarPage(),
+      home://TodoAddPage(),
+    CalendarPage(),
     )
 
   );

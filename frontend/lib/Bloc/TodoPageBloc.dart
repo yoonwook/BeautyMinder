@@ -22,7 +22,9 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState>{
     // 없으면 아무것도 노출 안됨
     final result = (await TodoService.getAllTodos());
 
-    print("result.value : ${result.value}");
+    print(result.value.runtimeType);
+    print("result.value in _initEvent : ${result.value}");
+
 
     try{
       List<Todo>? todos = result.value;

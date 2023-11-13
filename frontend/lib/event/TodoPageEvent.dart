@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../dto/task_model.dart';
 import '../dto/todo_model.dart';
 
 abstract class TodoPageEvent extends Equatable{
@@ -29,11 +30,12 @@ class TodoPageAddEvent extends TodoPageEvent{
 
 class TodoPageDeleteEvent extends TodoPageEvent{
   final Todo todo;
+  final Task task;
 
-  TodoPageDeleteEvent(this.todo);
+  TodoPageDeleteEvent(this.todo, this.task);
 
   @override
-  List<Object?> get props =>[todo];
+  List<Object?> get props =>[todo, task];
 }
 
 class TodoPageUpdateEvent extends TodoPageEvent{
