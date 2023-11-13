@@ -5,7 +5,11 @@ import '../dto/keywordRank_model.dart';
 
 class KeywordRankService {
   // Dio 객체 생성
-  static final Dio client = Dio();
+  // static final Dio client = Dio();
+  static final Dio client = Dio(BaseOptions(
+    connectTimeout: Duration(milliseconds: 1000), // milliseconds
+    receiveTimeout: Duration(milliseconds: 1000), // milliseconds
+  ));
 
   // JSON 헤더 설정
   static const Map<String, String> jsonHeaders = {
@@ -22,8 +26,8 @@ class KeywordRankService {
         url,
         //
         options: Options(
-          receiveTimeout: const Duration(milliseconds: 5000),
-          sendTimeout: const Duration(milliseconds: 5000),
+          receiveTimeout: const Duration(milliseconds: 1000),
+          sendTimeout: const Duration(milliseconds: 1000),
         )
         //
       );
@@ -31,6 +35,7 @@ class KeywordRankService {
       if (response.statusCode == 200) {
         // 사용자 정보 파싱
         final user = KeyWordRank.fromJson(response.data);
+        print('heloo : ${response.data}');
         return Result.success(user);
       }
 

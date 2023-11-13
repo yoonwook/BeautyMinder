@@ -9,7 +9,7 @@ import '../../services/homeSearch_service.dart';
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, required this.data}) : super(key: key);
 
-  final KeyWordRank data;
+  final KeyWordRank? data;
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -102,13 +102,24 @@ class _SearchPageState extends State<SearchPage> {
 
 
   Widget _searchPageUI() {
-    if (widget.data.keywords == null) {
-      return Center(
-        child: Text('실시간 랭킹 순위가 없습니다.'),
-      );
+    if (widget.data?.keywords == null) {
+      return _noRanking();
     }
     else {
-      return Column(
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            _keywordRanking(),
+            const SizedBox(height: 20),
+            _productRanking(),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _noRanking() {
+    return Column(
         children: [
           const SizedBox(height: 40),
           const Padding(
@@ -128,45 +139,117 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           _divider(),
-          SizedBox(
-            // height: 300, // Set a finite height for the ListView
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.data.keywords?.length,
-              itemBuilder: (context, index) {
-                final word = widget.data.keywords![index];
-                final rank = index + 1;
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text('${rank}순위 : ${word}'),
-                      onTap: () async {
-                        _navigateToSearchResultPage(word);
-                      },
-                    ),
-                  ],
-                );
-              },
+          SizedBox(height: 40),
+          Center(
+            child: Text(
+              '실시간 랭킹 순위를 불러올 수 없습니다.',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey
+              ),
             ),
           ),
-        ],
-      );
-      // return ListView.builder(
-      //   itemCount: widget.data.keywords?.length,
-      //   itemBuilder: (context, index) {
-      //     final word = widget.data.keywords![index];
-      //     final rank = index + 1;
-      //     return GestureDetector(
-      //       onTap: () async {
-      //         _navigateToSearchResultPage(word);
-      //       },
-      //       child: ListTile(
-      //         title: Text('${rank}순위 : ${word}'),
-      //       ),
-      //     );
-      //   },
-      // );
-    }
+      ]
+    );
+  }
+
+  Widget _keywordRanking() {
+    return Column(
+      children: [
+        const SizedBox(height: 40),
+        const Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '실시간 검색 랭킹',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xffd86a04),
+                ),
+              ),
+            ],
+          ),
+        ),
+        _divider(),
+        SizedBox(
+          child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(), // Disable scrolling
+            shrinkWrap: true,
+            itemCount: widget.data?.keywords?.length,
+            itemBuilder: (context, index) {
+              final word = widget.data?.keywords![index];
+              final rank = index + 1;
+              return Column(
+                children: [
+                  ListTile(
+                    title: Text('${rank}순위 : ${word}'),
+                    onTap: () async {
+                      if(word!=null) {
+                        _navigateToSearchResultPage(word);
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+
+
+  Widget _productRanking(){
+    return Column(
+      children: [
+        const SizedBox(height: 40),
+        const Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '실시간 제품 랭킹',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xffd86a04),
+                ),
+              ),
+            ],
+          ),
+        ),
+        _divider(),
+        SizedBox(
+          child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(), // Disable scrolling
+            shrinkWrap: true,
+            itemCount: widget.data?.keywords?.length,
+            itemBuilder: (context, index) {
+              final word = widget.data?.keywords![index];
+              final rank = index + 1;
+              return Column(
+                children: [
+                  ListTile(
+                    title: Text('${rank}순위 : ${word}'),
+                    onTap: () async {
+                      if(word != null)
+                        {
+                          _navigateToSearchResultPage(word);
+                        }
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
 

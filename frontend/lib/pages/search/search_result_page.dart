@@ -107,7 +107,18 @@ class _SearchResultPageState extends State<SearchResultPage> {
           _resultText(),
           _divider(),
           const SizedBox(height: 20),
-          _productList(),
+          widget.searchResults.isEmpty
+            ? const Center(
+                child: Text(
+                  '검색결과가 없습니다',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+              : _productList(),
         ],
       )
     );
@@ -150,12 +161,12 @@ class _SearchResultPageState extends State<SearchResultPage> {
               _navigateToProductDetailPage(product);
             },
             child: Container(
-              height: 80,
+              height: 70,
               child: ListTile(
                 leading:(product?.images != null && product.images!.isNotEmpty)
                     ? Container(
-                        width: 80,
-                        height: 80,
+                        width: 70,
+                        height: 70,
                         child: Image.network(
                           product.images![0],
                           width: 100,
@@ -164,8 +175,8 @@ class _SearchResultPageState extends State<SearchResultPage> {
                         ),
                       )
                     : Container(
-                        width: 80.0,
-                        height: 80.0,
+                        width: 70.0,
+                        height: 70.0,
                         color: Colors.white,
                       ),
                 title: Text(
