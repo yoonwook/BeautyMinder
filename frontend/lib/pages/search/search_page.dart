@@ -1,16 +1,19 @@
 import 'package:beautyminder/dto/keywordRank_model.dart';
+import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:beautyminder/pages/search/search_result_page.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../dto/cosmetic_model.dart';
 import '../../services/homeSearch_service.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key, required this.data}) : super(key: key);
+  const SearchPage({Key? key, required this.data, required this.data2}) : super(key: key);
 
   final KeyWordRank? data;
+  final ProductRank? data2;
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -40,9 +43,6 @@ class _SearchPageState extends State<SearchPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        const SizedBox(
-          width: 10,
-        ),
         Flexible(
           flex: 1,
           child: TextField(
@@ -104,7 +104,7 @@ class _SearchPageState extends State<SearchPage> {
 
 
   Widget _searchPageUI() {
-    if (widget.data?.keywords == null) {
+    if (widget.data?.keywords == null &&  widget.data2?.cosmetics == null) {
       return _noRanking();
     }
     else {
@@ -148,6 +148,34 @@ class _SearchPageState extends State<SearchPage> {
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey
+              ),
+            ),
+          ),
+          SizedBox(height: 40),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '실시간 제품 랭킹',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffd86a04),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _divider(),
+          SizedBox(height: 40),
+          const Center(
+            child: Text(
+              '실시간 랭킹 순위를 불러올 수 없습니다.',
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey
               ),
             ),
           ),
@@ -252,11 +280,13 @@ class _SearchPageState extends State<SearchPage> {
 
 
   Widget _productRanking(){
+    final formattedDate2 = _formatDateTime(widget.data2?.updatedAt);
+
     return Column(
       children: [
         const SizedBox(height: 40),
-        const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -268,57 +298,89 @@ class _SearchPageState extends State<SearchPage> {
                   color: Color(0xffd86a04),
                 ),
               ),
+              if(widget.data2 != null)
+                Text(
+                  formattedDate2,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                ),
             ],
           ),
         ),
         _divider(),
-        Row(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(), // Disable scrolling
-                shrinkWrap: true,
-                itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
-                itemBuilder: (context, index) {
-                  final keyword = widget.data?.keywords![index];
-                  final rank = index + 1;
-                  return ListTile(
-                    title: Text('${rank}순위 : $keyword'),
-                    onTap: () async {
-                      if (keyword != null) {
-                        _navigateToSearchResultPage(keyword);
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(), // Disable scrolling
-                shrinkWrap: true,
-                itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
-                itemBuilder: (context, index) {
-                  final startIndex = (widget.data?.keywords?.length ?? 0) ~/ 2 + index;
-                  final keyword = widget.data?.keywords![startIndex];
-                  final rank = startIndex + 1;
-                  return ListTile(
-                    title: Text('${rank}순위 : $keyword'),
-                    onTap: () async {
-                      if (keyword != null) {
-                        _navigateToSearchResultPage(keyword);
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              for (int index = 0; index < 3; index++)
+                if (index < (widget.data2?.cosmetics?.length ?? 0))
+                  _buildProductTile(widget.data2!.cosmetics[index], index + 1),
+            ],
+          ),
         ),
+        const SizedBox(height: 20),
       ],
     );
   }
+
+  Widget _buildProductTile(Cosmetic product, int rank) {
+    return GestureDetector(
+      onTap: () async {
+        _navigateToProductDetailPage(product);
+      },
+      child: Container(
+        height: 70,
+        margin: EdgeInsets.only(bottom: 10),
+        child: ListTile(
+          leading: (product?.images != null && product.images?.isNotEmpty == true)
+              ? Container(
+            width: 70,
+            height: 70,
+            child: Image.network(
+              product.images![0],
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+          )
+              : Container(
+            width: 70.0,
+            height: 70.0,
+            color: Colors.white,
+          ),
+          title: Text(
+            '$rank순위 : ${product.name}',
+            style: TextStyle(
+              fontSize: 18,
+              letterSpacing: 0,
+            ),
+          ), // Display product name
+          // Add more information if needed
+        ),
+      ),
+    );
+  }
+
+  void _navigateToProductDetailPage(Cosmetic product) async {
+    try {
+      print(product);
+
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProductDetailPage(
+          searchResults: product,
+        ),
+      ));
+      print('////////////searchQuery : $searchQuery');
+    } catch (e) {
+      print('Error searching anything: $e');
+    }
+  }
+
+
 
 
   void _navigateToSearchResultPage(String keyword) async {

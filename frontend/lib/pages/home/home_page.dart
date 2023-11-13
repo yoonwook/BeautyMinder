@@ -55,24 +55,22 @@ class _HomePageState extends State<HomePage> {
             });
             try {
               final result = await KeywordRankService.getKeywordRank();
+              final result2 = await KeywordRankService.getProductRank();
+
               print('fdsfd keyword rank : ${result.value}');
+              print('dkdkd product rank : ${result2.value}');
+
               if (result.isSuccess) {
                 // SearchPage로 이동하고 가져온 데이터를 전달합니다.
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: result.value!),),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: result.value!, data2: result2.value!,),),);
               }
               else {
-                // // API 호출 실패를 처리합니다.
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: result.value!),),);
-                // Fluttertoast.showToast(
-                //   msg: result.error ?? '키워드 랭킹 가져오는 데 실패하였습니다.',
-                //   toastLength: Toast.LENGTH_SHORT,
-                //   gravity: ToastGravity.CENTER,
-                // );
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: null,),),);
+                // API 호출 실패를 처리합니다.
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: null, data2: null,),),);
               }
             }
             catch (e) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: null,),),);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: null, data2: null),),);
             }
             finally {
               // API 호출 상태를 초기화합니다.

@@ -51,6 +51,42 @@ class KeywordRankService {
     }
   }
 
+
+  static Future<Result<ProductRank>> getProductRank() async {
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.productRankAPI).toString();
+
+    try {
+      // GET 요청
+      final response = await client.get(
+          url,
+          //
+          options: Options(
+            receiveTimeout: const Duration(milliseconds: 1000),
+            sendTimeout: const Duration(milliseconds: 1000),
+          )
+        //
+      );
+
+      if (response.statusCode == 200) {
+        // 사용자 정보 파싱
+        final user = ProductRank.fromJson(response.data);
+        print('heloo : ${response.data}');
+        return Result.success(user);
+      }
+
+      return Result.failure("Failed to get user profile");
+
+    } catch (e) {
+      //
+      if (e is DioException && e.type == DioExceptionType.connectionTimeout) {
+        return Result.failure("Connection timed out");
+      }
+      //
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
 }
 
 // 결과 클래스
