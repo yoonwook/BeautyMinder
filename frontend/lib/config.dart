@@ -17,6 +17,7 @@ class Config {
 
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
+  static const deleteAPI = "/user/delete";
   static const userProfileAPI = "/user/me/";
 
   // Todo
@@ -34,6 +35,10 @@ class Config {
 
   //search
   static const homeSearchKeywordAPI = "/search";
+  static const searchReviewbyContentAPI = "/search/review";
+  static const searchCosmeticsbyKeyword = "/search/keyword";
+  static const searchCosmeticsbyName = "/search/cosmetic";
+  static const searchCosmeticsbyCategory = "/search/category";
 
   //gpt review
   static const getGPTReviewAPI = "gpt/review";
@@ -46,4 +51,6 @@ class Config {
 
   //review
   static const AllReviewAPI = "/review";
+  static const getReviewAPI = "/review/";
+  static const ReviewImageAPI = "/review/image";
 }

@@ -2,12 +2,10 @@ import 'package:beautyminder/dto/cosmetic_model.dart';
 import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../dto/gptReview_model.dart';
 import '../../widget/commonAppBar.dart';
-import 'all_review_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({Key? key, required this.searchResults}) : super(key: key);
@@ -99,7 +97,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           viewportFraction: 1.0, //이미지 전체 화면 사용
           aspectRatio: 16/9, //가로 세로 비율 유지
         ),
-        items: widget.searchResults.images!.map((image) {
+        items: widget.searchResults.images.map((image) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.network(
@@ -117,7 +115,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        'Brand: ${widget.searchResults.brand}, 이미지 개수: ${widget.searchResults.images!.length}',
+        'Brand: ${widget.searchResults.brand}, 이미지 개수: ${widget.searchResults.images.length}',
         style: TextStyle(fontSize: 16),
       ),
     );

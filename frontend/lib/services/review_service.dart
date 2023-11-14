@@ -15,10 +15,17 @@ import 'package:mime/mime.dart';
 
 
 class ReviewService {
-  static final Dio client = Dio(BaseOptions(baseUrl: Config.apiURL));
+  static final Dio client = Dio();
+  static String accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM';
+  static String refreshToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ';
 
+  // 액세스 토큰 설정
+  static void setAccessToken() {
+    client.options.headers['Authorization'] = 'Bearer $accessToken';
+  }
 
   static Future<List<PlatformFile>> getImages() async {
+    setAccessToken();
     List<PlatformFile> paths = List.empty();
     try {
       paths = (await FilePicker.platform.pickFiles(
@@ -39,7 +46,8 @@ class ReviewService {
   // 리뷰 추가 함수
   static Future<ReviewResponse> addReview(
       ReviewRequest reviewRequest, List<PlatformFile> imageFiles) async {
-    final url = '/review';
+    setAccessToken();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI).toString();
 
     // Convert the PlatformFile objects to MultipartFile objects
     List<MultipartFile> multipartImageList = imageFiles.map((file) {
@@ -56,7 +64,6 @@ class ReviewService {
       'content': reviewRequest.content,
       'rating': reviewRequest.rating,
       'cosmeticId': reviewRequest.cosmeticId,
-      'userId': reviewRequest.userId,
     });
 
     // Create a MultipartFile from the JSON string
@@ -88,7 +95,10 @@ class ReviewService {
   // 리뷰 조회 함수
   static Future<List<ReviewResponse>> getReviewsForCosmetic(
       String cosmeticId) async {
-    final url = '/review/$cosmeticId';
+    setAccessToken();
+
+    final url = Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
+
     var response = await client.get(url);
     if (response.statusCode == 200) {
       return (response.data as List)
@@ -101,7 +111,9 @@ class ReviewService {
 
   // 리뷰 삭제 함수
   static Future<void> deleteReview(String reviewId) async {
-    final url = '/review/$reviewId';
+    setAccessToken();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI+reviewId).toString();
+
     var response = await client.delete(url);
     if (response.statusCode != 200) {
       throw Exception('Failed to delete review');
@@ -111,7 +123,9 @@ class ReviewService {
   // 리뷰 수정 함수
   static Future<ReviewResponse> updateReview(String reviewId,
       ReviewRequest reviewRequest, List<PlatformFile> imageFiles) async {
-    final url = '/review/$reviewId';
+    setAccessToken();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI+reviewId).toString();
+
     var formData = FormData();
 
     // 리뷰 텍스트 데이터를 JSON 문자열로 변환
@@ -149,17 +163,18 @@ class ReviewService {
 
   // 이미지 로드 함수
   static Future<String> loadImage(String filename) async {
+    setAccessToken();
     final parameters={
       'filename' : '$filename',
     };
-    final url = Uri.http(Config.apiURL, Config.AllReviewAPI, parameters).toString();
 
-    // final url = '${Config.apiURL}/review/image?filename=$filename';
+    final url = Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
+
     try {
       var response = await client.get(url);
       if (response.statusCode == 200) {
         // 서버에서 이미지의 URL
-        return response.data.toString(); // 이는 이미지의 URL
+        return response.data; // 이는 이미지의 URL
       } else {
         throw Exception('Failed to load image');
       }

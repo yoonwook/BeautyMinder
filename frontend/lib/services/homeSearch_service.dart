@@ -24,7 +24,12 @@ class SearchService {
 
   // 이름으로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByName(String name) async {
-    final url = '${Config.apiURL}/search/cosmetic?name=$name';
+    final parameters={
+      'name' : '$name',
+    };
+
+    final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters).toString();
+
     final response = await client.get(url);
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
@@ -48,7 +53,12 @@ class SearchService {
 
   // 카테고리로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByCategory(String category) async {
-    final url = '${Config.apiURL}/search/category?category=$category';
+    final parameters={
+      'category' : '$category',
+    };
+
+    final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters).toString();
+
     final response = await client.get(url);
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
@@ -60,7 +70,13 @@ class SearchService {
 
   // 키워드로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByKeyword(String keyword) async {
-    final url = '${Config.apiURL}/search/keyword?keyword=$keyword';
+
+    final parameters={
+      'keyword' : '$keyword',
+    };
+
+    final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters).toString();
+
     final response = await client.get(url);
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;

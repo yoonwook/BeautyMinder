@@ -89,4 +89,14 @@ class SharedService {
     // Update local storage with new tokens
     await SharedService.setRefreshToken(refreshedTokens?? '');
   }
+
+  static Future<bool> getBool(String key) async {
+    final result = await storage.read(key: key);
+    return result == 'true' ? true : false;
+  }
+
+  static Future<String?> getString(String key) async {
+    final result = await storage.read(key: key);
+    return result;
+  }
 }

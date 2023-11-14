@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
@@ -151,7 +152,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                         content: content,
                         rating: _localRating, // 여기에서 _localRating 사용
                         cosmeticId: _selectedCosmeticId,
-                        userId: userId,
+
                       );
 
                       try {
@@ -207,7 +208,6 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     );
   }
 
-  //해당 제품의 리뷰 전체보기
   Widget _buildReviewList() {
     return Expanded(
       child: ListView.builder(

@@ -7,6 +7,7 @@ class User {
     this.profileImage,
     required this.createdAt,
     required this.authorities,
+    required this.phoneNumber,
   });
 
   late final String id;
@@ -15,8 +16,8 @@ class User {
   late final String? nickname;
   late final String? profileImage;
   late final DateTime createdAt;
-  late final String
-      authorities; // authorities: [ { authority: ROLE_USER } ] -> ".."
+  late final String authorities; // authorities: [ { authority: ROLE_USER } ] -> ".."
+  late final String? phoneNumber;
 
   @override
   String toString() {
@@ -28,7 +29,8 @@ User {
   nickname: $nickname,
   profileImage: $profileImage,
   createdAt: $createdAt,
-  authorities: $authorities
+  authorities: $authorities,
+  phoneNumber: $phoneNumber
 }''';
   }
 
@@ -40,6 +42,7 @@ User {
       nickname: json['nickname'],
       profileImage: json['profileImage'],
       createdAt: DateTime.parse(json['createdAt']),
+      phoneNumber : json['phoneNumber'],
       authorities: (json['authorities'] as List<dynamic>)
           .map((obj) => obj['authority'] as String)
           .join(','), // Convert List of maps to comma-separated string
