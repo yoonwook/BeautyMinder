@@ -1,4 +1,3 @@
-import 'package:beautyminder/pages/recommend/recommend_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
-import '../recommend_bloc_screen.dart';
+import '../recommend/recommend_bloc_screen.dart';
 
 class PouchPage extends StatefulWidget {
   const PouchPage({Key? key}) : super(key: key);

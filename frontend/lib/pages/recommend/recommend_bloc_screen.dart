@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widget/commonAppBar.dart';
-import '../widget/commonBottomNavigationBar.dart';
-import 'home/home_page.dart';
-import 'my/my_page.dart';
+import '../../widget/commonAppBar.dart';
+import '../../widget/commonBottomNavigationBar.dart';
+import '../home/home_page.dart';
+import '../my/my_page.dart';
 
 class RecPage extends StatefulWidget {
   const RecPage({Key? key}) : super(key: key);

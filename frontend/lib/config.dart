@@ -43,4 +43,7 @@ class Config {
 
   // Recommend
   static const RecommendAPI = "/recommend/";
+
+  //review
+  static const AllReviewAPI = "/review";
 }

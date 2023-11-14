@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:beautyminder/dto/keywordRank_model.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/pouch/pouch_page.dart';
-import 'package:beautyminder/pages/recommend/recommend_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
 import 'package:beautyminder/widget/homepageAppBar.dart';
@@ -16,7 +15,7 @@ import '../../dto/todo_model.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../my/my_page.dart';
-import '../recommend_bloc_screen.dart';
+import '../recommend/recommend_bloc_screen.dart';
 import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {

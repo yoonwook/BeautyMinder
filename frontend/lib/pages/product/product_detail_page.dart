@@ -1,4 +1,5 @@
 import 'package:beautyminder/dto/cosmetic_model.dart';
+import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../dto/gptReview_model.dart';
 import '../../widget/commonAppBar.dart';
+import 'all_review_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({Key? key, required this.searchResults}) : super(key: key);
@@ -48,11 +50,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           _displayImages(),
           const SizedBox(height: 50),
           _displayBrand(),
-          const SizedBox(height: 50),
           _displayCategory(),
-          const SizedBox(height: 50),
           _displayKeywords(),
-          const SizedBox(height: 50),
           _displayGPTReviewText(),
           const SizedBox(height: 50),
           FutureBuilder<Result<GPTReviewInfo>>(
@@ -73,7 +72,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               }
             },
           ),
-          const SizedBox(height: 50),
+          _watchAllReviewsButton(),
+          const SizedBox(height: 80),
         ],
       ),
     );
@@ -154,9 +154,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Widget _displayGPTReview(GPTReviewInfo gptReviewInfo) {
-    print('GPTReviewInfo - Positive Review: ${gptReviewInfo.positive}');
-    print('GPTReviewInfo - Negative Review: ${gptReviewInfo.negative}');
-    print('GPTReviewInfo - GPT Version: ${gptReviewInfo.gptVersion}');
+    // print('GPTReviewInfo - Positive Review: ${gptReviewInfo.positive}');
+    // print('GPTReviewInfo - Negative Review: ${gptReviewInfo.negative}');
+    // print('GPTReviewInfo - GPT Version: ${gptReviewInfo.gptVersion}');
 
     return Column(
       children: [
@@ -203,6 +203,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  //리뷰 전체보기 버튼
+  Widget _watchAllReviewsButton() {
+    return ElevatedButton(
+      onPressed: () {
+        // 클릭 시 AllReviewPage로 이동
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => AllReviewPage(cosmeticId : widget.searchResults.id)),
+        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CosmeticReviewPage()),
+        );
+      },
+      child: Text('리뷰 전체보기'),
     );
   }
 }
