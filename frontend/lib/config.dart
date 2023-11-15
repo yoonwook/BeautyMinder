@@ -18,7 +18,7 @@ class Config {
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
   static const deleteAPI = "/user/delete";
-  static const userProfileAPI = "/user/me/";
+  static const userProfileAPI = "/user/me";
 
   // Todo
   static const todoAPI = "/todo/all";
@@ -27,7 +27,7 @@ class Config {
 
   //Baumann
   static const baumannSurveyAPI = "/baumann/survey";
-  static const baumannTestAPI = "/baumann/test/65499d8316f366541e3cc0a2";
+  static const baumannTestAPI = "/baumann/test";
 
   //rank
   static const keywordRankAPI = "/redis/top/keywords";
@@ -47,7 +47,7 @@ class Config {
   static const CosmeticAPI = "/cosmetic";
 
   // Recommend
-  static const RecommendAPI = "/recommend/";
+  static const RecommendAPI = "/recommend";
 
   //review
   static const AllReviewAPI = "/review";

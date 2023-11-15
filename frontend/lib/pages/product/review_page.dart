@@ -8,52 +8,60 @@ import 'package:flutter/services.dart';
 
 import '../../dto/review_request_model.dart';
 import '../../dto/review_response_model.dart';
-import '../../services/homeSearch_service.dart';
 import '../../services/review_service.dart';
 import '/dto/user_model.dart';
-import '/dto/cosmetic_model.dart';
 import '/services/shared_service.dart';
 
 class CosmeticReviewPage extends StatefulWidget {
+  final String cosmeticId;
+
+  CosmeticReviewPage({Key? key, required this.cosmeticId}) : super(key: key);
+
   @override
   _CosmeticReviewPageState createState() => _CosmeticReviewPageState();
 }
 
 class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Cosmetic> _searchResults = [];
+  //List<Cosmetic> _searchResults = [];
   List<ReviewResponse> _cosmeticReviews = []; // ReviewResponse 리스트로 변경
   bool _isLoading = false;
-  String _selectedCosmeticId = '';
+  //String _selectedCosmeticId = '';
   List<PlatformFile>? _imageFiles;
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _fetchReviewsForCosmetic(widget.cosmeticId);
   }
 
-  void _searchCosmetics() async {
-    setState(() => _isLoading = true);
-    try {
+  /***@override
+      void dispose() {
+      _searchController.dispose();
+      super.dispose();
+      }
+
+      void _searchCosmetics() async {
+      setState(() => _isLoading = true);
+      try {
       var results = await SearchService.searchCosmeticsByName(_searchController.text);
       setState(() {
-        _searchResults = results;
-        _isLoading = false;
+      _searchResults = results;
+      _isLoading = false;
       });
-    } catch (e) {
+      } catch (e) {
       setState(() => _isLoading = false);
       _showSnackBar('Search failed: $e');
-    }
-  }
-
+      }
+      }
+   ***/
   void _fetchReviewsForCosmetic(String cosmeticId) async {
     setState(() => _isLoading = true);
     try {
       var reviews = await ReviewService.getReviewsForCosmetic(cosmeticId);
       setState(() {
         _cosmeticReviews = reviews;
-        _selectedCosmeticId = cosmeticId;
+        //_selectedCosmeticId = cosmeticId;
         _isLoading = false;
       });
     } catch (e) {
@@ -147,11 +155,11 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                   child: Text('Submit'),
                   onPressed: () async {
                     final String content = _contentController.text;
-                    if (content.isNotEmpty && _selectedCosmeticId.isNotEmpty) {
+                    if (content.isNotEmpty && widget.cosmeticId.isNotEmpty) {
                       ReviewRequest newReviewRequest = ReviewRequest(
                         content: content,
                         rating: _localRating, // 여기에서 _localRating 사용
-                        cosmeticId: _selectedCosmeticId,
+                        cosmeticId: widget.cosmeticId,
 
                       );
 
@@ -180,8 +188,8 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                               _cosmeticReviews[index] = responseReview;
                             }
                           }
-                          _searchResults.clear();
-                          _searchController.clear();
+                          //_searchResults.clear();
+                          //_searchController.clear();
                         });
                         Navigator.of(context).pop();
                         _showSnackBar(reviewToUpdate == null ? 'Review added successfully' : 'Review updated successfully');
@@ -210,37 +218,63 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
 
   Widget _buildReviewList() {
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
         itemCount: _cosmeticReviews.length,
+        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey),
         itemBuilder: (context, index) {
           var review = _cosmeticReviews[index];
           return Card(
+            elevation: 2,
+            margin: EdgeInsets.all(8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: ListTile(
-              title: Text('Rating: ${review.rating}'),
-              subtitle: Text(review.content),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
+              title: Row(
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      _addOrEditReview(review);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () async {
-                      await _deleteReview(review.id);
-                    },
+                  ...List.generate(5, (starIndex) {
+                    return Icon(
+                      starIndex < review.rating ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                      size: 20,
+                    );
+                  }),
+                  SizedBox(width: 8),
+                  Text(
+                    '${review.rating} Stars',
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  review.content,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              /***trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                  TextButton(
+                  child: Text('Edit', style: TextStyle(color: Colors.blue)),
+                  onPressed: () {
+                  _addOrEditReview(review);
+                  },
+                  ),
+                  TextButton(
+                  child: Text('Delete', style: TextStyle(color: Colors.red)),
+                  onPressed: () async {
+                  await _deleteReview(review.id);
+                  },
+                  ),
+                  ],
+                  )***/
             ),
           );
         },
       ),
     );
   }
+
 
   Future<void> _deleteReview(String reviewId) async {
     setState(() => _isLoading = true);
@@ -263,55 +297,28 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cosmetic Reviews'),
-      ),
+      appBar: CommonAppBar(),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search Cosmetics',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: _searchCosmetics,
-                ),
-              ),
-              onSubmitted: (value) => _searchCosmetics(),
-            ),
-          ),
           if (_isLoading)
             CircularProgressIndicator()
           else
-            Expanded(
-              child: ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  var cosmetic = _searchResults[index];
-                  return ListTile(
-                    title: Text(cosmetic.name),
-                    subtitle: Text('ID: ${cosmetic.id}'),
-                    onTap: () => _fetchReviewsForCosmetic(cosmetic.id),
-                  );
-                },
-              ),
-            ),
-          Divider(),
-          if (!_isLoading && _selectedCosmeticId.isNotEmpty) _buildReviewList(),
+            _buildReviewList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (_selectedCosmeticId.isNotEmpty) {
+          if (widget.cosmeticId.isNotEmpty) {
             _addOrEditReview(null);
           } else {
             _showSnackBar('Please select a cosmetic to review.');
           }
         },
         child: Icon(Icons.add),
+        backgroundColor: Color(0xffd86a04),
+        // elevation: 0, // 그림자 크기를 0으로 설정
       ),
     );
   }
 }
+

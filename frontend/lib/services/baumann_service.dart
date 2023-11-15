@@ -1,4 +1,5 @@
 import 'package:beautyminder/dto/baumann_model.dart';
+import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../config.dart';
@@ -22,7 +23,8 @@ class BaumannService {
 
   //POST 방식으로 JSON 데이터 전송하는 일반 함수
   static Future<Response> postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}) {
+      {Map<String, String>? headers}){
+
     return client.post(
       url,
       options: _httpOptions('POST', headers),
@@ -52,31 +54,6 @@ class BaumannService {
       return Result.failure("An error occurred: $e");
     }
   }
-
-
-
-  // static Future<Result<ResultWrapper>> getBaumannResults() async {
-  //   // URL 생성
-  //   final url = Uri.http(Config.apiURL, Config.baumannTestAPI).toString();
-  //
-  //   try {
-  //     // GET 요청
-  //     final response = await client.get(
-  //       url,
-  //       // options: _httpOptions('GET', headers),
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       // 사용자 정보 파싱
-  //       final user = ResultWrapper.fromJson(response.data as Map<String, dynamic>);
-  //       print(user);
-  //       return Result.success(user);
-  //     }
-  //     return Result.failure("Failed to get user profile");
-  //   } catch (e) {
-  //     return Result.failure("An error occurred: $e");
-  //   }
-  // }
 
 }
 

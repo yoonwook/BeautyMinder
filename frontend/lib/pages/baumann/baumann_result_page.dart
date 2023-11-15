@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:beautyminder/dto/baumann_model.dart';
+import 'package:beautyminder/pages/home/home_page.dart';
 import 'package:dio/src/response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,8 @@ class _BaumannResultPageState extends State<BaumannResultPage> {
             _judgeElasticityReult(),
             _judgeMoistureRetentionReult(),
             _judgeSensiticityReult(),
+            SizedBox(height: 10),
+            _navigateToHomeButton(),
           ],
         ),
       ),
@@ -328,4 +331,34 @@ class _BaumannResultPageState extends State<BaumannResultPage> {
       );
     }
   }
+
+  Widget _navigateToHomeButton() {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child:       Container(
+        width: double.infinity,
+        child:       ElevatedButton(
+          onPressed: () {
+            // 버튼을 클릭했을 때 홈페이지로 이동하는 함수 호출
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xffe58731),
+            elevation: 0,
+          ),
+          child: Text(
+            '홈으로 가기',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 }

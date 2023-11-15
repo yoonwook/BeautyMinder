@@ -3,6 +3,7 @@ import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../dto/gptReview_model.dart';
 import '../../widget/commonAppBar.dart';
@@ -19,6 +20,7 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   late Future<Result<GPTReviewInfo>> _gptReviewInfo;
   bool showPositiveReview = true;
+  bool isFavorite = false;
 
   @override
   void initState() {
@@ -47,9 +49,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           const SizedBox(height: 50),
           _displayImages(),
           const SizedBox(height: 50),
+          _likesBtn(),
           _displayBrand(),
           _displayCategory(),
           _displayKeywords(),
+          _displayRatingStars(),
           _displayGPTReviewText(),
           const SizedBox(height: 50),
           FutureBuilder<Result<GPTReviewInfo>>(
@@ -111,13 +115,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  Widget _likesBtn() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          isFavorite  = !isFavorite;
+        });
+      },
+      icon: Icon(
+        isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: isFavorite ? Colors.red : null,
+      ),
+    );
+  }
+
   Widget _displayBrand() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text(
-        'Brand: ${widget.searchResults.brand}, 이미지 개수: ${widget.searchResults.images.length}',
-        style: TextStyle(fontSize: 16),
-      ),
+      child:
+        Text(
+          'Brand: ${widget.searchResults.brand}, 이미지 개수: ${widget.searchResults.images.length}',
+          style: TextStyle(fontSize: 16),
+         ),
     );
   }
 
@@ -137,6 +156,37 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       child: Text(
         'Keywords: ${widget.searchResults.keywords}',
         style: TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _displayRatingStars() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Text(
+            'Rating: ${widget.searchResults.averageRating}',
+            style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(width: 8.0),
+          RatingBar.builder(
+            initialRating: widget.searchResults.averageRating, // Set the initial rating
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemSize: 20,
+            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              // Handle rating updates if needed
+            },
+          ),
+        ],
       ),
     );
   }
@@ -215,7 +265,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         // );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CosmeticReviewPage()),
+          MaterialPageRoute(builder: (context) => CosmeticReviewPage(cosmeticId: widget.searchResults.id,)),
         );
       },
       child: Text('리뷰 전체보기'),

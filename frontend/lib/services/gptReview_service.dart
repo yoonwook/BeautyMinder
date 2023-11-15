@@ -1,5 +1,6 @@
 import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/dto/gptReview_model.dart';
+import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../config.dart';
@@ -23,14 +24,32 @@ class GPTReviewService {
 
   static Future<Result<GPTReviewInfo>> getGPTReviews(String id) async {
 
+    // 유저 정보 가지고 오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    // final accessToken = await SharedService.getAccessToken();
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //refreshToken 가지고오기
+    // final refreshToken = await SharedService.getRefreshToken();
+    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+
+    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
     // URL 생성
     final url = Uri.http(Config.apiURL, '${Config.getGPTReviewAPI}/$id').toString();
     print("******$url\n");
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
     try {
       // GET 요청
       final response = await client.get(
         url,
-        // options: _httpOptions('GET', headers),
+        options: _httpOptions('GET', headers),
       );
 
       print("hehehehehehh-----$response");

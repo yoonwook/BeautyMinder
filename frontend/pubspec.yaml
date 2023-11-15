@@ -33,6 +33,8 @@ dependencies:
   snippet_coder_utils: ^1.0.9
   flutter_secure_storage: ^9.0.0
 
+  flutter_rating_bar: ^4.0.1
+
   equatable: ^2.0.5
   flutter_bloc: ^8.1.1
   bloc_test: ^9.0.3
