@@ -1,10 +1,12 @@
+import 'package:cross_file/src/types/interface.dart';
+
 class UpdateRequestModel {
-  UpdateRequestModel({this.nickname, this.password, this.phone});
+  UpdateRequestModel({this.nickname, this.password, this.phone, required this.image});
 
   late final String? nickname;
   late final String? password;
   late final String? phone;
-  late final String? image;
+  late final String?  image;
 
   UpdateRequestModel.fromJson(Map<String, dynamic> json) {
     nickname = json['nickname'];

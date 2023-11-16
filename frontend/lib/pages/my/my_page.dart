@@ -206,7 +206,7 @@ class MyPageMenu extends StatelessWidget {
               title,
               style: const TextStyle(
                 fontSize: 18,
-                color: Color(0xFF868383),
+                color: Colors.black,
               ),
               textAlign: TextAlign.left,
             ),

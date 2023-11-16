@@ -86,12 +86,14 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                 backgroundColor: const Color(0xFFFF820E),
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserInfoModifyPage()),
-                                );
+                                if (user != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        UserInfoModifyPage()),
+                                  );
+                                }
                               },
                               child: const Text('회원정보 수정'),
                             ),
@@ -141,15 +143,16 @@ class UserInfoProfile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          // SizedBox(
-          //   width: 50,
-          //   child: Image.asset(
-          //     'assets/images/profile.jpg', // profileImage,
-          //     errorBuilder: (context, error, stackTrace) {
-          //       return Image.asset('assets/images/profile.jpg');
-          //     },
-          //   ),
-          // ),
+          SizedBox(
+            width: 50,
+            child: Image.network(
+              profileImage,
+              // 'assets/images/profile.jpg', // profileImage,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset('assets/images/profile.jpg');
+              },
+            ),
+          ),
           // Container(
           //     width: 58,
           //     height: 58,

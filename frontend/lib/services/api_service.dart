@@ -49,6 +49,15 @@ class APIService {
     );
   }
 
+  static Future<Response> _patchJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}) {
+    return client.post(
+      url,
+      options: _httpOptions('PATCH', headers),
+      data: body,
+    );
+  }
+
   // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
@@ -299,7 +308,7 @@ class APIService {
 
     // URL 생성
     final url =
-        Uri.http(Config.apiURL, Config.userProfileAPI).toString();
+        Uri.http(Config.apiURL, Config.editUserInfo).toString();
 
     // 헤더 설정
     final headers = {
@@ -308,8 +317,12 @@ class APIService {
     };
 
     try {
-      final response = await _postJson(url, model.toJson());
-      return Result.success(true);
+
+      final response = await _patchJson(url, model.toJson(), headers: headers);
+      if(response.statusCode == 200) {
+        return Result.success(true);
+      }
+      return Result.failure("Failed to update user profile");
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }

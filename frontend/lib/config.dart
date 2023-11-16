@@ -19,6 +19,7 @@ class Config {
   static const registerAPI = "/user/signup";
   static const deleteAPI = "/user/delete";
   static const userProfileAPI = "/user/me";
+  static const editUserInfo = "/user/update";
 
   // Todo
   static const todoAPI = "/todo/all";
