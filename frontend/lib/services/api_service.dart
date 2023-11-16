@@ -61,7 +61,9 @@ class APIService {
 
     try {
       // POST 요청
+      print("response:");
       final response = await _postForm(url, formData);
+      print("response: $response");
       if (response.statusCode == 200) {
         await SharedService.setLoginDetails(loginResponseJson(response.data));
 

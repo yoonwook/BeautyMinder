@@ -105,22 +105,61 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _searchPageUI() {
     if (widget.data?.keywords == null &&  widget.data2?.cosmetics == null) {
-      return _noRanking();
-    }
-    else {
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            _keywordRanking(),
-            _productRanking(),
-            const SizedBox(height: 20),
-          ],
-        ),
+      return Column(
+        children: [
+          _noKeywordRanking(),
+          _noProductRanking(),
+          const SizedBox(height: 20),
+        ],
       );
+    }
+    // else if(widget.data?.keywords != null &&  widget.data2?.cosmetics == null) {
+    //   return Column(
+    //     children: [
+    //       _keywordRanking(),
+    //       _noProductRanking(),
+    //       const SizedBox(height: 20),
+    //     ],
+    //   );
+    // }
+    // else if(widget.data?.keywords == null &&  widget.data2?.cosmetics != null) {
+    //   return Column(
+    //     children: [
+    //       _noKeywordRanking(),
+    //       _productRanking(),
+    //       const SizedBox(height: 20),
+    //     ],
+    //   );
+    // }
+    else {
+      if((widget.data?.keywords?.length ?? 0) >= 6) {
+        print("length : ${widget.data?.keywords?.length}");
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _keywordRankingIfMoreThanSix(),
+              _productRanking(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      }
+      else {
+        print("length : ${widget.data?.keywords?.length}");
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _keywordRankingIfLessThanFive(),
+              _productRanking(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      }
     }
   }
 
-  Widget _noRanking() {
+  Widget _noKeywordRanking() {
     return Column(
         children: [
           const SizedBox(height: 40),
@@ -144,13 +183,76 @@ class _SearchPageState extends State<SearchPage> {
           SizedBox(height: 40),
           const Center(
             child: Text(
-              '실시간 랭킹 순위를 불러올 수 없습니다.',
+              '실시간 랭킹 순위를 불러올간 수 없습니다.',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey
               ),
             ),
           ),
+          SizedBox(height: 40),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 20),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text(
+          //         '실시간 제품 랭킹',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.bold,
+          //           color: Color(0xffd86a04),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // _divider(),
+          // SizedBox(height: 40),
+          // const Center(
+          //   child: Text(
+          //     '실시간 랭킹 순위를 불러올 수 없습니다.',
+          //     style: TextStyle(
+          //         fontSize: 18,
+          //         color: Colors.grey
+          //     ),
+          //   ),
+          // ),
+      ]
+    );
+  }
+
+  Widget _noProductRanking() {
+    return Column(
+        children: [
+          // const SizedBox(height: 40),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 20),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text(
+          //         '실시간 검색 랭킹',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.bold,
+          //           color: Color(0xffd86a04),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // _divider(),
+          // SizedBox(height: 40),
+          // const Center(
+          //   child: Text(
+          //     '실시간 랭킹 순위를 불러올간 수 없습니다.',
+          //     style: TextStyle(
+          //         fontSize: 18,
+          //         color: Colors.grey
+          //     ),
+          //   ),
+          // ),
           SizedBox(height: 40),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -179,44 +281,48 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-      ]
+        ]
     );
   }
 
-  Widget _keywordRanking() {
+
+  Widget _keywordRankingIfMoreThanSix() {
+    print("dfjkdlsjafkldj: ${widget.data?.keywords}");
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
-    return Column(
-      children: [
-        const SizedBox(height: 40),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                '실시간 검색 랭킹',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffd86a04),
+    return Container(
+      height: 350,
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '실시간 검색 랭킹',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffd86a04),
+                  ),
                 ),
-              ),
-              Text(
-                formattedDate,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey,
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        _divider(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child:
+          _divider(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child:
             Row(
               children: [
                 Expanded(
@@ -261,10 +367,74 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
+
+
+
+  Widget _keywordRankingIfLessThanFive() {
+    print("dfjkdlsjafkldj: ${widget.data?.keywords}");
+    final formattedDate = _formatDateTime(widget.data?.updatedAt);
+
+    return Container(
+      height: 350,
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '실시간 검색 랭킹',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffd86a04),
+                  ),
+                ),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _divider(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+              shrinkWrap: true,
+              itemCount: widget.data?.keywords?.length ?? 0,
+              itemBuilder: (context, index) {
+                final keyword = widget.data?.keywords![index];
+                final rank = index + 1;
+                return ListTile(
+                  title: Text('$rank순위 : $keyword'),
+                  onTap: () async {
+                    if (keyword != null) {
+                      _navigateToSearchResultPage(keyword);
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 
   String _formatDateTime(String? dateTimeString) {
     if (dateTimeString == null) {
