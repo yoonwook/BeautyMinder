@@ -165,6 +165,9 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
         image = pickedFile.path;
       });
 
+      // Call the editProfileImgInfo method with the UpdateRequestModel
+      await APIService.editProfileImgInfo(image!);
+
       onImageChanged(image);
     }
   }

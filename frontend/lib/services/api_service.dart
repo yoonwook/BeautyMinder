@@ -8,6 +8,10 @@ import 'package:beautyminder/dto/review_model.dart';
 import 'package:beautyminder/dto/update_request_model.dart';
 import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
+import 'package:file_picker/src/platform_file.dart';
+import 'package:http_parser/src/media_type.dart';
+import 'package:mime/src/mime_type.dart';
+
 import '../../config.dart';
 import '../dto/user_model.dart';
 import 'shared_service.dart';
@@ -152,10 +156,6 @@ class APIService {
         Uri.http(Config.apiURL, Config.userProfileAPI).toString();
 
     // 헤더 설정
-    // final headers = {
-    //   'Authorization': 'Bearer $accessToken',
-    //   'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
-    // };
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -327,7 +327,55 @@ class APIService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+  //프로필 사진 변경
+  static Future<UpdateRequestModel> editProfileImgInfo(String image) async {
+    // 유저 정보 가지고 오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //refreshToken 가지고오기
+    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.editProfileImg).toString();
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+    };
+
+    var formData = FormData();
+
+    final MediaType contentType = MediaType.parse(lookupMimeType('new_profile.jpg') ?? 'application/octet-stream');
+    final MultipartFile file = MultipartFile.fromString(
+      image,
+      filename: 'new_profile.jpg',
+      contentType: contentType,
+    );
+
+    formData.files.add(MapEntry(
+      'profileImage', // 서버에서 기대하는 필드 이름
+      file,
+    ));
+      // Use Dio's post method for multipart data
+      final response = await client.post(
+        url,
+        options: _httpOptions('POST', headers),
+      );
+
+      // final response = await _postJson(url, model.toJson(), headers: headers);
+      if(response.statusCode == 200) {
+        return UpdateRequestModel.fromJson(response.data);
+      }
+      else {
+        throw Exception('Failed to update review: ${response.statusMessage}');
+      }
+  }
 }
+
+
 
 // 결과 클래스
 class Result<T> {

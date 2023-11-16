@@ -4,8 +4,10 @@ import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../dto/gptReview_model.dart';
+import '../../services/favorites_service.dart';
 import '../../widget/commonAppBar.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -24,8 +26,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   void initState() {
+    print("start page : $isFavorite");
     super.initState();
     _gptReviewInfo = GPTReviewService.getGPTReviews(widget.searchResults.id);
+    _loadFavoriteState();
   }
 
   @override
@@ -67,6 +71,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  Future<void> _loadFavoriteState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isFavorite = prefs.getBool('isFavorite_${widget.searchResults.id}') ?? false;
+    });
+  }
+
+  Future<void> _saveFavoriteState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFavorite_${widget.searchResults.id}', isFavorite);
+  }
+
   Widget _displayingName() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -106,10 +122,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Widget _likesBtn() {
     return IconButton(
-      onPressed: () {
+      onPressed: () async {
         setState(() {
           isFavorite  = !isFavorite;
         });
+        // Call FavoritesService to upload favorites when the heart icon is pressed
+        if (isFavorite) {
+          try {
+            // Assuming you have the cosmeticId from your widget
+            String cosmeticId = widget.searchResults.id;
+
+            // Call the uploadFavorites method from FavoritesService
+            String result = await FavoritesService.uploadFavorites(cosmeticId);
+
+            if (result == "success") {
+              print("Favorites uploaded successfully! : $isFavorite");
+            } else {
+              print("Failed to upload favorites");
+            }
+          } catch (e) {
+            print("An error occurred while uploading favorites: $e");
+          }
+        }
       },
       icon: Icon(
         isFavorite ? Icons.favorite : Icons.favorite_border,

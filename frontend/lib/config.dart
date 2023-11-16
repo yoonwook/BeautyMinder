@@ -20,6 +20,7 @@ class Config {
   static const deleteAPI = "/user/delete";
   static const userProfileAPI = "/user/me";
   static const editUserInfo = "/user/update";
+  static const editProfileImg = "user/upload";
 
   // Todo
   static const todoAPI = "/todo/all";
@@ -59,4 +60,7 @@ class Config {
   static const createCosmeticExpiryAPI = "/expiry/create";
   static const getAllExpiryByUserIdAPI = "/expiry/user/";
   static const getExpiryByUserIdandExpiryIdAPI = "/expiry/";
+
+  //favorites
+  static const uploadFavoritesAPI = "/user/favorites/";
 }
