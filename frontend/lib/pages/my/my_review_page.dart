@@ -2,6 +2,7 @@ import 'package:beautyminder/dto/review_model.dart';
 import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MyReviewPage extends StatefulWidget {
   const MyReviewPage({super.key});
@@ -55,7 +56,13 @@ class _MyReviewPageState extends State<MyReviewPage> {
 
   Widget _body() {
     return isLoading
-        ? Center(child: Text('로딩 중'))
+        ? Center(
+            child: SpinKitThreeInOut(
+              color: Color(0xffd86a04),
+              size: 50.0,
+              duration: Duration(seconds: 2),
+            ),
+          )
         : ListView.builder(
             itemCount: reviews?.length ?? 0,
             itemBuilder: (context, index) => Padding(

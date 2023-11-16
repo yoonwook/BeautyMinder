@@ -100,7 +100,7 @@ class _RecPage extends State<RecPage> {
           appBar: CommonAppBar(),
           body: Column(
             children: [
-              Container(height: 10,),
+              Container(height: 30),
               BlocBuilder<RecommendPageBloc, RecommendState>(
                   builder: (context, state) {
                     return Theme(
@@ -110,48 +110,52 @@ class _RecPage extends State<RecPage> {
                           selectedBorderColor: Color(0xffd86a04)
                         ),
                       ),
-                      child: ToggleButtons(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('전체', style: TextStyle(fontSize: 18)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('스킨케어', style: TextStyle(fontSize: 18)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('클렌징', style: TextStyle(fontSize: 18))
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('선케어', style: TextStyle(fontSize: 18))
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('베이스', style: TextStyle(fontSize: 18))
-                          ),
-                        ],
-                        isSelected: [
-                          isAll,
-                          isSkincare,
-                          isCleansing,
-                          isSuncare,
-                          isBase
-                        ],
-                        onPressed: (int index) {
-                          print({"index : $index"});
-                          toggleSelect(index);
-                          context.read<RecommendPageBloc>().add(
-                            RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
-                          );
-                        },
-                        // fillColor: Color(0xffffecda),
-                        fillColor: Colors.white,
+                      child: Container(
+                        height: 30,
+                        child: ToggleButtons(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('전체', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('스킨케어', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('클렌징', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('선케어', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('베이스', style: TextStyle(fontSize: 15)),
+                            ),
+                          ],
+                          isSelected: [
+                            isAll,
+                            isSkincare,
+                            isCleansing,
+                            isSuncare,
+                            isBase
+                          ],
+                          onPressed: (int index) {
+                            print({"index : $index"});
+                            toggleSelect(index);
+                            context.read<RecommendPageBloc>().add(
+                              RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
+                            );
+                          },
+                          // fillColor: Color(0xffffecda),
+                          fillColor: Colors.white,
+                        ),
                       ),
                     );
               }),
+              Container(height: 20,),
               Expanded(child: RecPageImageWidget())
             ],
           ),
@@ -289,6 +293,11 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                         // Navigator.of(context).push(MaterialPageRoute(
                         //     builder: (context) => ProductDetailPage(
                         //         name: state.recCosmetics![index].name)));
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProductDetailPage(
+                            searchResults: state.recCosmetics![index],
+                          ),
+                        ));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

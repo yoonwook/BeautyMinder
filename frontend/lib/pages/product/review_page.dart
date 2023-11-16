@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../dto/review_request_model.dart';
 import '../../dto/review_response_model.dart';
@@ -301,9 +302,19 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       body: Column(
         children: [
           if (_isLoading)
-            CircularProgressIndicator()
+            Expanded(
+              child: Center(
+                child: SpinKitThreeInOut(
+                  color: Color(0xffd86a04),
+                  size: 50.0,
+                  duration: Duration(seconds: 2),
+                ),
+              ),
+            )
           else
-            _buildReviewList(),
+            Expanded(
+              child: _buildReviewList(),
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
