@@ -7,7 +7,7 @@ class Task {
   final String taskId;
   final String description;
   final String category;
-  final bool done;
+  late  bool done;
 
   Task({
     required this.taskId,

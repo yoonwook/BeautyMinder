@@ -1,3 +1,4 @@
+import 'package:beautyminder/dto/task_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,13 +10,13 @@ abstract class TodoState extends Equatable{
   final bool isError;
   final List<Todo>? todos;
   final Todo? todo;// 삭제, 수정에 사용될 객체
-  final Map<String,dynamic>? update_todo;
+  final Task? task;
 
   const TodoState({
     this.isError = false,
     this.todos,
     this.todo,
-    this.update_todo
+    this.task
 });
 }
 
@@ -37,15 +38,15 @@ class TodoDownloadedState extends TodoState{
 
 // Todo를 로딩 후 상태  --> Todo리스트가 노출되는 상태
 class TodoLoadedState extends TodoState{
-  TodoLoadedState({super.todos, super.isError});
+  TodoLoadedState({super.todos, super.isError, super.todo, super.task});
 
   @override
-  List<Object?> get props =>[todos, isError];
+  List<Object?> get props =>[todos, isError, task];
 }
 
 // Todo를 추가하려는 상태
 class TodoAddState extends TodoState{
-  TodoAddState({ super.todo,super.isError});
+  TodoAddState({ super.todo,super.isError, super.task, super.todos});
 
   @override
   List<Object?> get props =>[ todo, isError];
@@ -65,32 +66,32 @@ class TodoUpdateState extends TodoState{
 
 
   TodoUpdateState({ super.isError,
-  super.update_todo});
+  super.task});
 
   @override
-  List<Object?> get props =>[ update_todo, isError];
+  List<Object?> get props =>[ task, isError];
 }
 
 // update후 상태
 class TodoUpdatedState extends TodoState{
 
-  TodoUpdatedState({ super.update_todo, super.isError});
+  TodoUpdatedState({ super.task, super.isError});
 
   @override
-  List<Object?> get props =>[ update_todo, isError];
+  List<Object?> get props =>[ task, isError];
 }
 
 // 삭제중인 상태
 class TodoDeleteState extends TodoState{
-  TodoDeleteState({super.todo, super.isError});
+  TodoDeleteState({super.todo, super.isError, super.todos});
 
   @override
-  List<Object?> get props => [todo, isError];
+  List<Object?> get props => [todo, isError, todos];
 }
 
 // 삭제 완료된 상태
 class TodoDeletedState extends TodoState{
-  TodoDeletedState({super.todo, super.isError});
+  TodoDeletedState({super.todo, super.isError, super.todos});
 
   @override
   List<Object?> get props => [todo, isError];

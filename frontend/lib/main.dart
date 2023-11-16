@@ -1,6 +1,8 @@
+import 'package:beautyminder/Bloc/RecommendPageBloc.dart';
 import 'package:beautyminder/Observer.dart';
 import 'package:beautyminder/pages/Todo_Add_Page_Test.dart';
 import 'package:beautyminder/pages/calendar_page.dart';
+import 'package:beautyminder/pages/camera_page.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
@@ -142,27 +144,44 @@ void main() async {
 
 
   //final result = await TodoService.getAllTodos();
-  final result = await TodoService.addTodo(todo);
+  //final result = await TodoService.addTodo(todo);
   //final result = await TodoService.deleteTodo("sss");
   //final result = await TodoService.taskUpdateTodo(k);
 
 
-  print("result.value : ${result.value}");
+ // print("result.value : ${result.value}");
 
 
 
-  //runApp(const MyApp());
-
-  runApp(MaterialApp(
-      title: 'BeautyMinder',
-      theme: ThemeData(
-        primaryColor: const Color(0xffffb876),
-      ),
-      home://TodoAddPage(),
-    CalendarPage(),
+  runApp( MultiBlocProvider(providers: [
+    BlocProvider<RecommendPageBloc>(
+         create: (context) => RecommendPageBloc(),
+       ),
+       BlocProvider<TodoPageBloc>(create: (create) => TodoPageBloc())],
+      child:  MaterialApp(
+        title: 'BeautyMinder',
+        theme: ThemeData(
+          primaryColor: const Color(0xffffb876),
+        ),
+        home: CalendarPage()
+        //const TodoPage(),
+      )
+    //MyApp()
     )
-
   );
+
+  // runApp(MaterialApp(
+  //     title: 'BeautyMinder',
+  //     theme: ThemeData(
+  //       primaryColor: const Color(0xffffb876),
+  //     ),
+  //     home: //TodoPage()
+  //   //TodoAddPage(),
+  //   CalendarPage(),
+  //   //CameraPage()
+  //   )
+  //
+  // );
 
 }
 

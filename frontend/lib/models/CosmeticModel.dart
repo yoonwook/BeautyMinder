@@ -6,6 +6,7 @@ class CosmeticModel{
  final List<String>? images;
  final String? category;
  final List<String>? keywords;
+ final String? thumbnailUrl;
 
  CosmeticModel({
    required this.id,
@@ -13,13 +14,15 @@ class CosmeticModel{
    required this.brand,
    required this.category,
    required this.keywords,
-   required this.name
+   required this.name,
+   required this.thumbnailUrl
 });
 
  factory CosmeticModel.fromJson(Map<String, dynamic> json){
   return CosmeticModel(
       id: json["id"],
       images: List<String>.from(json["images"]),
+      thumbnailUrl: json["thumbnailUrl"],
       brand: json["brand"],
       category: json["category"],
       keywords: List<String>.from(json["keywords"]),
@@ -28,7 +31,7 @@ class CosmeticModel{
 
  @override
  String toString() {
-   return 'CosmeticModel{id: $id, name: $name, brand: $brand, images: ${images?.join(', ')}, category: $category, keywords: ${keywords?.join(', ')}}';
+   return 'CosmeticModel{id: $id, name: $name, brand: $brand, images: ${images?.join(', ')}, category: $category, keywords: ${keywords?.join(', ')} , thumbnailUrl : ${thumbnailUrl}';
  }
 
 }

@@ -9,12 +9,25 @@ abstract class TodoPageEvent extends Equatable{
   // Add event : API를 통해 Todo를 추가하는 이벤트
   // Delete event : API를 통해 Todo를 삭제하는 이벤트
   // Update event : API를 통해 Todo를 수정하는 이벤트
+
+  final List<Todo>? todos;
+  final Todo? todo;
+  final Task? task;
+  final List<Map<String, dynamic>>? update_todo;
+  final bool? isDone;
+
+  const TodoPageEvent({this.todos, this.update_todo, this.isDone, this.task, this.todo});
+
+
 }
 
 class TodoPageInitEvent extends TodoPageEvent{
 
+
   @override
   List<Object?> get props =>[];
+
+  TodoPageInitEvent();
 }
 
 class TodoPageAddEvent extends TodoPageEvent{
@@ -29,19 +42,30 @@ class TodoPageAddEvent extends TodoPageEvent{
 
 
 class TodoPageDeleteEvent extends TodoPageEvent{
-  final Todo todo;
-  final Task task;
 
-  TodoPageDeleteEvent(this.todo, this.task);
+  TodoPageDeleteEvent({super.task, super.todo});
 
   @override
-  List<Object?> get props =>[todo, task];
+  List<Object?> get props =>[];
 }
 
 class TodoPageUpdateEvent extends TodoPageEvent{
-  final Map<String, dynamic> update_todo;
+  const TodoPageUpdateEvent({super.task, super.isDone, super.todos, super.todo});
 
-  TodoPageUpdateEvent(this.update_todo);
   @override
-  List<Object?> get props =>[update_todo];
+  List<Object?> get props =>[update_todo, isDone, todos];
+}
+
+class TodoPageUpdatedEvent extends TodoPageEvent{
+  const TodoPageUpdatedEvent({super.update_todo, super.isDone, super.todos});
+
+  @override
+  List<Object?> get props =>[update_todo, isDone, todos];
+}
+
+class TodoPageErrorEvent extends TodoPageEvent{
+  const TodoPageErrorEvent();
+
+  @override
+  List<Object?> get props => [];
 }
