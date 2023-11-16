@@ -61,7 +61,6 @@ class APIService {
 
     try {
       // POST 요청
-      print("response:");
       final response = await _postForm(url, formData);
       print("response: $response");
       if (response.statusCode == 200) {
@@ -322,6 +321,9 @@ class Result<T> {
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
+  Result.success(this.value) : error = null;
+  Result.failure(this.error) : value = null;
+
+  bool get isSuccess => error == null;
+  bool get isFailure => !isSuccess;
 }

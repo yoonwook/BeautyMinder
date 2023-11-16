@@ -1,4 +1,3 @@
-import 'package:beautyminder/pages/pouch/pouch_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +5,7 @@ import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
+import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
 
 class TodoPage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _TodoPageState extends State<TodoPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
           }
           else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           }
           else if (index == 2) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));

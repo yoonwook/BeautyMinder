@@ -73,7 +73,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       child: Center(
         child: Text(
           widget.searchResults.name,
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
       ),
     );
@@ -123,7 +124,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       child:
         Text(
           '브랜드: ${widget.searchResults.brand}',
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 18),
          ),
     );
   }
@@ -133,7 +134,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         '카테고리: ${widget.searchResults.category}',
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 18),
       ),
     );
   }
@@ -143,7 +144,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         '키워드: ${widget.searchResults.keywords}',
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 18),
       ),
     );
   }
@@ -156,7 +157,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           children: [
             Text(
               '별점: ',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 18),
             ),
             AbsorbPointer(
               absorbing: true, // Set absorbing to true
@@ -177,7 +178,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             Text(
               '(${widget.searchResults.averageRating})',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 18),
             ),
           ],
         ),
@@ -280,7 +281,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           return Text('Error: ${snapshot.error}');
         }
         else if (!snapshot.hasData || !snapshot.data!.isSuccess) {
-          return Text('Failed to load GPT review information');
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+            child: Center(
+              child: Text(
+                '요약된 GPT Review가 없습니다.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
         }
         else {
           final gptReviewInfo = snapshot.data!.value!;

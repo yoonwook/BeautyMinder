@@ -53,4 +53,9 @@ class Config {
   static const AllReviewAPI = "/review";
   static const getReviewAPI = "/review/";
   static const ReviewImageAPI = "/review/image";
+
+  //expiry
+  static const createCosmeticExpiryAPI = "/expiry/create";
+  static const getAllExpiryByUserIdAPI = "/expiry/user/";
+  static const getExpiryByUserIdandExpiryIdAPI = "/expiry/";
 }

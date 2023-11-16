@@ -25,13 +25,33 @@ class SearchService {
 
   // 이름으로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByName(String name) async {
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    // final accessToken = await SharedService.getAccessToken();
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //refreshToken 가지고오기
+    // final refreshToken = await SharedService.getRefreshToken();
+    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+
+    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'name' : '$name',
     };
 
     final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters).toString();
 
-    final response = await client.get(url);
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    final response = await client.get(
+        url,
+        options: _httpOptions('GET', headers)
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
@@ -54,13 +74,35 @@ class SearchService {
 
   // 카테고리로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByCategory(String category) async {
+
+    // 유저 정보 가지고 오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    // final accessToken = await SharedService.getAccessToken();
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //refreshToken 가지고오기
+    // final refreshToken = await SharedService.getRefreshToken();
+    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+
+    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'category' : '$category',
     };
 
     final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters).toString();
 
-    final response = await client.get(url);
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    final response = await client.get(
+      url,
+      options: _httpOptions('GET', headers),
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
@@ -72,13 +114,34 @@ class SearchService {
   // 키워드로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByKeyword(String keyword) async {
 
+    // 유저 정보 가지고 오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    // final accessToken = await SharedService.getAccessToken();
+    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //refreshToken 가지고오기
+    // final refreshToken = await SharedService.getRefreshToken();
+    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+
+    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'keyword' : '$keyword',
     };
 
     final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters).toString();
 
-    final response = await client.get(url);
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    final response = await client.get(
+      url,
+      options: _httpOptions('GET', headers),
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();

@@ -3,7 +3,7 @@ import 'package:beautyminder/pages/baumann/baumann_test_start_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';
-import 'package:beautyminder/pages/pouch/pouch_page.dart';
+import 'package:beautyminder/pages/pouch/expiry_page.dart';
 import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_bloc_screen.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/user/signup': (context) => const RegisterPage(),
         '/recommend': (context) => const RecPage(),
-        '/pouch': (context) => const PouchPage(),
+        '/pouch': (context) => CosmeticExpiryPage(),
         '/home': (context) => const HomePage(),
         '/todo': (context) => const TodoPage(),
         '/my': (context) => const MyPage(),

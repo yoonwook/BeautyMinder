@@ -14,7 +14,7 @@ import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
-import '../pouch/pouch_page.dart';
+import '../pouch/expiry_page.dart';
 import '../todo/todo_page.dart';
 
 class RecPage extends StatefulWidget {
@@ -166,7 +166,7 @@ class _RecPage extends State<RecPage> {
                   // 페이지 전환 로직 추가
                   if (index == 1) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PouchPage()));
+                        builder: (context) => CosmeticExpiryPage()));
                   } else if (index == 2) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const HomePage()));
@@ -361,7 +361,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
       padding: const EdgeInsets.only(bottom: 4, left: 12),
       child: Text(
         content,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );
   }

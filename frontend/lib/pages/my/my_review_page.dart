@@ -70,53 +70,28 @@ class _MyReviewPageState extends State<MyReviewPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.orange[50],
+                      color: Colors.white, // 흰색 배경
+                      border: Border.all(color: Colors.grey),
                     ),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(children: [
-                              SizedBox(
-                                  width: 50,
-                                  child:
-                                      Image.asset('assets/images/profile.jpg')),
-                              // SizedBox(
-                              //   width: 50,
-                              //   child:
-                              //       Image.network(reviews?[index]['images'][0],
-                              //           loadingBuilder: (BuildContext context,
-                              //               Widget child,
-                              //               ImageChunkEvent? loadingProgress) {
-                              //     if (loadingProgress == null) {
-                              //       return child; // 이미지 로딩이 완료되면 정상적으로 표시
-                              //     } else {
-                              //       return CircularProgressIndicator(
-                              //         value:
-                              //             loadingProgress.expectedTotalBytes !=
-                              //                     null
-                              //                 ? loadingProgress
-                              //                         .cumulativeBytesLoaded /
-                              //                     (loadingProgress
-                              //                             .expectedTotalBytes ??
-                              //                         1)
-                              //                 : null,
-                              //       );
-                              //     }
-                              //   }, errorBuilder: (context, error, stackTrace) {
-                              //     return Image.asset(
-                              //       'assets/images/profile.jpg',
-                              //     );
-                              //   }),
-                              // ),
-                              SizedBox(width: 30),
-                              Text(reviews?[index]['cosmetic']['name'])
-                            ]),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            child: Text(
+                                reviews?[index]['cosmetic']['name'],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(reviews?[index]['content']),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            child: Text(
+                              reviews?[index]['content'],
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
                         ]),
                   ),

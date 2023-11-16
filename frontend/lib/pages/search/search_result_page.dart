@@ -28,74 +28,76 @@ class _SearchResultPageState extends State<SearchResultPage> {
     return Scaffold(
         appBar: SearchAppBar(title:_title()),
         body: _searchResultPageUI(),
-        // 여기에 검색 결과를 표시하는 위젯을 추가
     );
   }
 
   Widget _title() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        SizedBox(
-          width: 10,
-        ),
-        Flexible(
-          flex: 1,
-          child: TextField(
-            controller: textController,
-            // onSubmitted: (text) {
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
-            // },
-            onChanged: (text) {
-              searchQuery = text;
-            },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 3,
-                horizontal: 15,
+    return Container(
+      height: 40,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(
+            width: 10,
+          ),
+          Flexible(
+            flex: 1,
+            child: TextField(
+              controller: textController,
+              // onSubmitted: (text) {
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
+              // },
+              onChanged: (text) {
+                searchQuery = text;
+              },
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 3,
+                  horizontal: 15,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10), //포커스 시
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffd86a04),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10), // 활성화 상태 모서리를 둥글게 조정
+                  ),
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+                hintText: "검색 키워드를 입력해주세요.",
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10), //포커스 시
-                ),
-                borderSide: BorderSide(
-                  color: Color(0xffd86a04),
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10), // 활성화 상태 모서리를 둥글게 조정
-                ),
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                ),
-              ),
-              hintText: "검색 키워드를 입력해주세요.",
             ),
           ),
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        IconButton(
-          onPressed: () async {
-            try {
-              final result = await SearchService.searchAnything(searchQuery);
-              print(result);
-
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery, searchResults: result, )),);
-              print('////////////searchQuery : $searchQuery');
-            } catch (e) {
-              print('Error searching anything: $e');
-            }
-          },
-          icon: Icon(
-            Icons.search,
-            color: Color(0xffd86a04),
+          SizedBox(
+            width: 8,
           ),
-        ),
-      ],
+          IconButton(
+            onPressed: () async {
+              try {
+                final result = await SearchService.searchAnything(searchQuery);
+                print(result);
+
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery, searchResults: result, )),);
+                print('////////////searchQuery : $searchQuery');
+              } catch (e) {
+                print('Error searching anything: $e');
+              }
+            },
+            icon: Icon(
+              Icons.search,
+              color: Color(0xffd86a04),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
-import '../pouch/pouch_page.dart';
+import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
 import '../todo/todo_page.dart';
 
@@ -110,7 +110,7 @@ class _MyPageState extends State<MyPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
           }
           else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           }
           else if (index == 2) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
