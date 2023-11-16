@@ -64,17 +64,19 @@ class _MyPageState extends State<MyPage> {
                 MyPageProfile(
                     nickname: user!.nickname ?? user!.email,
                     profileImage: user!.profileImage ?? ''),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 const MyDivider(),
+                const SizedBox(height: 20),
                 MyPageMenu(
-                    title: '즐겨찾기 해둔 제품',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MyFavoritePage()),
-                      );
-                    }),
+                  title: '즐겨찾기 해둔 제품',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MyFavoritePage()),
+                    );
+                  },
+                ),
                 MyPageMenu(
                   title: '내가 쓴 리뷰',
                   onTap: () {
@@ -135,22 +137,18 @@ class MyPageProfile extends StatelessWidget {
     return Material(
       child: Row(
         children: [
+          SizedBox(width: 10),
           SizedBox(
-            width: 50,
-            child: Image.asset(
-              'assets/images/profile.jpg', // profileImage,
+            width: 80,
+            child: Image.network(
+              // 'assets/images/profile.jpg', // profileImage,
+              profileImage,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset('assets/images/profile.jpg');
               },
             ),
           ),
-          const SizedBox(width: 10),
-          TextButton(
-            child: Text(''),
-            onPressed: () {
-              print(profileImage);
-            },
-          ),
+          SizedBox(width: 30),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,8 +159,9 @@ class MyPageProfile extends StatelessWidget {
                     Text(
                       nickname,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 20,
                         color: Color(0xFF585555),
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.left,
                     ),
@@ -206,7 +205,7 @@ class MyPageMenu extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 18,
                 color: Color(0xFF868383),
               ),
               textAlign: TextAlign.left,
