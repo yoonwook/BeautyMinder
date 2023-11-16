@@ -137,8 +137,9 @@ class MyPageProfile extends StatelessWidget {
         children: [
           SizedBox(
             width: 50,
-            child: Image.asset(
-              'assets/images/profile.jpg', // profileImage,
+            child: Image.network(//변경 부분
+              //'assets/images/profile.jpg', // profileImage,
+              profileImage,//변경 부분
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset('assets/images/profile.jpg');
               },

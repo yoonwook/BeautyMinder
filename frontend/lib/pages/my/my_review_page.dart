@@ -74,7 +74,7 @@ class _MyReviewPageState extends State<MyReviewPage> {
                               SizedBox(
                                   width: 50,
                                   child:
-                                      Image.asset('assets/images/profile.jpg')),
+                                      Image.network(reviews?[index]['user']['profileImage'])),//변경 부분
                               // SizedBox(
                               //   width: 50,
                               //   child:

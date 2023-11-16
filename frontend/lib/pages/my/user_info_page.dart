@@ -141,23 +141,24 @@ class UserInfoProfile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          // SizedBox(
-          //   width: 50,
-          //   child: Image.asset(
-          //     'assets/images/profile.jpg', // profileImage,
-          //     errorBuilder: (context, error, stackTrace) {
-          //       return Image.asset('assets/images/profile.jpg');
-          //     },
-          //   ),
-          // ),
-          // Container(
-          //     width: 58,
-          //     height: 58,
-          //     decoration: const BoxDecoration(
-          //       color: Color(0xFFD9D9D9),
-          //       shape: BoxShape.circle,
-          //     ),
-          //     child: const Icon(Icons.camera_alt_outlined, size: 35)),
+          SizedBox(
+            width: 50,
+            child: Image.network(
+              profileImage,
+              //'assets/images/profile.jpg', // profileImage,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset('assets/images/profile.jpg');
+              },
+            ),
+          ),
+          Container(
+              width: 58,
+              height: 58,
+              decoration: const BoxDecoration(
+                color: Color(0xFFD9D9D9),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.camera_alt_outlined, size: 35)),
           const SizedBox(width: 20),
           Expanded(
             child: Row(
