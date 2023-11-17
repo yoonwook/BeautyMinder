@@ -9,7 +9,7 @@ class Config {
       return "211.221.220.124:8080";
     }
     if (Platform.isAndroid) {
-      return '10.0.2.2:8080';
+      return '211.221.220.124:8080';
     } else {
       return '211.221.220.124:8080';
     }
