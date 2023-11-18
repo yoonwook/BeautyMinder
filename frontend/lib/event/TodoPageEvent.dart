@@ -49,15 +49,15 @@ class TodoPageDeleteEvent extends TodoPageEvent{
   List<Object?> get props =>[];
 }
 
-class TodoPageUpdateEvent extends TodoPageEvent{
-  const TodoPageUpdateEvent({super.task, super.isDone, super.todos, super.todo});
+class TodoPageTaskUpdateEvent extends TodoPageEvent{
+  const TodoPageTaskUpdateEvent({super.task, super.todos, super.todo});
 
   @override
-  List<Object?> get props =>[update_todo, isDone, todos];
+  List<Object?> get props =>[task, todo, todos];
 }
 
-class TodoPageUpdatedEvent extends TodoPageEvent{
-  const TodoPageUpdatedEvent({super.update_todo, super.isDone, super.todos});
+class TodoPageTaskUpdatedEvent extends TodoPageEvent{
+  const TodoPageTaskUpdatedEvent({super.update_todo, super.isDone, super.todos});
 
   @override
   List<Object?> get props =>[update_todo, isDone, todos];

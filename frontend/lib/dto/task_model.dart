@@ -5,8 +5,8 @@ import '../models/login_response_model.dart';
 
 class Task {
   final String taskId;
-  final String description;
-  final String category;
+  late String description;
+  late String category;
   late  bool done;
 
   Task({

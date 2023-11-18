@@ -234,11 +234,11 @@ class _todoList extends State<todoList> {
                             item.task!.done = value!;
                             // 필요한 경우 상태 업데이트 이벤트를 여기에 추가
                           });
-                          context.read<TodoPageBloc>().add(
-                             const TodoPageUpdateEvent( isDone: true, todos: [])
-                            //TodoPageInitEvent()
-                              //TodoPageErrorEvent()
-                          );
+                          // context.read<TodoPageBloc>().add(
+                          //   // const TodoPageTaskUpdateEvent( isDone: true, todos: [])
+                          //   //TodoPageInitEvent()
+                          //     //TodoPageErrorEvent()
+                          // );
 
                         },
                       ));

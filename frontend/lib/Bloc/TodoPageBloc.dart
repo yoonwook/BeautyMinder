@@ -1,18 +1,21 @@
-
 import 'package:beautyminder/State/TodoState.dart';
 import 'package:beautyminder/dto/todo_model.dart';
 import 'package:beautyminder/event/TodoPageEvent.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test/expect.dart';
 
 import '../dto/task_model.dart';
 
 class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
+
+  Function()? onCloseCallback;
+
   TodoPageBloc() : super(const TodoInitState()) {
     on<TodoPageInitEvent>(_initEvent);
     on<TodoPageAddEvent>(_addEvent);
-    on<TodoPageUpdateEvent>(_updateEvent);
+    on<TodoPageTaskUpdateEvent>(_TaskUpdateEvent);
     on<TodoPageDeleteEvent>(_deleteEvent);
     on<TodoPageErrorEvent>(_errorEvent);
   }
@@ -47,7 +50,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
   }
 
   Future<void> _changeEvent(
-      TodoPageUpdateEvent event, Emitter<TodoState> emit) async {
+      TodoPageTaskUpdateEvent event, Emitter<TodoState> emit) async {
     print("event.todos : ${event.todos}");
 
     emit(TodoLoadedState());
@@ -84,65 +87,81 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     }
   }
 
-  Future<void> _updateEvent(
-      TodoPageUpdateEvent event, Emitter<TodoState> emit) async {
+  Future<void> _TaskUpdateEvent(
+      TodoPageTaskUpdateEvent event, Emitter<TodoState> emit) async {
+    Todo? todo;
+    List<Todo>? todos = [];
+
     print("update");
-    //
-    // if(state is TodoLoadedState){
-    //   emit(TodoUpdateState(update_todo: state.update_todo, isError: state.isError));
-    //
-    //   try{
-    //     final Map<String, dynamic> update_todo = event.update_todo as Map<String, dynamic>;
-    //     final result = await TodoService.taskUpdateTodo(update_todo);
-    //
-    //     if(result.value != null){
-    //       emit(TodoUpdatedState(update_todo: state.update_todo, isError: state.isError));
-    //       print(update_todo);
-    //     }else{
-    //       emit(TodoErrorState(isError: true));
-    //     }
-    //
-    //   }catch(e){
-    //     print("Error : ${e}");
-    //   }
-    //
-    // }else{
-    //   emit(TodoErrorState());
-    // }
+    emit(TodoLoadedState(todos: event.todos, todo: event.todo, task: event.task, isError :state.isError));
+
+    if (state is TodoLoadedState) {
+      emit(TodoUpdateState(isError : false, task: state.task, todo: state.todo, todos: state.todos));
+
+      print("this is TodoLoadedState");
+
+      try {
+        final result = await TodoService.taskUpdateTodo(event.todo, event.task);
+
+        print("result.value : ${result.value}");
+        if (result.value!.containsKey('todo')) {
+          todo = Todo.fromJson(result.value?['todo']);
+
+          if (todo != null) {
+            todos.add(todo);
+          }
+        }
+
+        if (result.value != null) {
+          print("TodoUpdatedState!!");
+          emit(TodoUpdatedState(
+              todo: todo, isError: false, todos: todos));
+          print("TodoLoadedState!!");
+          // emit(TodoLoadedState(
+          //     isError: state.isError, todos: state.todos, todo: state.todo));
+        } else {
+          emit(TodoErrorState(isError: true));
+        }
+
+        onCloseCallback?.call();
+
+      } catch (e) {
+        print("Error : ${e}");
+      }
+    } else {
+      emit(TodoErrorState());
+    }
   }
 
   Future<void> _deleteEvent(
       TodoPageDeleteEvent event, Emitter<TodoState> emit) async {
-
     Todo? todo;
     List<Todo>? todos = [];
 
     if (state is TodoLoadedState) {
-      emit(TodoDeleteState(todo: state.todo, isError: state.isError, todos: state.todos));
+      emit(TodoDeleteState(
+          todo: state.todo, isError: state.isError, todos: state.todos));
       print("event.todo : ${event.todo}");
       print("event.task: ${event.task}");
       try {
         final String? taskid = event.task?.taskId;
-        final result = await TodoService.taskUpdateTodo(event.todo, event.task);
+        final result = await TodoService.deleteTask(event.todo, event.task);
         print("result.value.runtimeType: ${result.value.runtimeType}");
         print("result: ${result.value}");
 
-        if(result.value!.containsKey('todo')){
+        if (result.value!.containsKey('todo')) {
           todo = Todo.fromJson(result.value?['todo']);
 
-          if(todo !=null){
+          if (todo != null) {
             todos.add(todo);
           }
-
         }
 
-
         if (result.value != null) {
-
-
-          emit(TodoDeletedState(todo:todo , isError: false, todos: todos));
+          emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
           //print(taskid);
-          emit(TodoLoadedState(isError: state.isError, todos: state.todos, todo: state.todo));
+          // emit(TodoLoadedState(
+          //     isError: state.isError, todos: state.todos, todo: state.todo));
         } else {
           emit(TodoErrorState(isError: true));
         }
