@@ -102,9 +102,10 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-
   Widget _searchPageUI() {
-    if (widget.data?.keywords == null &&  widget.data2?.cosmetics == null) {
+    print("hellohelloeveryone : ${widget.data?.keywords}");
+    print("hellohelloeveryone : ${widget.data2?.cosmetics}");
+    if ((widget.data?.keywords?.length == 0) && (widget.data2?.cosmetics.length == 0)) {
       return Column(
         children: [
           _noKeywordRanking(),
@@ -113,24 +114,41 @@ class _SearchPageState extends State<SearchPage> {
         ],
       );
     }
-    // else if(widget.data?.keywords != null &&  widget.data2?.cosmetics == null) {
-    //   return Column(
-    //     children: [
-    //       _keywordRanking(),
-    //       _noProductRanking(),
-    //       const SizedBox(height: 20),
-    //     ],
-    //   );
-    // }
-    // else if(widget.data?.keywords == null &&  widget.data2?.cosmetics != null) {
-    //   return Column(
-    //     children: [
-    //       _noKeywordRanking(),
-    //       _productRanking(),
-    //       const SizedBox(height: 20),
-    //     ],
-    //   );
-    // }
+    else if((widget.data?.keywords?.length != 0) && (widget.data2?.cosmetics.length == 0)) {
+      if((widget.data?.keywords?.length ?? 0) >= 6) {
+        print("length : ${widget.data?.keywords?.length}");
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _keywordRankingIfMoreThanSix(),
+              _noProductRanking(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      }
+      else {
+        print("length : ${widget.data?.keywords?.length}");
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _keywordRankingIfLessThanFive(),
+              _noProductRanking(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      }
+    }
+    else if((widget.data?.keywords?.length == 0) && (widget.data2?.cosmetics.length != 0)) {
+      return Column(
+        children: [
+          _noKeywordRanking(),
+          _productRanking(),
+          const SizedBox(height: 20),
+        ],
+      );
+    }
     else {
       if((widget.data?.keywords?.length ?? 0) >= 6) {
         print("length : ${widget.data?.keywords?.length}");

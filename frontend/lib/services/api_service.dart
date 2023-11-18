@@ -66,6 +66,7 @@ class APIService {
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
+
     // FormData 생성
     final formData = FormData.fromMap({
       'email': model.email ?? '',
@@ -88,14 +89,18 @@ class APIService {
   }
 
   // 회원가입 함수
-  static Future<Result<RegisterResponseModel>> register(
-      RegisterRequestModel model) async {
+  static Future<Result<RegisterResponseModel>> register(RegisterRequestModel model) async {
+
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.registerAPI).toString();
 
     try {
       // POST 요청
+      print("hi : $url");
+      print("hihihihi : $model");
+      print("hihihi : ${model.toJson()}");
       final response = await _postJson(url, model.toJson());
+      print("hihi : $response");
       return Result.success(
           registerResponseJson(response.data as Map<String, dynamic>));
     } catch (e) {
