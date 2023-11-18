@@ -34,7 +34,7 @@ class _TodoPageState extends State<TodoPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           }
           else if (index == 2) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
           }
           // else if (index == 3) {
           //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));

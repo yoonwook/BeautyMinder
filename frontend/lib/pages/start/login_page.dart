@@ -1,3 +1,4 @@
+import 'package:beautyminder/pages/home/home_page.dart';
 import 'package:beautyminder/widget/loginAppBar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   String? email;
   String? password;
-  String? nickname; // 별명 필드 추가
 
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
@@ -254,9 +254,12 @@ class _LoginPageState extends State<LoginPage> {
             final model = LoginRequestModel(email: email, password: password);
             final result = await APIService.login(model);
 
+            print("1111 : ${result.value}");
+
             if (result.value == true) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
+              final userProfileResult = await APIService.getUserProfile();
+              print("Here is LoginPage : ${userProfileResult.value}");
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
             } else {
               // 에러 토스트 메시지
               Fluttertoast.showToast(

@@ -9,6 +9,7 @@ import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/api_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../pouch/expiry_page.dart';
@@ -103,26 +104,49 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+  // Widget _underNavigation() {
+  //   final userProfileResult = await APIService.getUserProfile();
+  //   return CommonBottomNavigationBar(
+  //       currentIndex: _currentIndex,
+  //       onTap: (int index) {
+  //         // 페이지 전환 로직 추가
+  //         if (index == 0) {
+  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
+  //         }
+  //         else if (index == 1) {
+  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+  //         }
+  //         else if (index == 2) {
+  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value,)));
+  //         }
+  //         else if (index == 3) {
+  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+  //         }
+  //       }
+  //   );
+  // }
   Widget _underNavigation() {
     return CommonBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          // 페이지 전환 로직 추가
-          if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
-          }
-          else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-          }
-          else if (index == 2) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-          }
-          else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
-          }
+      currentIndex: _currentIndex,
+      onTap: (int index) async {
+        // 페이지 전환 로직 추가
+        if (index == 0) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
         }
+        else if (index == 1) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+        }
+        else if (index == 2) {
+          final userProfileResult = await APIService.getUserProfile();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+        }
+        else if (index == 3) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+        }
+      },
     );
   }
+
 }
 
 class MyPageProfile extends StatelessWidget {

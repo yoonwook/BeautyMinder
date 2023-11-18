@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../services/api_service.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
@@ -161,23 +162,25 @@ class _RecPage extends State<RecPage> {
           ),
           bottomNavigationBar: Container(
             child: CommonBottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: (int index) {
-                  // 페이지 전환 로직 추가
-                  if (index == 1) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CosmeticExpiryPage()));
-                  } else if (index == 2) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const HomePage()));
-                  } else if (index == 3) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const TodoPage()));
-                  } else if (index == 4) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const MyPage()));
-                  }
-                }),
+              currentIndex: _currentIndex,
+              onTap: (int index) async {
+                // 페이지 전환 로직 추가
+                if (index == 1) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+                }
+                else if (index == 2) {
+                  final userProfileResult = await APIService.getUserProfile();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+                }
+                else if (index == 3) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+                }
+                else if (index == 4) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const MyPage()));
+                }
+              },
+            ),
           )),
     );
   }

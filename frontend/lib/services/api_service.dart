@@ -76,10 +76,10 @@ class APIService {
     try {
       // POST 요청
       final response = await _postForm(url, formData);
-      print("response: $response");
+      print("response(APIService) : $response");
       if (response.statusCode == 200) {
         await SharedService.setLoginDetails(loginResponseJson(response.data));
-
+        
         return Result.success(true);
       }
       return Result.failure("Login failed");
@@ -96,9 +96,6 @@ class APIService {
 
     try {
       // POST 요청
-      print("hi : $url");
-      print("hihihihi : $model");
-      print("hihihi : ${model.toJson()}");
       final response = await _postJson(url, model.toJson());
       print("hihi : $response");
       return Result.success(

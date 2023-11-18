@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kg_charts/kg_charts.dart';
 
+import '../../services/api_service.dart';
 import '../../widget/commonAppBar.dart';
 
 class BaumannResultPage extends StatefulWidget {
@@ -456,11 +457,12 @@ class _BaumannResultPageState extends State<BaumannResultPage> {
       child:       Container(
         width: double.infinity,
         child:       ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            final userProfileResult = await APIService.getUserProfile();
             // 버튼을 클릭했을 때 홈페이지로 이동하는 함수 호출
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value,)),
             );
           },
           style: ElevatedButton.styleFrom(

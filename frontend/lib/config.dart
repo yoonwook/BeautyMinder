@@ -22,6 +22,9 @@ class Config {
   static const editUserInfo = "/user/update";
   static const editProfileImg = "user/upload";
 
+  //home
+  static const getUserInfo = "user/me/";
+
   // Todo
   static const todoAPI = "/todo/all";
   static const todoAddAPI = "/todo/add";
@@ -30,6 +33,7 @@ class Config {
   //Baumann
   static const baumannSurveyAPI = "/baumann/survey";
   static const baumannTestAPI = "/baumann/test";
+  static const baumannHistoryAPI = "/baumann/history";
 
   //rank
   static const keywordRankAPI = "/redis/top/keywords";

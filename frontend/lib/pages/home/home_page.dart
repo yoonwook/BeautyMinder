@@ -1,25 +1,34 @@
 import 'dart:convert';
 import 'package:beautyminder/dto/keywordRank_model.dart';
+import 'package:beautyminder/globalVariable/globals.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
 import 'package:beautyminder/widget/homepageAppBar.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../dto/baumann_result_model.dart';
 import '../../dto/user_model.dart';
+import '../../services/baumann_service.dart';
+import '../../services/home_service.dart';
 import '../../services/shared_service.dart';
 import '../../services/todo_service.dart';
 import '../../dto/todo_model.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
+import '../baumann/baumann_test_start_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
 import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key, required this.user}) : super(key: key);
+
+  // final dynamic responseData;
+  final User? user;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 2;
   bool isApiCallProcess = false;
+  // late Future<HomePageResult<User>> userInfo;
 
   // late Future<Result<List<Todo>>> futureTodoList;
 
@@ -38,8 +48,10 @@ class _HomePageState extends State<HomePage> {
   //   futureTodoList = TodoService.getAllTodos();
   // }
 
+
   @override
   Widget build(BuildContext context) {
+    print("Here is Home Page : ${widget.user?.id}");
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget> [
         IconButton(
@@ -162,12 +174,90 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Widget _personalSkinTypeBtn() {
+  //   final screenWidth = MediaQuery.of(context).size.width/2-20;
+  //
+  //   return ElevatedButton(
+  //     onPressed: () async {
+  //       // 이미 API 호출이 진행 중인지 확인
+  //       if (isApiCallProcess) {
+  //         return;
+  //       }
+  //       // API 호출 중임을 표시
+  //       setState(() {
+  //         isApiCallProcess = true;
+  //       });
+  //       try {
+  //         final result = await BaumannService.getBaumannHistory();
+  //
+  //         if (result.isSuccess) {
+  //           Response<dynamic> response = Response(data: result.value, requestOptions: RequestOptions(path: ''));
+  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage(resultData: response!)));
+  //           print('This is HomePage - Baumann history: ${result.value}');
+  //           print('This is HomePage - Baumann history: ${response}');
+  //         } else {
+  //           // Handle the failure case
+  //           print('Failed to get Baumann history');
+  //         }
+  //       } catch (e) {
+  //         // Handle the error case
+  //         print('An error occurred: $e');
+  //       } finally {
+  //         // API 호출 상태를 초기화합니다.
+  //         setState(() {
+  //           isApiCallProcess = false;
+  //         });
+  //       }
+  //     },
+  //     style: ElevatedButton.styleFrom(
+  //       backgroundColor: Color(0xfffe9738), // 버튼의 배경색을 검정색으로 설정
+  //       foregroundColor: Colors.white, // 버튼의 글씨색을 하얀색으로 설정
+  //       elevation: 0, // 그림자 없애기
+  //       minimumSize: Size(screenWidth, 80.0),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
+  //       ),
+  //     ),
+  //     child: Align(
+  //       alignment: Alignment.topLeft,
+  //       child: Text("내 피부 타입"),
+  //     ),
+  //
+  //   );
+  // }
   Widget _personalSkinTypeBtn() {
-    final screenWidth = MediaQuery.of(context).size.width/2-20;
+    final screenWidth = MediaQuery.of(context).size.width / 2 - 20;
+    late BaumResult<BaumannResult> result = BaumResult.success(null); // Declare 'result' outside the try block
 
     return ElevatedButton(
-      onPressed: (){
-        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+      onPressed: () async {
+        // 이미 API 호출이 진행 중인지 확인
+        if (isApiCallProcess) {
+          return;
+        }
+        // API 호출 중임을 표시
+        setState(() {
+          isApiCallProcess = true;
+        });
+        try {
+          result = await BaumannService.getBaumannHistory();
+
+          if (result.isSuccess) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    BaumannResultPage(resultData: Response(data: result.value, requestOptions: RequestOptions(path: '')))));
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannStartPage()));
+          }
+        } catch (e) {
+          // Handle the error case
+          print('An error occurred: $e');
+        } finally {
+          // API 호출 상태를 초기화합니다.
+          setState(() {
+            isApiCallProcess = false;
+          });
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xfffe9738), // 버튼의 배경색을 검정색으로 설정
@@ -180,11 +270,12 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text("내 피부 타입"),
+        child: Text(result.isSuccess ? "결과보기" : "테스트하기"),
       ),
-
     );
   }
+
+
 
   Widget _personalColorBtn() {
     final screenWidth = MediaQuery.of(context).size.width/2-20;

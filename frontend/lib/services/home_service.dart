@@ -1,11 +1,11 @@
 import 'package:beautyminder/dto/baumann_model.dart';
-import 'package:beautyminder/dto/baumann_result_model.dart';
+import 'package:beautyminder/dto/user_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../config.dart';
 
-class BaumannService {
+class HomeService {
   // Dio 객체 생성
   static final Dio client = Dio();
 
@@ -33,31 +33,7 @@ class BaumannService {
     );
   }
 
-  static Future<BaumResult<SurveyWrapper>> getBaumannSurveys() async {
-    // URL 생성
-    final url = Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
-
-    try {
-      // GET 요청
-      final response = await client.get(
-        url,
-        // options: _httpOptions('GET', headers),
-      );
-
-      if (response.statusCode == 200) {
-        // 사용자 정보 파싱
-        final user = SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
-        print(user);
-        return BaumResult.success(user);
-      }
-      return BaumResult.failure("Failed to get user profile");
-    } catch (e) {
-      return BaumResult.failure("An error occurred: $e");
-    }
-  }
-
-
-  static Future<BaumResult<BaumannResult>> getBaumannHistory() async {
+  static Future<HomePageResult<User>> getUserInfo(String userId) async {
 
     // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
@@ -72,9 +48,8 @@ class BaumannService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.baumannHistoryAPI).toString();
+    final url = Uri.http(Config.apiURL, Config.getUserInfo+userId).toString();
 
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -87,29 +62,29 @@ class BaumannService {
         options: _httpOptions('GET', headers),
       );
 
+      print("Here is HomeService response : $response");
+
       if (response.statusCode == 200) {
         // 사용자 정보 파싱
-        final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
-        print("This is Baumann Service(getHistory) : $result");
-        return BaumResult.success(result);
+        final user = User.fromJson(response.data as Map<String, dynamic>);
+        print("Here is HomeService user : $user");
+        return HomePageResult.success(user);
       }
-      return BaumResult.failure("Failed to get baumann history");
+      return HomePageResult.failure("Failed to get user profile");
     } catch (e) {
-      return BaumResult.failure("An error occurred: $e");
+      return HomePageResult.failure("An error occurred: $e");
     }
   }
-
-
 
 }
 
 // 결과 클래스
-class BaumResult<T> {
+class HomePageResult<T> {
   final T? value;
   final String? error;
 
-  BaumResult.success(this.value) : error = null; // 성공
-  BaumResult.failure(this.error) : value = null; // 실패
+  HomePageResult.success(this.value) : error = null; // 성공
+  HomePageResult.failure(this.error) : value = null; // 실패
 
   bool get isSuccess => value != null;
 }
