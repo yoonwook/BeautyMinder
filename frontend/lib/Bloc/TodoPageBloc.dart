@@ -93,7 +93,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     List<Todo>? todos = [];
 
     print("update");
-    emit(TodoLoadedState(todos: event.todos, todo: event.todo, task: event.task, isError :state.isError));
+    //emit(TodoLoadedState(todos: event.todos, todo: event.todo, task: event.task, isError :state.isError));
 
     if (state is TodoLoadedState) {
       emit(TodoUpdateState(isError : false, task: state.task, todo: state.todo, todos: state.todos));
@@ -117,8 +117,8 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           emit(TodoUpdatedState(
               todo: todo, isError: false, todos: todos));
           print("TodoLoadedState!!");
-          // emit(TodoLoadedState(
-          //     isError: state.isError, todos: state.todos, todo: state.todo));
+           emit(TodoLoadedState(
+               isError: state.isError, todos: state.todos, todo: state.todo));
         } else {
           emit(TodoErrorState(isError: true));
         }

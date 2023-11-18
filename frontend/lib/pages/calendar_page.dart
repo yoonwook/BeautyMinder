@@ -48,13 +48,11 @@ class _CalendarPageState extends State<CalendarPage> {
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
         lazy: false,
         child: Scaffold(
-            appBar: CommonAppBar()
-            ,
+            appBar: CommonAppBar(),
             body: Column(
               children: [
                 BlocBuilder<TodoPageBloc, TodoState>(builder: (context, state) {
                   return Expanded(child: todoListWidget());
-                  //_calendar();
                 })
               ],
             ),
@@ -108,7 +106,7 @@ class _todoListWidget extends State<todoListWidget> {
     super.dispose();
   }
 
-  Widget _todoList(/*List<Map<String, dynamic>>? todos*/ List<Todo>? todos) {
+  Widget _todoList(List<Todo>? todos) {
     return Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -116,8 +114,7 @@ class _todoListWidget extends State<todoListWidget> {
         ));
   }
 
-  List<Widget> _buildChildren(
-      /*List<Map<String, dynamic>>? todos*/ List<Todo>? todos) {
+  List<Widget> _buildChildren(List<Todo>? todos) {
     List<Widget> _children = [];
     List<Widget> _morningTasks = [];
     List<Widget> _dinnerTasks = [];
@@ -125,13 +122,6 @@ class _todoListWidget extends State<todoListWidget> {
 
     print("_buildChidren");
     print("todos : ${todos}");
-
-    //  taskList = todos != null
-    //     ? todos.map((todo) => (todo['tasks'] as List).map((task) => {
-    //   'description': task['description'],
-    //   'category': task['category'],
-    //   'isDone': task['done']
-    // }))
 
     taskList = todos!.expand((todo) => todo.tasks).toList();
 
@@ -155,6 +145,11 @@ class _todoListWidget extends State<todoListWidget> {
   }
 
   Widget _calendar(List<Todo>? todos) {
+
+    List<Todo> _getTodosForDay(DateTime day){
+      return todos?.where((todo) => isSameDay(todo.createdAt, day)).toList() ?? [];
+    }
+
     return TableCalendar(
       firstDay: DateTime.utc(2010, 10, 16),
       lastDay: DateTime.utc(2030, 3, 14),
@@ -168,6 +163,7 @@ class _todoListWidget extends State<todoListWidget> {
           _focusedDay = focusedDay;
         });
       },
+      eventLoader: _getTodosForDay,
       calendarFormat: _calendarFormat,
       onFormatChanged: (format) {
         setState(() {
@@ -221,87 +217,93 @@ class _todoListWidget extends State<todoListWidget> {
               // context.read<TodoPageBloc>().add(TodoPageUpdateEvent(task: task, todo: todo));
               showDialog(
                   context: context,
-                  builder: (BuildContext context) {
+                  builder: (BuildContext dialogcontext) {
                     _controller.text = task.description;
-                    return BlocBuilder<TodoPageBloc, TodoState>(builder: (context, state){
-                      return StatefulBuilder(builder: (context, setDialogState) {
-                        return AlertDialog(
-                          title: Text('Update Todo'),
-                          content: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                ToggleButtons(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text('Morning'),
-                                    ),
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text('Dinner'),
-                                    )
-                                  ],
-                                  isSelected: isSelected,
-                                  onPressed: (int index) {
-                                    setDialogState(() {
-                                      for (int buttonIndex = 0;
-                                      buttonIndex < isSelected.length;
-                                      buttonIndex++) {
-                                        isSelected[buttonIndex] =
-                                            buttonIndex == index;
-                                      }
-                                      task.category = isSelected[0] ? 'morning' : 'dinner';
-                                      print("task.category : ${task.category}");
-                                    });
-                                  },
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: TextField(
-                                          controller: _controller,
-                                          onChanged: (value) {},
-                                        )),
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: (){
-                                        task.description = _controller.text;
-
-                                        context.read<TodoPageBloc>().onCloseCallback = (){
-                                          Navigator.of(context).pop();
-                                        };
-
+                    return BlocProvider.value(
+                        value: BlocProvider.of<TodoPageBloc>(context),
+                        child:
+                            StatefulBuilder(builder: (context, setDialogState) {
+                          return AlertDialog(
+                            title: Text('Update Todo'),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ToggleButtons(
+                                    isSelected: isSelected,
+                                    onPressed: (int index) {
+                                      setDialogState(() {
+                                        for (int buttonIndex = 0;
+                                            buttonIndex < isSelected.length;
+                                            buttonIndex++) {
+                                          isSelected[buttonIndex] =
+                                              buttonIndex == index;
+                                        }
+                                        task.category = isSelected[0]
+                                            ? 'morning'
+                                            : 'dinner';
                                         print(
-                                            "task.description : ${task.description}, task.category : ${task.category}");
-                                        print("task type : ${task.runtimeType}");
-                                        print("task : ${task.toString()}");
-                                        context.read<TodoPageBloc>().add(
-                                            TodoPageTaskUpdateEvent(
-                                                task: task,
-                                                todo: todo,
-                                                todos: todos));
-
-                                      },
-                                    )
-                                  ],
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 10)),
-                                TextButton.icon(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
+                                            "task.category : ${task.category}");
+                                      });
                                     },
-                                    icon: Icon(Icons.cancel),
-                                    label: Text('취소'))
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                    });
+                                    children: const [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Text('Morning'),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Text('Dinner'),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: TextField(
+                                        controller: _controller,
+                                        onChanged: (value) {},
+                                      )),
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () {
+                                          task.description = _controller.text;
 
+                                          context
+                                              .read<TodoPageBloc>()
+                                              .onCloseCallback = () {
+                                            Navigator.of(context).pop();
+                                          };
+
+                                          print(
+                                              "task.description : ${task.description}, task.category : ${task.category}");
+                                          print(
+                                              "task type : ${task.runtimeType}");
+                                          print("task : ${task.toString()}");
+                                          context.read<TodoPageBloc>().add(
+                                              TodoPageTaskUpdateEvent(
+                                                  task: task,
+                                                  todo: todo,
+                                                  todos: todos));
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10)),
+                                  TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      icon: Icon(Icons.cancel),
+                                      label: Text('취소'))
+                                ],
+                              ),
+                            ),
+                          );
+                        }));
                   });
             },
           ),
@@ -338,9 +340,8 @@ class _todoListWidget extends State<todoListWidget> {
             setState(() {
               task.done = newValue ?? false;
             });
-            // context.read<TodoPageBloc>().add(
-            //     // TodoPageUpdateEvent(update_todo:taskList, isDone: true, todos: [])
-            //     TodoPageDeleteEvent(task: task, todo: todo));
+            context.read<TodoPageBloc>().add(
+                TodoPageTaskUpdateEvent(task: task, todo: todo, todos: todos));
           },
         ),
         onTap: () {
@@ -356,8 +357,8 @@ class _todoListWidget extends State<todoListWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: BlocListener<TodoPageBloc, TodoState>(
-        listener: (context, state){
-          if(state is TodoUpdatedState){
+        listener: (context, state) {
+          if (state is TodoUpdatedState) {
             print("hello");
           }
         },
@@ -368,10 +369,6 @@ class _todoListWidget extends State<todoListWidget> {
                 width: MediaQuery.of(context).size.width,
                 height: 100,
                 child: GestureDetector(
-                  // onTap: () {
-                  //   HapticFeedback.mediumImpact();
-                  //   context.read<RecommendPageBloc>().add(RecommendPageInitEvent());
-                  //},
                   child: SpinKitThreeInOut(
                     color: Color(0xffd86a04),
                     size: 50.0,
@@ -384,23 +381,15 @@ class _todoListWidget extends State<todoListWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   _calendar(state.todos),
-                  //Text("${state.todos}"),
-                  _todoList(
-                    /*state.todos?.map((e) => e.toJson()).toList() ?? []*/ state
-                      .todos),
+                  _todoList(state.todos),
                 ],
               );
-            } else if(state is TodoUpdatedState || state is TodoDeletedState){
-              return Column(children: [Text("TodoUpdatedState or TodoDeleteState")],);
-            }else {
+            } else {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  // _calendar(state.todos),
-                  //Text("${state.todo}"),
-                  _todoList(
-                    /*state.todos?.map((e) => e.toJson()).toList() ?? []*/ state
-                      .todos),
+                  _calendar(state.todos),
+                  _todoList(state.todos),
                 ],
               );
             }

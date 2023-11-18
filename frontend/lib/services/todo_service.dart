@@ -282,6 +282,7 @@ class TodoService {
         "taskId" : task?.taskId,
         "description" : task?.description,
         "isDone" : task?.done,
+        "category" :  task?.category,
       }]
     };
 
