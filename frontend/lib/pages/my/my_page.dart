@@ -8,6 +8,7 @@ import 'package:beautyminder/services/shared_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../services/api_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
@@ -50,7 +51,11 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Center(child: Text('로딩 중'))
+        ? SpinKitThreeInOut(
+            color: Color(0xffd86a04),
+            size: 50.0,
+            duration: Duration(seconds: 2),
+          )
         : Scaffold(
       appBar: CommonAppBar(),
       body: Padding(

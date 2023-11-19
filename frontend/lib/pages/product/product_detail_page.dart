@@ -4,6 +4,7 @@ import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../dto/gptReview_model.dart';
@@ -302,7 +303,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       future: _gptReviewInfo,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return SpinKitThreeInOut(
+            color: Color(0xffd86a04),
+            size: 25.0,
+            duration: Duration(seconds: 2),
+          );
         }
         else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
