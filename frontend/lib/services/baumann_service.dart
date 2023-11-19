@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/dto/baumann_result_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
