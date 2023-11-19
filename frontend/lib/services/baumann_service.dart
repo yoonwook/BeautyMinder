@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/dto/baumann_result_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
@@ -57,7 +59,7 @@ class BaumannService {
   }
 
 
-  static Future<BaumResult<BaumannResult>> getBaumannHistory() async {
+  static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
 
     // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
@@ -73,6 +75,7 @@ class BaumannService {
 
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannHistoryAPI).toString();
+    print("This is BaumannService : $url");
 
     // 헤더 설정
     final headers = {
@@ -81,21 +84,34 @@ class BaumannService {
     };
 
     try {
+      print("1");
       // GET 요청
       final response = await client.get(
         url,
         options: _httpOptions('GET', headers),
       );
+      print("2");
 
       if (response.statusCode == 200) {
+        print("3");
+        print("${response.data}");
+
         // 사용자 정보 파싱
-        final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
+        // final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
+        final List<dynamic> jsonData = response.data as List<dynamic>;
+        final List<BaumannResult> result = jsonData
+            .map((dynamic item) =>
+            BaumannResult.fromJson(item as Map<String, dynamic>))
+            .toList();
+
         print("This is Baumann Service(getHistory) : $result");
-        return BaumResult.success(result);
+
+        return BaumResult<List<BaumannResult>>.success(result);
       }
-      return BaumResult.failure("Failed to get baumann history");
+      return BaumResult<List<BaumannResult>>.failure("Failed to get baumann history");
     } catch (e) {
-      return BaumResult.failure("An error occurred: $e");
+      print("An error occurred: $e");
+      return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
     }
   }
 

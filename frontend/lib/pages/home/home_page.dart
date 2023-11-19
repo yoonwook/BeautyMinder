@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:beautyminder/dto/keywordRank_model.dart';
 import 'package:beautyminder/globalVariable/globals.dart';
+import 'package:beautyminder/pages/baumann/baumann_history_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     print("Here is Home Page : ${widget.user?.id}");
+    print("Here is Home Page : ${widget.user}");
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget> [
         IconButton(
@@ -174,61 +175,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget _personalSkinTypeBtn() {
-  //   final screenWidth = MediaQuery.of(context).size.width/2-20;
-  //
-  //   return ElevatedButton(
-  //     onPressed: () async {
-  //       // 이미 API 호출이 진행 중인지 확인
-  //       if (isApiCallProcess) {
-  //         return;
-  //       }
-  //       // API 호출 중임을 표시
-  //       setState(() {
-  //         isApiCallProcess = true;
-  //       });
-  //       try {
-  //         final result = await BaumannService.getBaumannHistory();
-  //
-  //         if (result.isSuccess) {
-  //           Response<dynamic> response = Response(data: result.value, requestOptions: RequestOptions(path: ''));
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage(resultData: response!)));
-  //           print('This is HomePage - Baumann history: ${result.value}');
-  //           print('This is HomePage - Baumann history: ${response}');
-  //         } else {
-  //           // Handle the failure case
-  //           print('Failed to get Baumann history');
-  //         }
-  //       } catch (e) {
-  //         // Handle the error case
-  //         print('An error occurred: $e');
-  //       } finally {
-  //         // API 호출 상태를 초기화합니다.
-  //         setState(() {
-  //           isApiCallProcess = false;
-  //         });
-  //       }
-  //     },
-  //     style: ElevatedButton.styleFrom(
-  //       backgroundColor: Color(0xfffe9738), // 버튼의 배경색을 검정색으로 설정
-  //       foregroundColor: Colors.white, // 버튼의 글씨색을 하얀색으로 설정
-  //       elevation: 0, // 그림자 없애기
-  //       minimumSize: Size(screenWidth, 80.0),
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
-  //       ),
-  //     ),
-  //     child: Align(
-  //       alignment: Alignment.topLeft,
-  //       child: Text("내 피부 타입"),
-  //     ),
-  //
-  //   );
-  // }
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 20;
-    late BaumResult<BaumannResult> result = BaumResult.success(null); // Declare 'result' outside the try block
-
+    BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
     return ElevatedButton(
       onPressed: () async {
         // 이미 API 호출이 진행 중인지 확인
@@ -242,13 +191,19 @@ class _HomePageState extends State<HomePage> {
         try {
           result = await BaumannService.getBaumannHistory();
 
-          if (result.isSuccess) {
+          print("This is Baumann Button in Home Page : ${result.value}");
+
+          if (result.isSuccess && result.value!.isNotEmpty) {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    BaumannResultPage(resultData: Response(data: result.value, requestOptions: RequestOptions(path: '')))));
+                    BaumannHistoryPage(resultData: result.value)));
+            print("This is BaumannButton in HomePage2 : ${result.value}");
           } else {
+
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannStartPage()));
+            print("This is Baumann Button in Home Page2 : ${result.isSuccess}");
           }
+
         } catch (e) {
           // Handle the error case
           print('An error occurred: $e');
@@ -270,7 +225,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text(result.isSuccess ? "결과보기" : "테스트하기"),
+        child: Text((result.value != null) ? "결과보기" : "테스트하기"),
       ),
     );
   }
