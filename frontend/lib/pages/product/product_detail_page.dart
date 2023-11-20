@@ -118,30 +118,73 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  // Widget _likesBtn() {
+  //   return IconButton(
+  //     onPressed: () async {
+  //       setState(() {
+  //         isFavorite  = !isFavorite;
+  //       });
+  //       await _saveFavoriteState(widget.searchResults.id);
+  //       // Call FavoritesService to upload favorites when the heart icon is pressed
+  //       if (isFavorite) {
+  //         try {
+  //           // Assuming you have the cosmeticId from your widget
+  //           String cosmeticId = widget.searchResults.id;
+  //
+  //           // Call the uploadFavorites method from FavoritesService
+  //           String result = await FavoritesService.uploadFavorites(cosmeticId);
+  //
+  //           if (result == "success") {
+  //             print("Favorites uploaded successfully! : $isFavorite");
+  //           } else {
+  //             print("Failed to upload favorites");
+  //           }
+  //         } catch (e) {
+  //           print("An error occurred while uploading favorites: $e");
+  //         }
+  //       }
+  //     },
+  //     icon: Icon(
+  //       isFavorite ? Icons.favorite : Icons.favorite_border,
+  //       color: isFavorite ? Colors.red : null,
+  //     ),
+  //   );
+  // }
   Widget _likesBtn() {
     return IconButton(
       onPressed: () async {
         setState(() {
-          isFavorite  = !isFavorite;
+          isFavorite = !isFavorite;
         });
         await _saveFavoriteState(widget.searchResults.id);
-        // Call FavoritesService to upload favorites when the heart icon is pressed
-        if (isFavorite) {
-          try {
-            // Assuming you have the cosmeticId from your widget
-            String cosmeticId = widget.searchResults.id;
 
+        // Call FavoritesService to upload or delete favorites based on the button state
+        try {
+          // Assuming you have the cosmeticId from your widget
+          String cosmeticId = widget.searchResults.id;
+
+          // Call the appropriate method based on the button state
+          if (isFavorite) {
             // Call the uploadFavorites method from FavoritesService
             String result = await FavoritesService.uploadFavorites(cosmeticId);
 
-            if (result == "success") {
+            if (result == "success upload user favorites") {
               print("Favorites uploaded successfully! : $isFavorite");
             } else {
               print("Failed to upload favorites");
             }
-          } catch (e) {
-            print("An error occurred while uploading favorites: $e");
+          } else {
+            // Call the deleteFavorites method from FavoritesService
+            String result = await FavoritesService.deleteFavorites(cosmeticId);
+
+            if (result == "success deleted user favorites") {
+              print("Favorites deleted successfully! : $isFavorite");
+            } else {
+              print("Failed to delete favorites");
+            }
           }
+        } catch (e) {
+          print("An error occurred while handling favorites: $e");
         }
       },
       icon: Icon(
@@ -150,6 +193,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
     );
   }
+
 
   Widget _displayBrand() {
     return Padding(
