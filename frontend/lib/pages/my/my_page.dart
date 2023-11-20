@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
-import '../pouch/pouch_page.dart';
+import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
 import '../todo/todo_page.dart';
 
@@ -51,54 +51,58 @@ class _MyPageState extends State<MyPage> {
     return isLoading
         ? Center(child: Text('로딩 중'))
         : Scaffold(
-      appBar: CommonAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const MyPageHeader('마이페이지'),
-                const SizedBox(height: 20),
-                MyPageProfile(
-                    nickname: user!.nickname ?? user!.email,
-                    profileImage: user!.profileImage ?? ''),
-                const SizedBox(height: 20),
-                const MyDivider(),
-                MyPageMenu(
-                    title: '즐겨찾기 해둔 제품',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MyFavoritePage()),
-                      );
-                    }),
-                MyPageMenu(
-                  title: '내가 쓴 리뷰',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyReviewPage()),
-                    );
-                  },
-                ),
-                MyPageMenu(
-                  title: '로그아웃',
-                  onTap: () {
-                    SharedService.logout(context);
-                  },
-                ),
-                const SizedBox(height: 20),
-              ],
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: _underNavigation(),
-    );
+            appBar: CommonAppBar(),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const MyPageHeader('마이페이지'),
+                      const SizedBox(height: 20),
+                      MyPageProfile(
+                        nickname: user!.nickname ?? user!.email,
+                        profileImage: user!.profileImage ?? '',
+                        reload: getUserInfo,
+                      ),
+                      const SizedBox(height: 30),
+                      const MyDivider(),
+                      const SizedBox(height: 20),
+                      MyPageMenu(
+                        title: '즐겨찾기 해둔 제품',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyFavoritePage()),
+                          );
+                        },
+                      ),
+                      MyPageMenu(
+                        title: '내가 쓴 리뷰',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyReviewPage()),
+                          );
+                        },
+                      ),
+                      MyPageMenu(
+                        title: '로그아웃',
+                        onTap: () {
+                          SharedService.logout(context);
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            bottomNavigationBar: _underNavigation(),
+          );
   }
 
   Widget _underNavigation() {
@@ -107,51 +111,51 @@ class _MyPageState extends State<MyPage> {
         onTap: (int index) {
           // 페이지 전환 로직 추가
           if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const RecPage()));
+          } else if (index == 1) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+          } else if (index == 2) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          } else if (index == 3) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const TodoPage()));
           }
-          else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PouchPage()));
-          }
-          else if (index == 2) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-          }
-          else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
-          }
-        }
-    );
+        });
   }
 }
 
 class MyPageProfile extends StatelessWidget {
   final String nickname;
   final String profileImage;
+  final VoidCallback reload;
 
-  const MyPageProfile(
-      {super.key, required this.nickname, required this.profileImage});
+  const MyPageProfile({
+    super.key,
+    required this.nickname,
+    required this.profileImage,
+    required this.reload,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Row(
         children: [
+          SizedBox(width: 10),
           SizedBox(
-            width: 50,
-            child: Image.network(//변경 부분
-              //'assets/images/profile.jpg', // profileImage,
-              profileImage,//변경 부분
+            width: 80,
+            child: Image.network(
+              // 'assets/images/profile.jpg', // profileImage,
+              profileImage,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset('assets/images/profile.jpg');
               },
             ),
           ),
-          const SizedBox(width: 10),
-          TextButton(
-            child: Text(''),
-            onPressed: () {
-              print(profileImage);
-            },
-          ),
+          SizedBox(width: 30),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,8 +166,9 @@ class MyPageProfile extends StatelessWidget {
                     Text(
                       nickname,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 20,
                         color: Color(0xFF585555),
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.left,
                     ),
@@ -172,11 +177,13 @@ class MyPageProfile extends StatelessWidget {
                         Icons.arrow_right,
                         color: Color(0xFFFE9738),
                       ),
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: ((context) => UserInfoPage())));
+
+                        reload();
                       },
                     ),
                   ],
@@ -207,8 +214,8 @@ class MyPageMenu extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 15,
-                color: Color(0xFF868383),
+                fontSize: 18,
+                color: Colors.black,
               ),
               textAlign: TextAlign.left,
             ),

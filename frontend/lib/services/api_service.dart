@@ -8,6 +8,10 @@ import 'package:beautyminder/dto/review_model.dart';
 import 'package:beautyminder/dto/update_request_model.dart';
 import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
+import 'package:file_picker/src/platform_file.dart';
+import 'package:http_parser/src/media_type.dart';
+import 'package:mime/src/mime_type.dart';
+
 import '../../config.dart';
 import '../dto/user_model.dart';
 import 'shared_service.dart';
@@ -49,6 +53,15 @@ class APIService {
     );
   }
 
+  static Future<Response> _patchJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}) {
+    return client.post(
+      url,
+      options: _httpOptions('PATCH', headers),
+      data: body,
+    );
+  }
+
   // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
@@ -61,7 +74,6 @@ class APIService {
 
     try {
       // POST 요청
-      print("response:");
       final response = await _postForm(url, formData);
       print("response: $response");
       if (response.statusCode == 200) {
@@ -100,7 +112,8 @@ class APIService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.deleteAPI + userId).toString();
+    final url = Uri.http(Config.apiURL, Config.deleteAPI)
+        .toString(); //deleteAPI 뒤에 + userID 지움
 
     // 헤더 설정
     final headers = {
@@ -131,23 +144,20 @@ class APIService {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     // final accessToken = await SharedService.getAccessToken();
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
     //refreshToken 가지고오기
     // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
 
     // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, Config.userProfileAPI).toString();
+    final url = Uri.http(Config.apiURL, Config.userProfileAPI).toString();
 
     // 헤더 설정
-    // final headers = {
-    //   'Authorization': 'Bearer $accessToken',
-    //   'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
-    // };
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -184,17 +194,18 @@ class APIService {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     // final accessToken = await SharedService.getAccessToken();
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
     //refreshToken 가지고오기
     // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
 
     // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, '/user/favorites').toString();
+    final url = Uri.http(Config.apiURL, '/user/favorites').toString();
 
     // 헤더 설정
     // final headers = {
@@ -215,10 +226,12 @@ class APIService {
 
       if (response.statusCode == 200) {
         // 사용자 정보 파싱
-        print('res:' + response.data.toString());
-        final favorites =
-            FavoriteModel.fromJson(response.data as Map<String, dynamic>);
-        return Result.success(favorites);
+        //print('res:' + response.data.toString());
+        //final favorites =
+        //    FavoriteModel.fromJson(response.data as Map<String, dynamic>);
+        //return Result.success(favorites);
+
+        return Result.success(response.data);
       }
 
       return Result.failure("Failed to get user favorites");
@@ -239,17 +252,18 @@ class APIService {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     // final accessToken = await SharedService.getAccessToken();
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
     //refreshToken 가지고오기
     // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
 
     // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, '/user/reviews').toString();
+    final url = Uri.http(Config.apiURL, '/user/reviews').toString();
 
     // 헤더 설정
     // final headers = {
@@ -290,17 +304,18 @@ class APIService {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     // final accessToken = await SharedService.getAccessToken();
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
     //refreshToken 가지고오기
     // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
 
     // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, Config.userProfileAPI).toString();
+    final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
 
     // 헤더 설정
     final headers = {
@@ -309,10 +324,59 @@ class APIService {
     };
 
     try {
-      final response = await _postJson(url, model.toJson());
-      return Result.success(true);
+      final response = await _patchJson(url, model.toJson(), headers: headers);
+      if (response.statusCode == 200) {
+        return Result.success(true);
+      }
+      return Result.failure("Failed to update user profile");
     } catch (e) {
       return Result.failure("An error occurred: $e");
+    }
+  }
+
+  //프로필 사진 변경
+  static Future<String> editProfileImgInfo(String image) async {
+    // 유저 정보 가지고 오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //refreshToken 가지고오기
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.editProfileImg).toString();
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+    };
+
+    final MediaType contentType = MediaType.parse(
+        lookupMimeType('new_profile.jpg') ?? 'application/octet-stream');
+
+    final formData = FormData.fromMap({
+      "image": MultipartFile.fromFileSync(
+        image,
+        //filename: 'new_profile.jpg',
+        contentType: contentType,
+      ),
+    });
+
+    // Use Dio's post method for multipart data
+    final response = await client.post(
+      url,
+      data: formData,
+      options: _httpOptions('POST', headers),
+    );
+
+    // final response = await _postJson(url, model.toJson(), headers: headers);
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('Failed to update review: ${response.statusMessage}');
     }
   }
 }
@@ -322,6 +386,9 @@ class Result<T> {
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
+  Result.success(this.value) : error = null;
+  Result.failure(this.error) : value = null;
+
+  bool get isSuccess => error == null;
+  bool get isFailure => !isSuccess;
 }

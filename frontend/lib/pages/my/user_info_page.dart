@@ -85,13 +85,17 @@ class _UserInfoPageState extends State<UserInfoPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserInfoModifyPage()),
-                                );
+                              onPressed: () async {
+                                if (user != null) {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UserInfoModifyPage()),
+                                  );
+
+                                  getUserInfo();
+                                }
                               },
                               child: const Text('회원정보 수정'),
                             ),
@@ -145,20 +149,20 @@ class UserInfoProfile extends StatelessWidget {
             width: 50,
             child: Image.network(
               profileImage,
-              //'assets/images/profile.jpg', // profileImage,
+              // 'assets/images/profile.jpg', // profileImage,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset('assets/images/profile.jpg');
               },
             ),
           ),
-          Container(
-              width: 58,
-              height: 58,
-              decoration: const BoxDecoration(
-                color: Color(0xFFD9D9D9),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.camera_alt_outlined, size: 35)),
+          // Container(
+          //     width: 58,
+          //     height: 58,
+          //     decoration: const BoxDecoration(
+          //       color: Color(0xFFD9D9D9),
+          //       shape: BoxShape.circle,
+          //     ),
+          //     child: const Icon(Icons.camera_alt_outlined, size: 35)),
           const SizedBox(width: 20),
           Expanded(
             child: Row(

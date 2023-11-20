@@ -1,3 +1,4 @@
+import 'package:beautyminder/dto/favorite_model.dart';
 import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
     try {
       final info = await APIService.getFavorites();
       setState(() {
-        // favorites = info;
+        favorites = info.value! as List;
         isLoading = false;
       });
     } catch (e) {
@@ -35,7 +36,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
   }
 
   // favorite 데이터 사용법
-  // 위 favorites = info; 의 주석을 제거 하고,
+  // 위 favorites = info; 의 주석을 제거,
   // favorites[index].brand 처럼 쓰기.
   // itemCounter는 favorites.length 로 하기.
 
@@ -43,21 +44,18 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      body: _body(),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: null,
-      //   child: Text('+'),
-      // ),
+      body: isLoading ? Center(child: Text('로딩 중')) : _body(),
     );
   }
 
   Widget _body() {
+    print(favorites.first['images']);
     return ListView.builder(
-        itemCount: 10,
+        itemCount: favorites.length,
         itemBuilder: (context, index) => ListTile(
-              leading: Image.asset('assets/images/profile.jpg'),
-              title: Text('title'),
-              subtitle: Text('subTitle'),
-            ));
+          leading: Image.network(favorites[index]['images'][0] ?? ''),
+          title: Text(favorites[index]['name']),
+          subtitle: Text(favorites[index]['createdAt']),
+        ));
   }
 }

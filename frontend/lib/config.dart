@@ -9,7 +9,7 @@ class Config {
       return "211.221.220.124:8080";
     }
     if (Platform.isAndroid) {
-      return '10.0.2.2:8080';
+      return '211.221.220.124:8080';
     } else {
       return '211.221.220.124:8080';
     }
@@ -18,7 +18,9 @@ class Config {
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
   static const deleteAPI = "/user/delete";
-  static const userProfileAPI = "/user/me";
+  static const userProfileAPI = "/me"; // 바꾼부분
+  static const editUserInfo = "/user/update";
+  static const editProfileImg = "user/upload";
 
   // Todo
   static const todoAPI = "/todo/all";
@@ -53,4 +55,12 @@ class Config {
   static const AllReviewAPI = "/review";
   static const getReviewAPI = "/review/";
   static const ReviewImageAPI = "/review/image";
+
+  //expiry
+  static const createCosmeticExpiryAPI = "/expiry/create";
+  static const getAllExpiryByUserIdAPI = "/expiry/user/";
+  static const getExpiryByUserIdandExpiryIdAPI = "/expiry/";
+
+  //favorites
+  static const uploadFavoritesAPI = "/user/favorites/";
 }

@@ -29,7 +29,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cross_file: ^0.3.3+6
   http: ^1.1.0
   snippet_coder_utils: ^1.0.9
   flutter_secure_storage: ^9.0.0
@@ -55,11 +54,14 @@ dependencies:
   file_picker: ^6.1.1
   flutter_spinkit: ^5.1.0
   flutter_svg: ^2.0.9
+  flutter_slidable: ^3.0.1
+  image_picker: ^0.8.4
+  provider: ^6.1.1
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  image_picker: ^1.0.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

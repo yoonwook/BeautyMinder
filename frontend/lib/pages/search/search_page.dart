@@ -45,36 +45,36 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         Flexible(
           flex: 1,
-          child: TextField(
-            controller: textController,
-            // onSubmitted: (text) {
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
-            // },
-            onChanged: (text) {
-              searchQuery = text;
-            },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 3,
-                horizontal: 15,
+          child: Container(
+            height: 40,
+            child: TextField(
+              controller: textController,
+              onChanged: (text) {
+                searchQuery = text;
+              },
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 3,
+                  horizontal: 15,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10), //포커스 시
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffd86a04),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10), // 활성화 상태 모서리를 둥글게 조정
+                  ),
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+                hintText: "검색 키워드를 입력해주세요.",
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10), //포커스 시
-                ),
-                borderSide: BorderSide(
-                  color: Color(0xffd86a04),
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10), // 활성화 상태 모서리를 둥글게 조정
-                ),
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                ),
-              ),
-              hintText: "검색 키워드를 입력해주세요.",
             ),
           ),
         ),
@@ -183,7 +183,7 @@ class _SearchPageState extends State<SearchPage> {
           SizedBox(height: 40),
           const Center(
             child: Text(
-              '실시간 랭킹 순위를 불러올간 수 없습니다.',
+              '실시간 랭킹 순위를 불러올 수 없습니다.',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey
