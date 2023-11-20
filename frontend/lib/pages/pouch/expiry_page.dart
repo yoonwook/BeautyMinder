@@ -162,26 +162,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
     );
   }
 
-  // Widget _underNavigation() {
-  //   return CommonBottomNavigationBar(
-  //       currentIndex: _currentIndex,
-  //       onTap: (int index) {
-  //         // 페이지 전환 로직 추가
-  //         if (index == 0) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
-  //         }
-  //         else if (index == 2) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-  //         }
-  //         else if (index == 3) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
-  //         }
-  //         else if (index == 4) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
-  //         }
-  //       }
-  //   );
-  // }
   Widget _underNavigation() {
     return CommonBottomNavigationBar(
       currentIndex: _currentIndex,

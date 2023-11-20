@@ -9,6 +9,7 @@ import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UserInfoPage extends StatefulWidget {
   UserInfoPage({super.key});
@@ -34,7 +35,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
       final info = await SharedService.loginDetails();
       setState(() {
         user = info!.user;
-        print("user.phoneNumber: ${user?.phoneNumber}");
         isLoading = false;
       });
     } catch (e) {
@@ -47,8 +47,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
     return Scaffold(
         appBar: CommonAppBar(),
         body: isLoading
-            ? Center(
-                child: Text('로딩 중'),
+            ? SpinKitThreeInOut(
+                color: Color(0xffd86a04),
+                size: 50.0,
+                duration: Duration(seconds: 2),
               )
             : Stack(
                 children: [
@@ -62,7 +64,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             profileImage: user!.profileImage ?? ''),
                         SizedBox(height: 20),
                         MyDivider(),
-                        //UserInfoItem(title: '아이디', content: user!.id),
+                        UserInfoItem(title: '아이디', content: user!.id),
                         MyDivider(),
                         UserInfoItem(title: '이메일', content: user!.email),
                         MyDivider(),
@@ -86,14 +88,16 @@ class _UserInfoPageState extends State<UserInfoPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (user != null) {
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        UserInfoModifyPage()),
+                                            UserInfoModifyPage()),
                                   );
+
+                                  getUserInfo();
                                 }
                               },
                               child: const Text('회원정보 수정'),

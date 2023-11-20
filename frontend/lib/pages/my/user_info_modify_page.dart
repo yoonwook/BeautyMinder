@@ -6,6 +6,7 @@ import 'package:beautyminder/pages/my/widgets/pop_up.dart';
 import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/painting.dart';
@@ -30,10 +31,24 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
   TextEditingController phoneController = TextEditingController();
   String? image;
 
+  Future<void> onImageChanged(String? imagePath) async {
+    final updatedUser = User(
+      id: user!.id,
+      email: user!.email,
+      password: user!.password,
+      nickname: user!.nickname,
+      profileImage: imagePath,
+      createdAt: user!.createdAt,
+      authorities: user!.authorities,
+      phoneNumber: user!.phoneNumber,
+      baumann: user?.baumann,
+      baumannScores: user?.baumannScores
+    );
 
-  void onImageChanged(String? imagePath) {
+    await SharedService.updateUser(updatedUser);
+
     setState(() {
-      image = imagePath;
+      user = updatedUser;
       print(image);
     });
   }
@@ -49,11 +64,8 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
     try {
       final info = await SharedService.loginDetails();
       setState(() {
-        user = info!.user;
+        user = info?.user;
         isLoading = false;
-        phoneController.text = user!.phoneNumber!;
-        nicknameController.text = user!.nickname!;
-
       });
     } catch (e) {
       print(e);
@@ -67,102 +79,105 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
     return Scaffold(
         appBar: CommonAppBar(),
         body: isLoading
-            ? Center(
-          child: Text('로딩 중'),
-        )
+            ? SpinKitThreeInOut(
+                color: Color(0xffd86a04),
+                size: 50.0,
+                duration: Duration(seconds: 2),
+              )
             : Stack(
-          children: [
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
-                  child: Column(children: [
-                    MyPageHeader('회원정보 수정'),
-                    UserInfoProfile(
-                      nickname: user!.nickname ?? user!.email,
-                      profileImage: user!.profileImage ?? '',
-                      onTap: _pickImage, // 수정: _pickImage 함수를 onTap으로 전달
-                    ),
-                    SizedBox(height: 20),
-                    MyDivider(),
-                   UserInfoItem(title: '아이디', content: ''),
-                    MyDivider(),
-                    UserInfoEditItem(
-                        title: '전화번호', controller: phoneController),
-                    MyDivider(),
-                    UserInfoEditItem(
-                        title: '닉네임', controller: nicknameController),
-                    MyDivider(),
-                    UserInfoEditItem(
-                        title: '현재 비밀번호',
-                        controller: nowPasswordController),
-                    UserInfoEditItem(
-                        title: '변경할 비밀번호',
-                        controller: passwordController),
-                    UserInfoEditItem(
-                        title: '비밀번호 재확인',
-                        controller: passwordConfirmController),
-                    SizedBox(height: 150),
-                  ]),
-                )),
-            Positioned(
-              bottom: 10, // 원하는 위치에 배치
-              left: 10, // 원하는 위치에 배치
-              right: 10, // 원하는 위치에 배치
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFFFFFF),
-                          side: const BorderSide(
-                              width: 1.0, color: Color(0xFFFF820E)),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('취소',
-                            style: TextStyle(color: Color(0xFFFF820E))),
+                children: [
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: SingleChildScrollView(
+                        child: Column(children: [
+                          MyPageHeader('회원정보 수정'),
+                          UserInfoProfile(
+                            nickname: user!.nickname ?? user!.email,
+                            profileImage: user!.profileImage ?? '',
+                            onTap: _pickImage, // 수정: _pickImage 함수를 onTap으로 전달
+                          ),
+                          SizedBox(height: 20),
+                          MyDivider(),
+                          UserInfoItem(title: '아이디', content: user!.id),
+                          MyDivider(),
+                          UserInfoEditItem(
+                              title: '전화번호', controller: phoneController),
+                          MyDivider(),
+                          UserInfoEditItem(
+                              title: '닉네임', controller: nicknameController),
+                          MyDivider(),
+                          UserInfoEditItem(
+                              title: '현재 비밀번호',
+                              controller: nowPasswordController),
+                          UserInfoEditItem(
+                              title: '변경할 비밀번호',
+                              controller: passwordController),
+                          UserInfoEditItem(
+                              title: '비밀번호 재확인',
+                              controller: passwordConfirmController),
+                          SizedBox(height: 150),
+                        ]),
+                      )),
+                  Positioned(
+                    bottom: 10, // 원하는 위치에 배치
+                    left: 10, // 원하는 위치에 배치
+                    right: 10, // 원하는 위치에 배치
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFFFFFF),
+                                side: const BorderSide(
+                                    width: 1.0, color: Color(0xFFFF820E)),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('취소',
+                                  style: TextStyle(color: Color(0xFFFF820E))),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFF820E),
+                              ),
+                              onPressed: () async {
+                                final ok = await popUp(
+                                  title: '회원 정보를 수정하시겠습니까?',
+                                  context: context,
+                                );
+                                if (ok) {
+                                  if (image != null) {
+                                    APIService.sendEditInfo(UpdateRequestModel(
+                                      nickname: nicknameController.text,
+                                      password: passwordController.text,
+                                      phone: phoneController.text,
+                                      image: image,
+                                      // image: image ?? XFile(''),
+                                    ));
+                                  }
+                                }
+                              },
+                              child: const Text('수정'),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF820E),
-                        ),
-                        onPressed: () async {
-                          final ok = await popUp(
-                            title: '회원 정보를 수정하시겠습니까?',
-                            context: context,
-                          );
-                          if (ok) {
-                            if(image != null) {
-                              APIService.sendEditInfo(UpdateRequestModel(
-                                nickname: nicknameController.text,
-                                password: passwordController.text,
-                                phone: phoneController.text,
-                                image: image,
-                                // image: image ?? XFile(''),
-                              ));
-                            }
-                          }
-                        },
-                        child: const Text('수정'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ));
+                  ),
+                ],
+              ));
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -170,9 +185,9 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
       });
 
       // Call the editProfileImgInfo method with the UpdateRequestModel
-      await APIService.editProfileImgInfo(image!);
+      final newImageUrl = await APIService.editProfileImgInfo(image!);
 
-      onImageChanged(image);
+      onImageChanged(newImageUrl);
     }
   }
 }
@@ -196,15 +211,15 @@ class UserInfoProfile extends StatelessWidget {
       child: Column(
         children: [
           profileImage == null
-           ? Icon(
-            Icons.camera_alt,
-            size: 50,
-            color: Colors.grey,
-          )
-          : CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage(profileImage!),
-          ),
+              ? Icon(
+                  Icons.camera_alt,
+                  size: 50,
+                  color: Colors.grey,
+                )
+              : CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(profileImage!),
+                ),
           SizedBox(height: 10),
           Text(
             nickname,
@@ -215,8 +230,6 @@ class UserInfoProfile extends StatelessWidget {
     );
   }
 }
-
-
 
 class UserInfoEditItem extends StatelessWidget {
   final String title;
@@ -240,11 +253,10 @@ class UserInfoEditItem extends StatelessWidget {
           ),
           Flexible(
               child: TextField(
-                controller: controller,
-              )),
+            controller: controller,
+          )),
         ],
       ),
     );
   }
-
 }

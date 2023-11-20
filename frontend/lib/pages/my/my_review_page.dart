@@ -56,12 +56,10 @@ class _MyReviewPageState extends State<MyReviewPage> {
 
   Widget _body() {
     return isLoading
-        ? Center(
-            child: SpinKitThreeInOut(
-              color: Color(0xffd86a04),
-              size: 50.0,
-              duration: Duration(seconds: 2),
-            ),
+        ? SpinKitThreeInOut(
+            color: Color(0xffd86a04),
+            size: 50.0,
+            duration: Duration(seconds: 2),
           )
         : ListView.builder(
             itemCount: reviews?.length ?? 0,

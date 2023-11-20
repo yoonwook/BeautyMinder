@@ -12,7 +12,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../services/api_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
-import '../baumann/baumann_test_start_page.dart';
 import '../home/home_page.dart';
 import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
@@ -69,12 +68,15 @@ class _MyPageState extends State<MyPage> {
                       const MyPageHeader('마이페이지'),
                       const SizedBox(height: 20),
                       MyPageProfile(
-                          nickname: user!.nickname ?? user!.email,
-                          profileImage: user!.profileImage ?? ''),
+                        nickname: user!.nickname ?? user!.email,
+                        profileImage: user!.profileImage ?? '',
+                        reload: getUserInfo,
+                      ),
                       const SizedBox(height: 30),
                       const MyDivider(),
                       const SizedBox(height: 20),
-                      GestureDetector(
+                      MyPageMenu(
+                        title: '즐겨찾기 해둔 제품',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -82,18 +84,9 @@ class _MyPageState extends State<MyPage> {
                                 builder: (context) => const MyFavoritePage()),
                           );
                         },
-                        child: MyPageMenu(
-                          title: '즐겨찾기 해둔 제품',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MyFavoritePage()),
-                            );
-                          },
-                        ),
                       ),
-                      GestureDetector(
+                      MyPageMenu(
+                        title: '내가 쓴 리뷰',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -101,40 +94,12 @@ class _MyPageState extends State<MyPage> {
                                 builder: (context) => const MyReviewPage()),
                           );
                         },
-                        child: MyPageMenu(
-                          title: '내가 쓴 리뷰',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MyReviewPage()),
-                            );
-                          },
-                        ),
                       ),
-                      GestureDetector(
+                      MyPageMenu(
+                        title: '로그아웃',
                         onTap: () {
                           SharedService.logout(context);
                         },
-                        child: MyPageMenu(
-                          title: '로그아웃',
-                          onTap: () {
-                            SharedService.logout(context);
-                          },
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => BaumannStartPage()));
-                        },
-                        child: MyPageMenu(
-                          title: '바우만 테스트',
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => BaumannStartPage()));
-                          },
-                        ),
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -146,57 +111,39 @@ class _MyPageState extends State<MyPage> {
           );
   }
 
-  // Widget _underNavigation() {
-  //   final userProfileResult = await APIService.getUserProfile();
-  //   return CommonBottomNavigationBar(
-  //       currentIndex: _currentIndex,
-  //       onTap: (int index) {
-  //         // 페이지 전환 로직 추가
-  //         if (index == 0) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
-  //         }
-  //         else if (index == 1) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-  //         }
-  //         else if (index == 2) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value,)));
-  //         }
-  //         else if (index == 3) {
-  //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
-  //         }
-  //       }
-  //   );
-  // }
   Widget _underNavigation() {
     return CommonBottomNavigationBar(
-      currentIndex: _currentIndex,
-      onTap: (int index) async {
-        // 페이지 전환 로직 추가
-        if (index == 0) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const RecPage()));
-        } else if (index == 1) {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-        } else if (index == 2) {
-          final userProfileResult = await APIService.getUserProfile();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => HomePage(user: userProfileResult.value)));
-        } else if (index == 3) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const TodoPage()));
-        }
-      },
-    );
+        currentIndex: _currentIndex,
+        onTap: (int index) async {
+          // 페이지 전환 로직 추가
+          if (index == 0) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const RecPage()));
+          } else if (index == 1) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+          } else if (index == 2) {
+            final userProfileResult = await APIService.getUserProfile();
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+          } else if (index == 3) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const TodoPage()));
+          }
+        });
   }
 }
 
 class MyPageProfile extends StatelessWidget {
   final String nickname;
   final String profileImage;
+  final VoidCallback reload;
 
-  const MyPageProfile(
-      {super.key, required this.nickname, required this.profileImage});
+  const MyPageProfile({
+    super.key,
+    required this.nickname,
+    required this.profileImage,
+    required this.reload,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -236,11 +183,13 @@ class MyPageProfile extends StatelessWidget {
                         Icons.arrow_right,
                         color: Color(0xFFFE9738),
                       ),
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: ((context) => UserInfoPage())));
+
+                        reload();
                       },
                     ),
                   ],

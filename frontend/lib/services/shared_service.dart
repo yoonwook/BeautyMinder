@@ -9,9 +9,7 @@ class SharedService {
   // 안전한 저장소 설정
   static const storage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      iOptions: IOSOptions(
-          accessibility: KeychainAccessibility.first_unlock)
-  );
+      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock));
 
   // 로그인 여부 확인
   static Future<bool> isLoggedIn() async {
@@ -21,10 +19,13 @@ class SharedService {
   // 로그인 상세 정보 가져오기
   static Future<LoginResponseModel?> loginDetails() async {
     final result = await storage.read(key: 'login_details');
-    return result != null ? LoginResponseModel.fromJson(jsonDecode(result)) : null;
+    return result != null
+        ? LoginResponseModel.fromJson(jsonDecode(result))
+        : null;
   }
 
-  static Future<void> updateLoginDetails(String accessToken, String refreshToken) async {
+  static Future<void> updateLoginDetails(
+      String accessToken, String refreshToken) async {
     final loginDetails = await SharedService.loginDetails();
     if (loginDetails != null) {
       loginDetails.accessToken = accessToken;
@@ -34,6 +35,22 @@ class SharedService {
         value: jsonEncode(loginDetails.toJson()),
       );
       // Since login_details itself is updated, no need to update individual keys for accessToken and refreshToken
+    }
+  }
+
+  static Future<void> updateUser(User user) async {
+    final loginDetails = await SharedService.loginDetails();
+    if (loginDetails != null) {
+      final updatedDetails = LoginResponseModel(
+        accessToken: loginDetails.accessToken,
+        refreshToken: loginDetails.refreshToken,
+        user: user,
+      );
+
+      await storage.write(
+        key: 'login_details',
+        value: jsonEncode(updatedDetails.toJson()),
+      );
     }
   }
 
@@ -87,7 +104,7 @@ class SharedService {
     final refreshedTokens = await SharedService.getRefreshToken();
 
     // Update local storage with new tokens
-    await SharedService.setRefreshToken(refreshedTokens?? '');
+    await SharedService.setRefreshToken(refreshedTokens ?? '');
   }
 
   static Future<bool> getBool(String key) async {
