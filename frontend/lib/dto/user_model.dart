@@ -69,6 +69,7 @@ User {
       'nickname': nickname,
       'profileImage': profileImage,
       'createdAt': createdAt.toIso8601String(),
+      'phoneNumber' : phoneNumber,
       'baumann': baumann,
       'baumannScores': baumannScores,
       'authorities': authorities

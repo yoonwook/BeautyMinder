@@ -10,7 +10,8 @@ import '../../dto/cosmetic_model.dart';
 import '../../services/homeSearch_service.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key, required this.data, required this.data2}) : super(key: key);
+  const SearchPage({Key? key, required this.data, required this.data2})
+      : super(key: key);
 
   final KeyWordRank? data;
   final ProductRank? data2;
@@ -32,20 +33,19 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(title:_title()),
+      appBar: SearchAppBar(title: _title()),
       body: _searchPageUI(),
     );
   }
 
   Widget _title() {
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
         Flexible(
           flex: 1,
-          child: Container(
+          child: SizedBox(
             height: 40,
             child: TextField(
               controller: textController,
@@ -87,11 +87,17 @@ class _SearchPageState extends State<SearchPage> {
               final result = await SearchService.searchAnything(searchQuery);
               print(result);
 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery, searchResults: result, )),);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => SearchResultPage(
+                          searchQuery: searchQuery,
+                          searchResults: result,
+                        )),
+              );
               print('////////////searchQuery : $searchQuery');
-              } catch (e) {
-                print('Error searching anything: $e');
-              }
+            } catch (e) {
+              print('Error searching anything: $e');
+            }
           },
           icon: const Icon(
             Icons.search,
@@ -105,7 +111,8 @@ class _SearchPageState extends State<SearchPage> {
   Widget _searchPageUI() {
     print("hellohelloeveryone : ${widget.data?.keywords}");
     print("hellohelloeveryone : ${widget.data2?.cosmetics}");
-    if ((widget.data?.keywords?.length == 0) && (widget.data2?.cosmetics.length == 0)) {
+    if ((widget.data?.keywords?.length == 0) &&
+        (widget.data2?.cosmetics.length == 0)) {
       return Column(
         children: [
           _noKeywordRanking(),
@@ -113,9 +120,9 @@ class _SearchPageState extends State<SearchPage> {
           const SizedBox(height: 20),
         ],
       );
-    }
-    else if((widget.data?.keywords?.length != 0) && (widget.data2?.cosmetics.length == 0)) {
-      if((widget.data?.keywords?.length ?? 0) >= 6) {
+    } else if ((widget.data?.keywords?.length != 0) &&
+        (widget.data2?.cosmetics.length == 0)) {
+      if ((widget.data?.keywords?.length ?? 0) >= 6) {
         print("length : ${widget.data?.keywords?.length}");
         return SingleChildScrollView(
           child: Column(
@@ -126,8 +133,7 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
         );
-      }
-      else {
+      } else {
         print("length : ${widget.data?.keywords?.length}");
         return SingleChildScrollView(
           child: Column(
@@ -139,18 +145,18 @@ class _SearchPageState extends State<SearchPage> {
           ),
         );
       }
-    }
-    else if((widget.data?.keywords?.length == 0) && (widget.data2?.cosmetics.length != 0)) {
-      return Column(
+    } else if ((widget.data?.keywords?.length == 0) &&
+        (widget.data2?.cosmetics.length != 0)) {
+      return SingleChildScrollView(
+          child: Column(
         children: [
           _noKeywordRanking(),
           _productRanking(),
           const SizedBox(height: 20),
         ],
-      );
-    }
-    else {
-      if((widget.data?.keywords?.length ?? 0) >= 6) {
+      ));
+    } else {
+      if ((widget.data?.keywords?.length ?? 0) >= 6) {
         print("length : ${widget.data?.keywords?.length}");
         return SingleChildScrollView(
           child: Column(
@@ -161,8 +167,7 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
         );
-      }
-      else {
+      } else {
         print("length : ${widget.data?.keywords?.length}");
         return SingleChildScrollView(
           child: Column(
@@ -178,131 +183,120 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _noKeywordRanking() {
-    return Column(
-        children: [
-          const SizedBox(height: 40),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '실시간 검색 랭킹',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xffd86a04),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _divider(),
-          SizedBox(height: 40),
-          const Center(
-            child: Text(
-              '실시간 랭킹 순위를 불러올 수 없습니다.',
+    return Column(children: [
+      const SizedBox(height: 40),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '실시간 검색 랭킹',
               style: TextStyle(
                 fontSize: 18,
-                color: Colors.grey
+                fontWeight: FontWeight.bold,
+                color: Color(0xffd86a04),
               ),
             ),
-          ),
-          SizedBox(height: 40),
-          // const Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 20),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Text(
-          //         '실시간 제품 랭킹',
-          //         style: TextStyle(
-          //           fontSize: 18,
-          //           fontWeight: FontWeight.bold,
-          //           color: Color(0xffd86a04),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // _divider(),
-          // SizedBox(height: 40),
-          // const Center(
-          //   child: Text(
-          //     '실시간 랭킹 순위를 불러올 수 없습니다.',
-          //     style: TextStyle(
-          //         fontSize: 18,
-          //         color: Colors.grey
-          //     ),
-          //   ),
-          // ),
-      ]
-    );
+          ],
+        ),
+      ),
+      _divider(),
+      SizedBox(height: 40),
+      const Center(
+        child: Text(
+          '실시간 랭킹 순위를 불러올 수 없습니다.',
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      ),
+      SizedBox(height: 40),
+      // const Padding(
+      //   padding: EdgeInsets.symmetric(horizontal: 20),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       Text(
+      //         '실시간 제품 랭킹',
+      //         style: TextStyle(
+      //           fontSize: 18,
+      //           fontWeight: FontWeight.bold,
+      //           color: Color(0xffd86a04),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      // _divider(),
+      // SizedBox(height: 40),
+      // const Center(
+      //   child: Text(
+      //     '실시간 랭킹 순위를 불러올 수 없습니다.',
+      //     style: TextStyle(
+      //         fontSize: 18,
+      //         color: Colors.grey
+      //     ),
+      //   ),
+      // ),
+    ]);
   }
 
   Widget _noProductRanking() {
-    return Column(
-        children: [
-          // const SizedBox(height: 40),
-          // const Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 20),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Text(
-          //         '실시간 검색 랭킹',
-          //         style: TextStyle(
-          //           fontSize: 18,
-          //           fontWeight: FontWeight.bold,
-          //           color: Color(0xffd86a04),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // _divider(),
-          // SizedBox(height: 40),
-          // const Center(
-          //   child: Text(
-          //     '실시간 랭킹 순위를 불러올간 수 없습니다.',
-          //     style: TextStyle(
-          //         fontSize: 18,
-          //         color: Colors.grey
-          //     ),
-          //   ),
-          // ),
-          SizedBox(height: 40),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '실시간 제품 랭킹',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xffd86a04),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _divider(),
-          SizedBox(height: 40),
-          const Center(
-            child: Text(
-              '실시간 랭킹 순위를 불러올 수 없습니다.',
+    return Column(children: [
+      // const SizedBox(height: 40),
+      // const Padding(
+      //   padding: EdgeInsets.symmetric(horizontal: 20),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       Text(
+      //         '실시간 검색 랭킹',
+      //         style: TextStyle(
+      //           fontSize: 18,
+      //           fontWeight: FontWeight.bold,
+      //           color: Color(0xffd86a04),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      // _divider(),
+      // SizedBox(height: 40),
+      // const Center(
+      //   child: Text(
+      //     '실시간 랭킹 순위를 불러올간 수 없습니다.',
+      //     style: TextStyle(
+      //         fontSize: 18,
+      //         color: Colors.grey
+      //     ),
+      //   ),
+      // ),
+      SizedBox(height: 40),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '실시간 제품 랭킹',
               style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffd86a04),
               ),
             ),
-          ),
-        ]
-    );
+          ],
+        ),
+      ),
+      _divider(),
+      SizedBox(height: 40),
+      const Center(
+        child: Text(
+          '실시간 랭킹 순위를 불러올 수 없습니다.',
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      ),
+    ]);
   }
-
 
   Widget _keywordRankingIfMoreThanSix() {
     print("dfjkdlsjafkldj: ${widget.data?.keywords}");
@@ -340,12 +334,12 @@ class _SearchPageState extends State<SearchPage> {
           _divider(),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
-            child:
-            Row(
+            child: Row(
               children: [
                 Expanded(
                   child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Disable scrolling
                     shrinkWrap: true,
                     itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
                     itemBuilder: (context, index) {
@@ -365,11 +359,13 @@ class _SearchPageState extends State<SearchPage> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Disable scrolling
                     shrinkWrap: true,
                     itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
                     itemBuilder: (context, index) {
-                      final startIndex = (widget.data?.keywords?.length ?? 0) ~/ 2 + index;
+                      final startIndex =
+                          (widget.data?.keywords?.length ?? 0) ~/ 2 + index;
                       final keyword = widget.data?.keywords![startIndex];
                       final rank = startIndex + 1;
                       return ListTile(
@@ -390,8 +386,6 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-
-
 
   Widget _keywordRankingIfLessThanFive() {
     print("dfjkdlsjafkldj: ${widget.data?.keywords}");
@@ -430,7 +424,8 @@ class _SearchPageState extends State<SearchPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+              physics:
+                  const NeverScrollableScrollPhysics(), // Disable scrolling
               shrinkWrap: true,
               itemCount: widget.data?.keywords?.length ?? 0,
               itemBuilder: (context, index) {
@@ -452,22 +447,19 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-
-
   String _formatDateTime(String? dateTimeString) {
     if (dateTimeString == null) {
       return '';
     }
 
     final dateTime = DateTime.parse(dateTimeString);
-    final formattedDate = DateFormat('yyyy년 MM월 dd일 HH시 mm분 기준').format(dateTime);
+    final formattedDate =
+        DateFormat('yyyy년 MM월 dd일 HH시 mm분 기준').format(dateTime);
 
     return formattedDate;
   }
 
-
-
-  Widget _productRanking(){
+  Widget _productRanking() {
     final formattedDate2 = _formatDateTime(widget.data2?.updatedAt);
 
     return Column(
@@ -486,7 +478,7 @@ class _SearchPageState extends State<SearchPage> {
                   color: Color(0xffd86a04),
                 ),
               ),
-              if(widget.data2 != null)
+              if (widget.data2 != null)
                 Text(
                   formattedDate2,
                   style: const TextStyle(
@@ -524,22 +516,23 @@ class _SearchPageState extends State<SearchPage> {
         height: 70,
         margin: EdgeInsets.only(bottom: 10),
         child: ListTile(
-          leading: (product?.images != null && product.images?.isNotEmpty == true)
-              ? Container(
-            width: 70,
-            height: 70,
-            child: Image.network(
-              product.images![0],
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-          )
-              : Container(
-            width: 70.0,
-            height: 70.0,
-            color: Colors.white,
-          ),
+          leading:
+              (product?.images != null && product.images?.isNotEmpty == true)
+                  ? Container(
+                      width: 70,
+                      height: 70,
+                      child: Image.network(
+                        product.images![0],
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Container(
+                      width: 70.0,
+                      height: 70.0,
+                      color: Colors.white,
+                    ),
           title: Text(
             '$rank순위 : ${product.name}',
             style: TextStyle(
@@ -568,9 +561,6 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-
-
-
   void _navigateToSearchResultPage(String keyword) async {
     try {
       final result = await SearchService.searchAnything(keyword);
@@ -597,8 +587,6 @@ class _SearchPageState extends State<SearchPage> {
       color: Colors.grey,
     );
   }
-
-
 }
 
 // 결과 클래스

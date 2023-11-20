@@ -34,6 +34,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
       final info = await SharedService.loginDetails();
       setState(() {
         user = info!.user;
+        print("user.phoneNumber: ${user?.phoneNumber}");
         isLoading = false;
       });
     } catch (e) {
@@ -61,7 +62,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             profileImage: user!.profileImage ?? ''),
                         SizedBox(height: 20),
                         MyDivider(),
-                        UserInfoItem(title: '아이디', content: user!.id),
+                        //UserInfoItem(title: '아이디', content: user!.id),
                         MyDivider(),
                         UserInfoItem(title: '이메일', content: user!.email),
                         MyDivider(),

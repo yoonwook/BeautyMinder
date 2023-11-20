@@ -364,6 +364,7 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
       padding: const EdgeInsets.only(bottom: 4, left: 12),
       child: Text(
         content,
+        overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );

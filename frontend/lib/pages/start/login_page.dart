@@ -36,6 +36,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    email = "token@test";
+    password = '1234';
   }
 
 
@@ -43,18 +45,22 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: LoginAppBar(),
-        backgroundColor: Colors.white,
-        body: ProgressHUD(
-          child: Form(
-            key: globalFormKey,
-            child: _loginUI(context),
-          ),
-          inAsyncCall: isApiCallProcess,
-          opacity: 0.3,
-          key: UniqueKey(),
+      appBar: LoginAppBar(),
+      backgroundColor: Colors.white,
+      body:SingleChildScrollView(
+        child: Column(
+          children: [ ProgressHUD(
+            child: Form(
+              key: globalFormKey,
+              child: _loginUI(context),
+            ),
+            inAsyncCall: isApiCallProcess,
+            opacity: 0.3,
+            key: UniqueKey(),
+          )],
         ),
-      );
+      ) ,
+    );
   }
 
 
@@ -108,6 +114,7 @@ class _LoginPageState extends State<LoginPage> {
             });
           },
           child: TextFormField(
+            initialValue: 'token@test',
             focusNode: emailFocusNode,
             validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
             onChanged: (val) => email = val,
@@ -154,6 +161,7 @@ class _LoginPageState extends State<LoginPage> {
             });
           },
           child: TextFormField(
+            initialValue: '1234',
             focusNode: passwordFocusNode,
             validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
             onChanged: (val) => password = val,

@@ -30,6 +30,7 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
   TextEditingController phoneController = TextEditingController();
   String? image;
 
+
   void onImageChanged(String? imagePath) {
     setState(() {
       image = imagePath;
@@ -50,6 +51,9 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
       setState(() {
         user = info!.user;
         isLoading = false;
+        phoneController.text = user!.phoneNumber!;
+        nicknameController.text = user!.nickname!;
+
       });
     } catch (e) {
       print(e);
@@ -58,8 +62,8 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("fdsfdsf : $image");
-    print("dsadsadas : ${user!.profileImage}");
+    //print("fdsfdsf : $image");
+    //print("dsadsadas : ${user!.profileImage}");
     return Scaffold(
         appBar: CommonAppBar(),
         body: isLoading
@@ -80,7 +84,7 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
                     ),
                     SizedBox(height: 20),
                     MyDivider(),
-                    UserInfoItem(title: '아이디', content: user!.id),
+                   UserInfoItem(title: '아이디', content: ''),
                     MyDivider(),
                     UserInfoEditItem(
                         title: '전화번호', controller: phoneController),

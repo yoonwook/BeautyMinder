@@ -1,5 +1,6 @@
 
 import 'package:beautyminder/dto/baumann_model.dart';
+import 'package:beautyminder/pages/baumann/baumann_test_start_page.dart';
 import 'package:beautyminder/pages/baumann/watch_result_page.dart';
 import 'package:beautyminder/pages/home/home_page.dart';
 import 'package:dio/dio.dart';
@@ -31,7 +32,10 @@ class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
     return Scaffold(
       appBar: CommonAppBar(),
       body: SingleChildScrollView(
-        child: _baumannHistoryUI(),
+        child: Column(
+          children: [_baumannHistoryUI(),
+          ],
+        )
       ),
     );
   }
