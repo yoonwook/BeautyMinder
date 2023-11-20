@@ -148,15 +148,9 @@ class UserInfoProfile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          SizedBox(
-            width: 50,
-            child: Image.network(
-              profileImage,
-              // 'assets/images/profile.jpg', // profileImage,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset('assets/images/profile.jpg');
-              },
-            ),
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage(profileImage!),
           ),
           // Container(
           //     width: 58,

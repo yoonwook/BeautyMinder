@@ -103,7 +103,7 @@ class _MyPageState extends State<MyPage> {
                       ),
                       const SizedBox(height: 20),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -151,15 +151,9 @@ class MyPageProfile extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: 10),
-          SizedBox(
-            width: 80,
-            child: Image.network(
-              // 'assets/images/profile.jpg', // profileImage,
-              profileImage,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset('assets/images/profile.jpg');
-              },
-            ),
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage(profileImage!),
           ),
           SizedBox(width: 30),
           Expanded(
