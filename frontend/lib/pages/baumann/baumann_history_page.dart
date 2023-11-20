@@ -15,71 +15,68 @@ import '../../services/baumann_service.dart';
 import '../../widget/commonAppBar.dart';
 import 'baumann_result_page.dart';
 
-class BaumannHistoryPage extends StatefulWidget {
-  const BaumannHistoryPage({Key? key, required this.resultData}) : super(key: key);
-
+class BaumannHistoryPage extends StatelessWidget {
   final List<BaumannResult>? resultData;
 
-  @override
-  _BaumannHistoryPageState createState() => _BaumannHistoryPageState();
-}
-
-class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
+  const BaumannHistoryPage({Key? key, required this.resultData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("This is History Page : ${widget.resultData}");
+    print("This is History Page : $resultData");
     return Scaffold(
       appBar: CommonAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [_baumannHistoryUI(),
-          ],
-        )
+      body: Column(
+        children: [
+          _baumannHistoryUI(),
+          _divider(),
+          Expanded(
+            child: _baumannHistoryListView(),
+          ),
+        ],
       ),
     );
   }
 
   Widget _baumannHistoryUI() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Left-align the text
-      children: [
-        SizedBox(height: 30,),
-        Padding(
-          padding: const EdgeInsets.only(left: 20), // Add left padding
-          child: Text(
-            "바우만 피부 타입 결과",
-            style: TextStyle(
-              color: Color(0xFF868383), // Set text color to grey
-              fontSize: 15, // Adjust font size as needed
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 30,),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              "바우만 피부 타입 결과",
+              style: TextStyle(
+                color: Color(0xFF868383),
+                fontSize: 15,
+              ),
             ),
           ),
-        ),
-        _divider(),
-        _baumannHistoryListView(),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _baumannHistoryListView() {
     return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.resultData?.length ?? 0,
+      itemCount: resultData?.length ?? 0,
       itemBuilder: (context, index) {
-        final result = widget.resultData![index];
+        final result = resultData![index];
         final isEven = index.isEven;
 
         return Column(
           children: [
             SizedBox(height: 5),
-            _resultButton(result, isEven),
+            _resultButton(context, result, isEven),
           ],
         );
       },
     );
   }
 
-  Widget _resultButton(BaumannResult result, bool isEven) {
+  Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
     Color buttonColor = isEven ? Colors.white : Color(0xffffb876);
     Color textColor = isEven ? Colors.black : Colors.white;
 
@@ -92,7 +89,7 @@ class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => WatchResultPage(resultData: result)));
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: buttonColor, // 버튼의 배경색을 회색으로 변경
+            backgroundColor: buttonColor,
             side: BorderSide(color: Color(0xffffb876)),
             elevation: 0,
           ),
@@ -103,12 +100,11 @@ class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('피부타입: ${result.baumannType}', style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold),),
+                  Text('피부타입: ${result.baumannType}', style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(width: 16),
-                  Text('테스트 일시: ${result.date}', style: TextStyle(color: textColor, fontSize: 18),),
+                  Text('테스트 일시: ${result.date}', style: TextStyle(color: textColor, fontSize: 18)),
                 ],
               ),
-              //
               _baumannResultContent(result, isEven),
             ],
           ),
@@ -121,9 +117,7 @@ class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
     Color cardColor = isEven ? Colors.white : Color(0xffffb876);
     Color textColor = isEven ? Color(0xff6e6e6e) : Colors.white;
 
-    // Baumann Result에 대한 정보를 나타내는 Card 위젯
     return Card(
-      // margin: EdgeInsets.all(10),
       color: cardColor,
       elevation: 0,
       child: Column(
@@ -132,7 +126,7 @@ class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
             subtitle: Column(
               children: [
                 SizedBox(height: 5),
-                Text('색소침착도: ${result.baumannScores['pigmentation']}/57', style: TextStyle(color: textColor),),
+                Text('색소침착도: ${result.baumannScores['pigmentation']}/57', style: TextStyle(color: textColor)),
                 Text('유수분 밸런스: ${result.baumannScores['hydration']}/44', style: TextStyle(color: textColor)),
                 Text('탄력: ${result.baumannScores['elasticity']}/85', style: TextStyle(color: textColor)),
                 Text('수분 보유력: ${result.baumannScores['moistureRetention']}/65', style: TextStyle(color: textColor)),
@@ -155,5 +149,4 @@ class _BaumannHistoryPageState extends State<BaumannHistoryPage> {
       color: Colors.grey,
     );
   }
-
 }
