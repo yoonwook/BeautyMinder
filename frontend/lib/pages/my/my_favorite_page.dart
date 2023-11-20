@@ -27,7 +27,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
     try {
       final info = await APIService.getFavorites();
       setState(() {
-        favorites = info.value! as List;
+        favorites = info.value!;
         isLoading = false;
       });
     } catch (e) {

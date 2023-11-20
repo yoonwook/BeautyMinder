@@ -183,7 +183,7 @@ class APIService {
   }
 
   // 즐겨찾기 조회 함수
-  static Future<Result<FavoriteModel>> getFavorites() async {
+  static Future<Result<List<dynamic>>> getFavorites()  async {
     // 로그인 상세 정보 가져오기
     // final user = await SharedService.getUser();
     // final accessToken = await SharedService.getAccessToken();
