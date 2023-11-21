@@ -1,3 +1,4 @@
+import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/pages/pouch/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
+import '../todo/todo_page.dart';
 import 'expiry_edit_dialog.dart';
 import 'expiry_input_dialog.dart';
 
@@ -200,12 +202,12 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
           if (index == 0) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecPage()));
           }
-          else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-          }
           else if (index == 2) {
             final userProfileResult = await APIService.getUserProfile();
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+          }
+          else if (index == 3) {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalendarPage()));
           }
           else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(

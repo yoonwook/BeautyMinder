@@ -380,17 +380,33 @@ class _todoListWidget extends State<todoListWidget> {
       child: BlocBuilder<TodoPageBloc, TodoState>(
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: GestureDetector(
-                child: SpinKitThreeInOut(
-                  color: Color(0xffd86a04),
-                  size: 50.0,
-                  duration: Duration(seconds: 2),
-                ),
+            // return Center(
+            //   child: SizedBox(
+            //     width: MediaQuery.of(context).size.width,
+            //     height: 100,
+            //     child: GestureDetector(
+            //       child: SpinKitThreeInOut(
+            //         color: Color(0xffd86a04),
+            //         size: 50.0,
+            //         duration: Duration(seconds: 2),
+            //       ),
+            //     ),
+            //   ),
+            // );
+            return Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitThreeInOut(
+                    color: Color(0xffd86a04),
+                    size: 50.0,
+                    duration: Duration(seconds: 2),
+                  ),
+                ],
               ),
             );
+
+
           } else if (state is TodoLoadedState) {
             return Column(
               mainAxisSize: MainAxisSize.max,
