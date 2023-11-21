@@ -1,25 +1,35 @@
-import 'dart:convert';
 import 'package:beautyminder/dto/keywordRank_model.dart';
+import 'package:beautyminder/globalVariable/globals.dart';
+import 'package:beautyminder/pages/baumann/baumann_history_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
 import 'package:beautyminder/widget/homepageAppBar.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../dto/baumann_result_model.dart';
 import '../../dto/user_model.dart';
+import '../../services/baumann_service.dart';
+import '../../services/home_service.dart';
 import '../../services/shared_service.dart';
 import '../../services/todo_service.dart';
 import '../../dto/todo_model.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
+import '../baumann/baumann_test_start_page.dart';
+import '../chat/chat_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
 import '../search/search_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key, required this.user}) : super(key: key);
+
+  // final dynamic responseData;
+  final User? user;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,6 +39,7 @@ class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 2;
   bool isApiCallProcess = false;
+  // late Future<HomePageResult<User>> userInfo;
 
   // late Future<Result<List<Todo>>> futureTodoList;
 
@@ -38,8 +49,12 @@ class _HomePageState extends State<HomePage> {
   //   futureTodoList = TodoService.getAllTodos();
   // }
 
+
   @override
   Widget build(BuildContext context) {
+    print("Here is Home Page : ${widget.user?.id}");
+    print("Here is Home Page : ${widget.user}");
+
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget> [
         IconButton(
@@ -98,11 +113,13 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: <Widget>[
               _recommendProductBtn(),
+              SizedBox(width: 30,),
               Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   _personalSkinTypeBtn(),
-                  _personalColorBtn(),
+                  SizedBox(height:25,),
+                  _chatBtn(),
                 ],
               )
             ],
@@ -125,7 +142,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color(0xffffb876),  // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Colors.white, // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0, // 그림자 없애기
-        minimumSize: Size(screenWidth, 80.0),
+        minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
@@ -139,7 +156,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _recommendProductBtn() {
-    final screenWidth = MediaQuery.of(context).size.width/2-20;
+    final screenWidth = MediaQuery.of(context).size.width/2-40;
 
     return ElevatedButton(
       onPressed: (){
@@ -149,7 +166,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color(0xffffecda), // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Color(0xffff820e), // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0, // 그림자 없애기
-        minimumSize: Size(screenWidth, 160.0),
+        minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
@@ -163,48 +180,126 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _personalSkinTypeBtn() {
-    final screenWidth = MediaQuery.of(context).size.width/2-20;
+    final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
+    BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
 
     return ElevatedButton(
-      onPressed: (){
-        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+      onPressed: () async {
+        // 이미 API 호출이 진행 중인지 확인
+        if (isApiCallProcess) {
+          return;
+        }
+        // API 호출 중임을 표시
+        setState(() {
+          isApiCallProcess = true;
+        });
+        try {
+          result = await BaumannService.getBaumannHistory();
+
+          print("This is Baumann Button in Home Page : ${result.value}");
+
+          if (result.isSuccess && result.value!.isNotEmpty) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    BaumannHistoryPage(resultData: result.value)));
+            print("This is BaumannButton in HomePage2 : ${result.value}");
+          } else {
+
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannStartPage()));
+            print("This is Baumann Button in Home Page2 : ${result.isSuccess}");
+          }
+
+        } catch (e) {
+          // Handle the error case
+          print('An error occurred: $e');
+        } finally {
+          // API 호출 상태를 초기화합니다.
+          setState(() {
+            isApiCallProcess = false;
+          });
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xfffe9738), // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Colors.white, // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0, // 그림자 없애기
-        minimumSize: Size(screenWidth, 80.0),
+        minimumSize: Size(screenWidth, 90.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
+        // padding: EdgeInsets.zero,
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text("내 피부 타입"),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "내 피부 타입 ",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                    // Add any other styling properties as needed
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Text((result.value != null) ? "${widget.user?.baumann}" : "테스트하기",
+                style: TextStyle(fontSize:25, fontWeight: FontWeight.bold)
+              ),
+            ],
+          ),
+        ),
       ),
-
     );
   }
 
-  Widget _personalColorBtn() {
-    final screenWidth = MediaQuery.of(context).size.width/2-20;
+
+
+  Widget _chatBtn() {
+    final screenWidth = MediaQuery.of(context).size.width/2-30;
 
     return ElevatedButton(
       onPressed: (){
-        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BaumannResultPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffd1a6), // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Color(0xffd86a04), // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0, // 그림자 없애기
-        minimumSize: Size(screenWidth, 80.0),
+        minimumSize: Size(screenWidth, 90.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text("내 퍼스널 컬러"),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "소통방 가기 ",
+              style: TextStyle(
+                // fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+              // Add any other styling properties as needed
+            ),
+          ],
+        ),
       ),
 
     );
@@ -215,13 +310,13 @@ class _HomePageState extends State<HomePage> {
 
     return ElevatedButton(
       onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffe7e4e1), // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Color(0xffff820e), // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0, // 그림자 없애기
-        minimumSize: Size(screenWidth, 80.0),
+        minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
@@ -249,7 +344,7 @@ class _HomePageState extends State<HomePage> {
           //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
           // }
           else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
           }
           else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));

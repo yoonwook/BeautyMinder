@@ -8,7 +8,9 @@ import 'package:beautyminder/services/shared_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../services/api_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../pouch/expiry_page.dart';
@@ -49,7 +51,11 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Center(child: Text('로딩 중'))
+        ? SpinKitThreeInOut(
+            color: Color(0xffd86a04),
+            size: 50.0,
+            duration: Duration(seconds: 2),
+          )
         : Scaffold(
             appBar: CommonAppBar(),
             body: Padding(
@@ -97,7 +103,7 @@ class _MyPageState extends State<MyPage> {
                       ),
                       const SizedBox(height: 20),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -108,7 +114,7 @@ class _MyPageState extends State<MyPage> {
   Widget _underNavigation() {
     return CommonBottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (int index) {
+        onTap: (int index) async {
           // 페이지 전환 로직 추가
           if (index == 0) {
             Navigator.of(context)
@@ -117,11 +123,11 @@ class _MyPageState extends State<MyPage> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           } else if (index == 2) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const HomePage()));
+            final userProfileResult = await APIService.getUserProfile();
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
           } else if (index == 3) {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const TodoPage()));
+                MaterialPageRoute(builder: (context) => const CalendarPage()));
           }
         });
   }
@@ -145,15 +151,9 @@ class MyPageProfile extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: 10),
-          SizedBox(
-            width: 80,
-            child: Image.network(
-              // 'assets/images/profile.jpg', // profileImage,
-              profileImage,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset('assets/images/profile.jpg');
-              },
-            ),
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage(profileImage!),
           ),
           SizedBox(width: 30),
           Expanded(

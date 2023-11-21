@@ -1,4 +1,7 @@
-import 'package:beautyminder/dto/review_model.dart';
+import 'package:beautyminder/pages/my/widgets/default_dialog.dart';
+import 'package:beautyminder/pages/my/widgets/pop_up.dart';
+import 'package:beautyminder/pages/my/widgets/review/delete_popup.dart';
+import 'package:beautyminder/pages/my/widgets/review/update_popup.dart';
 import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +20,6 @@ class _MyReviewPageState extends State<MyReviewPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getReviews();
   }
@@ -36,17 +38,6 @@ class _MyReviewPageState extends State<MyReviewPage> {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  // reviews 데이터 사용법
-  // 위 reviews = info; 의 주석을 제거하고,
-  // reviews[index].brand 처럼 쓰기.
-  // itemCounter는 reviews.length 로 하기.
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
@@ -56,45 +47,74 @@ class _MyReviewPageState extends State<MyReviewPage> {
 
   Widget _body() {
     return isLoading
-        ? Center(
-            child: SpinKitThreeInOut(
-              color: Color(0xffd86a04),
-              size: 50.0,
-              duration: Duration(seconds: 2),
-            ),
-          )
+        ? SpinKitThreeInOut(
+      color: Color(0xffd86a04),
+      size: 50.0,
+      duration: Duration(seconds: 2),
+    )
         : ListView.builder(
-            itemCount: reviews?.length ?? 0,
-            itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white, // 흰색 배경
-                      border: Border.all(color: Colors.grey),
+        itemCount: reviews?.length ?? 0,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white, // 흰색 배경
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Text(
+                            reviews?[index]['cosmetic']['name'],
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              FilledButton(
+                                  onPressed: () async {
+                                    final ok = await updatePopUp(
+                                      title: reviews?[index]['cosmetic']
+                                      ['name'],
+                                      context: context,
+                                    );
+                                  },
+                                  child: Text('수정')),
+                              FilledButton(
+                                  onPressed: () async {
+                                    final ok = await deletePopUp(
+                                        context: context,
+                                        title: '정말 삭제하시겠습니까?',
+                                        id: reviews?[index]['id']);
+                                  },
+                                  child: Text('삭제'))
+                            ],
+                          ),
+                        )
+                      ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Text(
+                      reviews?[index]['content'],
+                      textAlign: TextAlign.justify,
                     ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            child: Text(
-                                reviews?[index]['cosmetic']['name'],
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            child: Text(
-                              reviews?[index]['content'],
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ]),
                   ),
-                ));
+                ]),
+          ),
+        ));
   }
 }
+

@@ -6,6 +6,7 @@ import 'package:beautyminder/pages/my/widgets/pop_up.dart';
 import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/painting.dart';
@@ -40,6 +41,8 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
       createdAt: user!.createdAt,
       authorities: user!.authorities,
       phoneNumber: user!.phoneNumber,
+      baumann: user?.baumann,
+      baumannScores: user?.baumannScores
     );
 
     await SharedService.updateUser(updatedUser);
@@ -76,8 +79,10 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
     return Scaffold(
         appBar: CommonAppBar(),
         body: isLoading
-            ? Center(
-                child: Text('로딩 중'),
+            ? SpinKitThreeInOut(
+                color: Color(0xffd86a04),
+                size: 50.0,
+                duration: Duration(seconds: 2),
               )
             : Stack(
                 children: [

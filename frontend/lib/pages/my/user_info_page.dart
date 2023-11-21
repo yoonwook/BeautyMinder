@@ -9,6 +9,7 @@ import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UserInfoPage extends StatefulWidget {
   UserInfoPage({super.key});
@@ -46,8 +47,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
     return Scaffold(
         appBar: CommonAppBar(),
         body: isLoading
-            ? Center(
-                child: Text('로딩 중'),
+            ? SpinKitThreeInOut(
+                color: Color(0xffd86a04),
+                size: 50.0,
+                duration: Duration(seconds: 2),
               )
             : Stack(
                 children: [
@@ -145,15 +148,9 @@ class UserInfoProfile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          SizedBox(
-            width: 50,
-            child: Image.network(
-              profileImage,
-              // 'assets/images/profile.jpg', // profileImage,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset('assets/images/profile.jpg');
-              },
-            ),
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage(profileImage!),
           ),
           // Container(
           //     width: 58,

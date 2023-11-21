@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../dto/baumann_model.dart';
+import '../../services/api_service.dart';
 
 class BaumannStartPage extends StatefulWidget {
   BaumannStartPage({Key? key, this.title}) : super(key: key);
@@ -190,9 +191,10 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
               actions: <Widget>[
                 TextButton(
                   child: Text('확인'),
-                  onPressed: () {
+                  onPressed: () async {
+                    final userProfileResult = await APIService.getUserProfile();
                     Navigator.pop(context); // 팝업 닫기
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value,)));
                   },
                 ),
                 TextButton(

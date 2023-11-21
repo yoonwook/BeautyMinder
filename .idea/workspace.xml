@@ -5,8 +5,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e600c138-053a-40aa-8dd0-6bb68a64734d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/lib/pages/my/widgets/review/delete_dialog.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/pages/my/widgets/review/delete_popup.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/pages/my/widgets/review/update_dialog.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/lib/pages/my/widgets/review/update_popup.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ios/Runner/Base.lproj/Main.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ios/Runner/Base.lproj/Main.storyboard" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/ios/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/config.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/dto/register_request_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/dto/register_request_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/dto/todo_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/dto/todo_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/dto/user_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/dto/user_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/baumann/baumann_result_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/baumann/baumann_result_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/baumann/baumann_test_start_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/baumann/baumann_test_start_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/home/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/home/home_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/lib/pages/my/my_favorite_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/my/my_favorite_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/my/my_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/my/my_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/my/my_review_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/my/my_review_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/my/user_info_modify_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/my/user_info_modify_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/my/user_info_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/my/user_info_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/pouch/expiry_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/pouch/expiry_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/product/product_detail_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/product/product_detail_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/recommend/recommend_bloc_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/recommend/recommend_bloc_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/search/search_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/search/search_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/start/login_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/start/login_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/start/register_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/start/register_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/pages/todo/todo_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/pages/todo/todo_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/baumann_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/baumann_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/cosmetic_recommend_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/cosmetic_recommend_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/expiry_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/expiry_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/favorites_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/favorites_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/gptReview_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/gptReview_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/homeSearch_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/homeSearch_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/keywordRank_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/keywordRank_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/review_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/review_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/lib/services/todo_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/todo_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

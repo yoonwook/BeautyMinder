@@ -12,7 +12,10 @@ import 'package:beautyminder/pages/start/splash_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/pages/start/welcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'Bloc/RecommendPageBloc.dart';
+import 'Bloc/TodoPageBloc.dart';
 import 'pages/home/home_page.dart';
 import 'pages/start/login_page.dart';
 import 'pages/start/register_page.dart';
@@ -22,7 +25,22 @@ import 'pages/start/register_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider<RecommendPageBloc>(
+          create: (context) => RecommendPageBloc(),
+        ),
+        BlocProvider<TodoPageBloc>(create: (create) => TodoPageBloc())
+      ],
+      child: MaterialApp(
+        title: 'BeautyMinder',
+        theme: ThemeData(
+          primaryColor: const Color(0xffffb876),
+        ),
+        home: MyApp(),
+      )
+
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -47,8 +65,8 @@ class MyApp extends StatelessWidget {
         '/user/signup': (context) => const RegisterPage(),
         '/recommend': (context) => const RecPage(),
         '/pouch': (context) => CosmeticExpiryPage(),
-        '/home': (context) => const HomePage(),
-        '/todo': (context) => const TodoPage(),
+        // '/home': (context) => const HomePage(),
+        '/todo': (context) => const CalendarPage(),
         '/my': (context) => const MyPage(),
         // '/baumann/survey' : (context) => BaumannTestPage(),
         '/baumann/test' : (context) => BaumannStartPage(),

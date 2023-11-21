@@ -4,6 +4,7 @@ import 'package:beautyminder/services/gptReview_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../dto/gptReview_model.dart';
@@ -29,7 +30,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     print("start page : $isFavorite");
     super.initState();
     _gptReviewInfo = GPTReviewService.getGPTReviews(widget.searchResults.id);
-    _loadFavoriteState();
+    _loadFavoriteState(widget.searchResults.id);
+  }
+
+  Future<void> _loadFavoriteState(String prouctId) async {
+    isFavorite = await FavoriteManager().getFavoriteState(prouctId);
+    setState(() {}); // Trigger a rebuild to reflect the initial state.
+  }
+
+  Future<void> _saveFavoriteState(String prouctId) async {
+    await FavoriteManager().setFavoriteState(prouctId, isFavorite);
   }
 
   @override
@@ -71,18 +81,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  Future<void> _loadFavoriteState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isFavorite = prefs.getBool('isFavorite_${widget.searchResults.id}') ?? false;
-    });
-  }
-
-  Future<void> _saveFavoriteState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isFavorite_${widget.searchResults.id}', isFavorite);
-  }
-
   Widget _displayingName() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -120,29 +118,73 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  // Widget _likesBtn() {
+  //   return IconButton(
+  //     onPressed: () async {
+  //       setState(() {
+  //         isFavorite  = !isFavorite;
+  //       });
+  //       await _saveFavoriteState(widget.searchResults.id);
+  //       // Call FavoritesService to upload favorites when the heart icon is pressed
+  //       if (isFavorite) {
+  //         try {
+  //           // Assuming you have the cosmeticId from your widget
+  //           String cosmeticId = widget.searchResults.id;
+  //
+  //           // Call the uploadFavorites method from FavoritesService
+  //           String result = await FavoritesService.uploadFavorites(cosmeticId);
+  //
+  //           if (result == "success") {
+  //             print("Favorites uploaded successfully! : $isFavorite");
+  //           } else {
+  //             print("Failed to upload favorites");
+  //           }
+  //         } catch (e) {
+  //           print("An error occurred while uploading favorites: $e");
+  //         }
+  //       }
+  //     },
+  //     icon: Icon(
+  //       isFavorite ? Icons.favorite : Icons.favorite_border,
+  //       color: isFavorite ? Colors.red : null,
+  //     ),
+  //   );
+  // }
   Widget _likesBtn() {
     return IconButton(
       onPressed: () async {
         setState(() {
-          isFavorite  = !isFavorite;
+          isFavorite = !isFavorite;
         });
-        // Call FavoritesService to upload favorites when the heart icon is pressed
-        if (isFavorite) {
-          try {
-            // Assuming you have the cosmeticId from your widget
-            String cosmeticId = widget.searchResults.id;
+        await _saveFavoriteState(widget.searchResults.id);
 
+        // Call FavoritesService to upload or delete favorites based on the button state
+        try {
+          // Assuming you have the cosmeticId from your widget
+          String cosmeticId = widget.searchResults.id;
+
+          // Call the appropriate method based on the button state
+          if (isFavorite) {
             // Call the uploadFavorites method from FavoritesService
             String result = await FavoritesService.uploadFavorites(cosmeticId);
 
-            if (result == "success") {
+            if (result == "success upload user favorites") {
               print("Favorites uploaded successfully! : $isFavorite");
             } else {
               print("Failed to upload favorites");
             }
-          } catch (e) {
-            print("An error occurred while uploading favorites: $e");
+          } else {
+            // Call the deleteFavorites method from FavoritesService
+            String result = await FavoritesService.deleteFavorites(cosmeticId);
+
+            if (result == "success deleted user favorites") {
+              print("Favorites deleted successfully! : $isFavorite");
+            } else {
+              print("Failed to delete favorites");
+            }
           }
+        } catch (e) {
+          print("An error occurred while handling favorites: $e");
         }
       },
       icon: Icon(
@@ -151,6 +193,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
     );
   }
+
 
   Widget _displayBrand() {
     return Padding(
@@ -220,8 +263,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  Widget _displayGPTReview(GPTReviewInfo gptReviewInfo) {
-    bool isPositive = showPositiveReview;
+  Widget _displayGPTReview(GPTReviewInfo gptReviewInfo, bool isPositive) {
+    // bool isPositive = showPositiveReview;
 
     return Column(
       children: [
@@ -292,44 +335,99 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: Text(
-        //     'GPT Version: ${gptReviewInfo.gptVersion}',
-        //     style: TextStyle(fontSize: 16),
-        //   ),
-        // ),
       ],
     );
   }
 
   //GPT리뷰요약 상세내용
   Widget _gptReviewContent() {
+    bool isPositive = showPositiveReview;
+
     return FutureBuilder<Result<GPTReviewInfo>>(
       future: _gptReviewInfo,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return SpinKitThreeInOut(
+            color: Color(0xffd86a04),
+            size: 25.0,
+            duration: Duration(seconds: 2),
+          );
         }
         else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
         else if (!snapshot.hasData || !snapshot.data!.isSuccess) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-            child: Center(
-              child: Text(
-                '요약된 GPT Review가 없습니다.',
-                textAlign: TextAlign.center,
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 30,
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          toggleButtonsTheme: ToggleButtonsThemeData(
+                            selectedColor: Color(0xffd86a04),
+                            selectedBorderColor: Color(0xffd86a04),
+                          ),
+                        ),
+                        child: ToggleButtons(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text(
+                                '높은 평정 요약',
+                                style: TextStyle(
+                                  color: isPositive ? Color(0xffd86a04) : Colors.black,
+                                  fontWeight: isPositive ? FontWeight.bold : FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text(
+                                '낮은 평점 요약',
+                                style: TextStyle(
+                                  color: !isPositive ? Color(0xffd86a04) : Colors.black,
+                                  fontWeight: !isPositive ? FontWeight.bold : FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ],
+                          isSelected: [showPositiveReview, !showPositiveReview],
+                          onPressed: (index) {
+                            setState(() {
+                              showPositiveReview = index == 0;
+                            });
+                          },
+                          fillColor: Colors.white,
+                          constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width / 2 - 46),
+                          // color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                child: Center(
+                  child: Text(
+                    '요약된 GPT Review가 없습니다.',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
           );
         }
         else {
           final gptReviewInfo = snapshot.data!.value!;
           return Container(
             width: double.infinity,  // Set the width to maximum
-            child: _displayGPTReview(gptReviewInfo),
+            child: _displayGPTReview(gptReviewInfo, isPositive),
           );
         }
       },
@@ -441,4 +539,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+}
+
+
+
+class FavoriteManager {
+  static final FavoriteManager _instance = FavoriteManager._internal();
+
+  factory FavoriteManager() {
+    return _instance;
+  }
+
+  FavoriteManager._internal();
+
+  Future<bool> getFavoriteState(String productId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isFavorite_$productId') ?? false;
+  }
+
+  Future<void> setFavoriteState(String productId, bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isFavorite_$productId', value);
+  }
 }
