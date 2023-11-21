@@ -24,8 +24,7 @@ class BaumannService {
 
   //POST 방식으로 JSON 데이터 전송하는 일반 함수
   static Future<Response> postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}){
-
+      {Map<String, String>? headers}) {
     return client.post(
       url,
       options: _httpOptions('POST', headers),
@@ -46,7 +45,8 @@ class BaumannService {
 
       if (response.statusCode == 200) {
         // 사용자 정보 파싱
-        final user = SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
+        final user =
+            SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
         print(user);
         return BaumResult.success(user);
       }
@@ -56,19 +56,13 @@ class BaumannService {
     }
   }
 
-
   static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
-
-    // 유저 정보 가지고 오기
+    // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    // final accessToken = await SharedService.getAccessToken();
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
@@ -77,8 +71,10 @@ class BaumannService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -99,22 +95,20 @@ class BaumannService {
         final List<dynamic> jsonData = response.data as List<dynamic>;
         final List<BaumannResult> result = jsonData
             .map((dynamic item) =>
-            BaumannResult.fromJson(item as Map<String, dynamic>))
+                BaumannResult.fromJson(item as Map<String, dynamic>))
             .toList();
 
         print("This is Baumann Service(getHistory) : $result");
 
         return BaumResult<List<BaumannResult>>.success(result);
       }
-      return BaumResult<List<BaumannResult>>.failure("Failed to get baumann history");
+      return BaumResult<List<BaumannResult>>.failure(
+          "Failed to get baumann history");
     } catch (e) {
       print("An error occurred: $e");
       return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
     }
   }
-
-
-
 }
 
 // 결과 클래스

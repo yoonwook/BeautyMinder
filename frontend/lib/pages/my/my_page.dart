@@ -127,7 +127,7 @@ class _MyPageState extends State<MyPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
           } else if (index == 3) {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const TodoPage()));
+                MaterialPageRoute(builder: (context) => const CalendarPage()));
           }
         });
   }

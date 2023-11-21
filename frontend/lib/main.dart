@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
         '/recommend': (context) => const RecPage(),
         '/pouch': (context) => CosmeticExpiryPage(),
         // '/home': (context) => const HomePage(),
-        '/todo': (context) => const TodoPage(),
+        '/todo': (context) => const CalendarPage(),
         '/my': (context) => const MyPage(),
         // '/baumann/survey' : (context) => BaumannTestPage(),
         '/baumann/test' : (context) => BaumannStartPage(),

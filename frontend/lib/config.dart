@@ -69,4 +69,7 @@ class Config {
 
   //favorites
   static const uploadFavoritesAPI = "/user/favorites/";
+
+  static const acccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDA1NTA3MjUsImV4cCI6MTcwMTc2MDMyNSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.MESeOCDgBOPiXj9Zn-UiFqSbN0Oo30cEibwk__7IZEo";
+  static const refreshToken= "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDA1NTA3MjUsImV4cCI6MTcwMjM2NTEyNSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.Pl1s8CyrVYDeBor4gtD4i6ibt1CI0tDVU9bipqP5ozI";
 }

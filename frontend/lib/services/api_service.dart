@@ -107,8 +107,10 @@ class APIService {
   static Future<Result<bool>> delete(DeleteRequestModel model) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
     final userId = user?.id ?? '-1';
 
     // URL 생성
@@ -117,8 +119,10 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -135,23 +139,11 @@ class APIService {
   // 사용자 프로필 조회 함수
   static Future<Result<User>> getUserProfile() async {
     // 로그인 상세 정보 가져오기
-    // final user = await SharedService.getUser();
-    // final accessToken = await SharedService.getAccessToken();
-    // final refreshToken = await SharedService.getRefreshToken();
-    // final userId = user?.id ?? '-1';
-
-    // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    // final accessToken = await SharedService.getAccessToken();
-    final accessToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
@@ -159,8 +151,10 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -184,37 +178,24 @@ class APIService {
 
   // 즐겨찾기 조회 함수
   static Future<Result<List<dynamic>>> getFavorites()  async {
-    // 로그인 상세 정보 가져오기
-    // final user = await SharedService.getUser();
-    // final accessToken = await SharedService.getAccessToken();
-    // final refreshToken = await SharedService.getRefreshToken();
-    // final userId = user?.id ?? '-1';
 
-    // 유저 정보 가지고 오기
+    /// 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    // final accessToken = await SharedService.getAccessToken();
-    final accessToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
     final url = Uri.http(Config.apiURL, '/user/favorites').toString();
 
     // 헤더 설정
-    // final headers = {
-    //   'Authorization': 'Bearer $accessToken',
-    //   'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
-    // };
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -244,35 +225,22 @@ class APIService {
   // 리뷰 조회 함수
   static Future<Result<List<dynamic>>> getReviews() async {
     // 로그인 상세 정보 가져오기
-    // final user = await SharedService.getUser();
-    // final accessToken = await SharedService.getAccessToken();
-    // final refreshToken = await SharedService.getRefreshToken();
-    // final userId = user?.id ?? '-1';
-    // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    // final accessToken = await SharedService.getAccessToken();
-    final accessToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
     final url = Uri.http(Config.apiURL, '/user/reviews').toString();
 
     // 헤더 설정
-    // final headers = {
-    //   'Authorization': 'Bearer $accessToken',
-    //   'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
-    // };
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+   final headers = {
+    'Authorization': 'Bearer ${Config.acccessToken}',
+    'Cookie': 'XRT=${Config.refreshToken}',
+    // 'Authorization': 'Bearer $accessToken',
+    // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -296,22 +264,11 @@ class APIService {
   // 회원정보 수정 함수
   static Future<Result<bool>> sendEditInfo(UpdateRequestModel model) async {
     // 로그인 상세 정보 가져오기
-    // final user = await SharedService.getUser();
-    // final accessToken = await SharedService.getAccessToken();
-    // final refreshToken = await SharedService.getRefreshToken();
-    // final userId = user?.id ?? '-1';
-    // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    // final accessToken = await SharedService.getAccessToken();
-    final accessToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    // final refreshToken = await SharedService.getRefreshToken();
-    final refreshToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // URL 생성
@@ -319,8 +276,10 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -336,22 +295,22 @@ class APIService {
 
   //프로필 사진 변경
   static Future<String> editProfileImgInfo(String image) async {
-    // 유저 정보 가지고 오기
+    // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    final accessToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    final refreshToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
+    final userId = user?.id ?? '-1';
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.editProfileImg).toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     final MediaType contentType = MediaType.parse(

@@ -9,11 +9,12 @@ import '../../dto/task_model.dart';
 import '../../services/api_service.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
+import 'todo_page.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
-import 'calendar_page.dart';
+
 
 
 class TodoAddPage extends StatefulWidget {
@@ -286,7 +287,7 @@ class _TodoAddPage extends State<TodoAddPage> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
             }
             else if (index == 3) {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
             }
             else if (index == 4) {
               Navigator.of(context).push(MaterialPageRoute(

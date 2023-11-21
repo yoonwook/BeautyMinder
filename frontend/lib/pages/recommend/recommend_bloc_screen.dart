@@ -173,7 +173,7 @@ class _RecPage extends State<RecPage> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
                 }
                 else if (index == 3) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
                 }
                 else if (index == 4) {
                   Navigator.of(context).push(MaterialPageRoute(

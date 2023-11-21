@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> {
 
     return ElevatedButton(
       onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffe7e4e1), // 버튼의 배경색을 검정색으로 설정
@@ -344,7 +344,7 @@ class _HomePageState extends State<HomePage> {
           //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
           // }
           else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
           }
           else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
