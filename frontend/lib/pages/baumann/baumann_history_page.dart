@@ -29,6 +29,7 @@ class BaumannHistoryPage extends StatelessWidget {
         children: [
           _baumannHistoryUI(),
           _divider(),
+          _retestButton(context),
           Expanded(
             child: _baumannHistoryListView(),
           ),
@@ -139,6 +140,41 @@ class BaumannHistoryPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _retestButton(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BaumannStartPage(),
+              ));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xffe3e3e3), // Background color
+              elevation: 0, // color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                side: BorderSide(color: Colors.blueGrey),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                '다시 테스트하기',
+                style: TextStyle(
+                  color: Colors.blueGrey, // Text color
+                ),
+              ),
+            ),
+          ),
+        ),
+    );
+  }
+
+
 
   Widget _divider() {
     return const Divider(
