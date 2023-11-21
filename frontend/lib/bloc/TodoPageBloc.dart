@@ -1,11 +1,12 @@
+import 'package:beautyminder/State/TodoState.dart';
+import 'package:beautyminder/dto/todo_model.dart';
+import 'package:beautyminder/event/TodoPageEvent.dart';
 
-
+import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test/expect.dart';
 
-import '../State/TodoState.dart';
-import '../dto/todo_model.dart';
-import '../event/TodoPageEvent.dart';
-import '../services/todo_service.dart';
+import '../dto/task_model.dart';
 
 class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
 
@@ -111,6 +112,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           }
         }
 
+
         if (result.value != null) {
           print("TodoUpdatedState!!");
           emit(TodoUpdatedState(
@@ -119,10 +121,10 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           emit(TodoLoadedState(
               isError: state.isError, todos: state.todos, todo: state.todo));
         } else {
-          emit(TodoErrorState(isError: true));
+          // emit(TodoErrorState(isError: true));
         }
 
-        onCloseCallback?.call();
+
 
       } catch (e) {
         print("Error : ${e}");
@@ -156,14 +158,19 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           }
         }
 
-        if (result.value != null) {
-          emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
-          //print(taskid);
-          // emit(TodoLoadedState(
-          //     isError: state.isError, todos: state.todos, todo: state.todo));
-        } else {
-          emit(TodoErrorState(isError: true));
-        }
+        emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
+        //print(taskid);
+        emit(TodoLoadedState(
+            isError: state.isError, todos: state.todos, todo: state.todo));
+
+        // if (result.value != null) {
+        //   emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
+        //   //print(taskid);
+        //   emit(TodoLoadedState(
+        //       isError: state.isError, todos: state.todos, todo: state.todo));
+        // } else {
+        //   emit(TodoErrorState(isError: true));
+        // }
       } catch (e) {
         print("Error: ${e}");
       }
