@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,29 +161,57 @@ class _todoListWidget extends State<todoListWidget> {
           [];
     }
 
-    return TableCalendar(
-      firstDay: DateTime.utc(2010, 10, 16),
-      lastDay: DateTime.utc(2030, 3, 14),
-      focusedDay: _focusedDay,
-      selectedDayPredicate: (day) {
-        return isSameDay(_selectedDay, day);
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _selectedDay = selectedDay;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: TableCalendar(
+        firstDay: DateTime.utc(2010, 10, 16),
+        lastDay: DateTime.utc(2030, 3, 14),
+        focusedDay: _focusedDay,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+        },
+        eventLoader: _getTodosForDay,
+        calendarFormat: _calendarFormat,
+        onFormatChanged: (format) {
+          setState(() {
+            _calendarFormat = format;
+          });
+        },
+        onPageChanged: (focusedDay) {
           _focusedDay = focusedDay;
-        });
-      },
-      eventLoader: _getTodosForDay,
-      calendarFormat: _calendarFormat,
-      onFormatChanged: (format) {
-        setState(() {
-          _calendarFormat = format;
-        });
-      },
-      onPageChanged: (focusedDay) {
-        _focusedDay = focusedDay;
-      },
+        },
+        headerStyle: HeaderStyle(
+          formatButtonVisible: true, // 포맷 변경 버튼
+          titleCentered: true,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.normal,
+          ),
+          leftChevronIcon: Icon(
+            Icons.chevron_left,
+            color: Colors.grey, // 이전 달 버튼 색상
+          ),
+          rightChevronIcon: Icon(
+            Icons.chevron_right,
+            color: Colors.grey, // 다음 달 버튼 색상
+          ),
+          formatButtonDecoration: BoxDecoration(
+            // 텍스트 색상을 여기에서 설정합니다.
+            color: Colors.transparent, // 버튼의 배경 색상
+            border: Border.all(color: Colors.orange), // 버튼 테두리 색상
+            borderRadius: BorderRadius.circular(10), // 버튼 모서리의 둥근 정도
+          ),
+          formatButtonTextStyle: TextStyle(
+            color: Colors.deepOrangeAccent, // 텍스트 색상
+          ),
+        ),
+      ),
     );
   }
 
@@ -412,19 +438,25 @@ class _todoListWidget extends State<todoListWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 _calendar(state.todos),
-                ElevatedButton.icon(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const TodoAddPage()));
                   },
-                  icon: Icon(Icons.add, color: Color(0xffd86a04)),
-                  label: Text(
-                    "Todo Add",
-                    style: TextStyle(color: Color(0xffd86a04)),
+                  child: Container(
+                    width: 40, // Adjust the width and height for the circular button
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xffff8310),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: const Color(0xffffffff),
+                      ),
+                    ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xffffecda),
-                      backgroundColor: const Color(0xffffecda)),
                 ),
                 _todoList(state.todos),
               ],
@@ -435,44 +467,58 @@ class _todoListWidget extends State<todoListWidget> {
               children: [
                 _calendar(state.todos),
                 Text("else"),
-                ElevatedButton.icon(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const TodoAddPage()));
                   },
-                  icon: const Icon(Icons.add, color: Color(0xffd86a04)),
-                  label: const Text(
-                    "Todo Add",
-                    style: TextStyle(color: Color(0xffd86a04)),
+                  child: Container(
+                    width: 40, // Adjust the width and height for the circular button
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xffff8310),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: const Color(0xffffffff),
+                      ),
+                    ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xffffecda),
-                      backgroundColor: const Color(0xffffecda)),
                 ),
                 _todoList(state.todos),
               ],
             );
-          } else {
+          }
+          else {
             return Column(
               children: [
                 _calendar(state.todos),
-                ElevatedButton.icon(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const TodoAddPage()));
                   },
-                  icon: const Icon(Icons.add, color: Color(0xffd86a04)),
-                  label: const Text(
-                    "Todo Add",
-                    style: TextStyle(color: Color(0xffd86a04)),
+                  child: Container(
+                    width: 40, // Adjust the width and height for the circular button
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xffff8310),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: const Color(0xffffffff),
+                      ),
+                    ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xffffecda),
-                      backgroundColor: const Color(0xffffecda)),
-                )
+                ),
               ],
             );
           }
+
         },
       ),
     );

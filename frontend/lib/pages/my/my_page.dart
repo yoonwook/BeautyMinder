@@ -96,6 +96,16 @@ class _MyPageState extends State<MyPage> {
                         },
                       ),
                       MyPageMenu(
+                        title: '나의 파우치',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CosmeticExpiryPage()),
+                          );
+                        },
+                      ),
+                      MyPageMenu(
                         title: '로그아웃',
                         onTap: () {
                           SharedService.logout(context);
