@@ -5,7 +5,6 @@ import 'package:beautyminder/pages/todo_page.dart';
 import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 
 import '../dto/task_model.dart';
 import '../widget/commonAppBar.dart';
@@ -31,7 +30,6 @@ class _TodoAddPage extends State<TodoAddPage> {
   DateTime? picked;
 
   late List<Task> tasks;
-  final Logger _log = Logger('TodoAddPage');
 
   @override
   void initState() {
@@ -39,7 +37,7 @@ class _TodoAddPage extends State<TodoAddPage> {
     super.initState();
     _controllers.add(TextEditingController());
     _dateController.text = DateTime.now().toString().substring(0, 10);
-    _toggleSelections.add([false, false, false]);
+    _toggleSelections.add([false, false, true]);
     picked = DateTime.parse(_dateController.text);
   }
 
@@ -56,7 +54,7 @@ class _TodoAddPage extends State<TodoAddPage> {
     setState(() {
       // 새로운 TextEditingContrller을 추가
       _controllers.add(TextEditingController());
-      _toggleSelections.add([false, false, false]);
+      _toggleSelections.add([false, false, true]);
     });
   }
 
@@ -120,9 +118,9 @@ class _TodoAddPage extends State<TodoAddPage> {
 
   String getCategory(List<bool> categorys) {
     if (categorys[0]) {
-      return "morning";
-    } else if (categorys[1]) {
       return "dinner";
+    } else if (categorys[1]) {
+      return "morning";
     } else {
       return "other";
     }
@@ -132,13 +130,6 @@ class _TodoAddPage extends State<TodoAddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      // TodoCommonAppBar(
-      //     context: context,
-      //     onAddPressed: () {
-      //       createRoutine();
-      //       //_log.info("todo: ${todo.toString()}");
-      //       TodoService.addTodo(todo!);
-      //     }),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -149,9 +140,9 @@ class _TodoAddPage extends State<TodoAddPage> {
                   onPressed: () {
                     createRoutine();
                     TodoService.addTodo(todo!);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const CalendarPage()));
 
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const CalendarPage()));
                   },
                   icon: const Icon(Icons.add_box_rounded,
                       size: 50, color: Color(0xffd86a04)),
@@ -169,13 +160,16 @@ class _TodoAddPage extends State<TodoAddPage> {
                   child: AbsorbPointer(
                     child: TextField(
                       controller: _dateController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
+                        prefixStyle: TextStyle(
+                          color: Color(0xffd86a04)
+                        ),
                           labelText: 'Date',
                           hintText: 'Date',
-                          icon: Icon(Icons.calendar_month),
+                          icon: const Icon(Icons.calendar_month, color: Color(0xffd86a04),),
                           border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.amber, width: 1.0)),
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.black, width: 1.0)),
                           contentPadding: EdgeInsets.all(3)),
                     ),
                   ),
@@ -194,8 +188,13 @@ class _TodoAddPage extends State<TodoAddPage> {
                           decoration: InputDecoration(
                             labelText: 'Todo $index',
                             hintText: 'Enter Todo $index',
-                            icon: const Icon(Icons.add_task_sharp),
-                            border: const OutlineInputBorder(),
+                            icon: const Icon(Icons.add_task_sharp,  color: Color(0xffd86a04)),
+                            border:  OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.amber, width: 2.0)
+                            )
                           ),
                         ),
                       ),
@@ -204,10 +203,12 @@ class _TodoAddPage extends State<TodoAddPage> {
                         isSelected: _toggleSelections[index],
                         onPressed: (int buttonIndex) {
                           setState(() {
-                            for (int i = 0;
-                                i < _toggleSelections[index].length;
-                                i++) {
-                              _toggleSelections[index][i] = i == buttonIndex;
+                            if (!_toggleSelections[index][buttonIndex]) {
+                              for (int i = 0;
+                                  i < _toggleSelections[index].length;
+                                  i++) {
+                                _toggleSelections[index][i] = i == buttonIndex;
+                              }
                             }
                           });
                         },

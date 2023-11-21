@@ -112,6 +112,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           }
         }
 
+
         if (result.value != null) {
           print("TodoUpdatedState!!");
           emit(TodoUpdatedState(
@@ -120,10 +121,10 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
            emit(TodoLoadedState(
                isError: state.isError, todos: state.todos, todo: state.todo));
         } else {
-          emit(TodoErrorState(isError: true));
+          // emit(TodoErrorState(isError: true));
         }
 
-        onCloseCallback?.call();
+
 
       } catch (e) {
         print("Error : ${e}");
@@ -157,14 +158,19 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           }
         }
 
-        if (result.value != null) {
-          emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
-          //print(taskid);
-          // emit(TodoLoadedState(
-          //     isError: state.isError, todos: state.todos, todo: state.todo));
-        } else {
-          emit(TodoErrorState(isError: true));
-        }
+        emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
+        //print(taskid);
+        emit(TodoLoadedState(
+            isError: state.isError, todos: state.todos, todo: state.todo));
+
+        // if (result.value != null) {
+        //   emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
+        //   //print(taskid);
+        //   emit(TodoLoadedState(
+        //       isError: state.isError, todos: state.todos, todo: state.todo));
+        // } else {
+        //   emit(TodoErrorState(isError: true));
+        // }
       } catch (e) {
         print("Error: ${e}");
       }

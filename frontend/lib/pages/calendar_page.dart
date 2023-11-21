@@ -120,6 +120,10 @@ class _todoListWidget extends State<todoListWidget> {
     List<Widget> _dinnerTasks = [];
     List<Widget> _otherTasks = [];
 
+    if (todos == null || todos.isEmpty) {
+      return _children;
+    }
+
     taskList = todos!.expand((todo) => todo.tasks).toList();
 
     // taskList를 순회하며 작업 수행
@@ -236,7 +240,8 @@ class _todoListWidget extends State<todoListWidget> {
                           return AlertDialog(
                             title: Text('Update Todo'),
                             content: SingleChildScrollView(
-                              child: Column(children: [
+                              child: Column(
+                                children: [
                                   ToggleButtons(
                                     isSelected: isSelected,
                                     onPressed: (int index) {
@@ -372,70 +377,87 @@ class _todoListWidget extends State<todoListWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: BlocListener<TodoPageBloc, TodoState>(
-        listener: (context, state) {
-          if (state is TodoUpdatedState) {
-            print("hello");
+      child: BlocBuilder<TodoPageBloc, TodoState>(
+        builder: (context, state) {
+          if (state is TodoInitState || state is TodoDownloadedState) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 100,
+              child: GestureDetector(
+                child: SpinKitThreeInOut(
+                  color: Color(0xffd86a04),
+                  size: 50.0,
+                  duration: Duration(seconds: 2),
+                ),
+              ),
+            );
+          } else if (state is TodoLoadedState) {
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _calendar(state.todos),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const TodoAddPage()));
+                  },
+                  icon: Icon(Icons.add, color: Color(0xffd86a04)),
+                  label: Text(
+                    "Todo Add",
+                    style: TextStyle(color: Color(0xffd86a04)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: const Color(0xffffecda),
+                      backgroundColor: const Color(0xffffecda)),
+                ),
+                _todoList(state.todos),
+              ],
+            );
+          } else if (state is TodoDeletedState) {
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _calendar(state.todos),
+                Text("else"),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const TodoAddPage()));
+                  },
+                  icon: const Icon(Icons.add, color: Color(0xffd86a04)),
+                  label: const Text(
+                    "Todo Add",
+                    style: TextStyle(color: Color(0xffd86a04)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: const Color(0xffffecda),
+                      backgroundColor: const Color(0xffffecda)),
+                ),
+                _todoList(state.todos),
+              ],
+            );
+          } else {
+            return Column(
+              children: [
+                _calendar(state.todos),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const TodoAddPage()));
+                  },
+                  icon: const Icon(Icons.add, color: Color(0xffd86a04)),
+                  label: const Text(
+                    "Todo Add",
+                    style: TextStyle(color: Color(0xffd86a04)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: const Color(0xffffecda),
+                      backgroundColor: const Color(0xffffecda)),
+                )
+              ],
+            );
           }
         },
-        child: BlocBuilder<TodoPageBloc, TodoState>(
-          builder: (context, state) {
-            if (state is TodoInitState || state is TodoDownloadedState) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                child: GestureDetector(
-                  child: SpinKitThreeInOut(
-                    color: Color(0xffd86a04),
-                    size: 50.0,
-                    duration: Duration(seconds: 2),
-                  ),
-                ),
-              );
-            } else if (state is TodoLoadedState) {
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _calendar(state.todos),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const TodoAddPage()));
-                    },
-                    icon: Icon(Icons.add, color: Color(0xffd86a04)),
-                    label: Text("Todo Add", style: TextStyle(color: Color(0xffd86a04)),),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xffffecda),
-                      backgroundColor: const Color(0xffffecda)
-                      ),
-                  ),
-
-                  _todoList(state.todos),
-                ],
-              );
-            } else {
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _calendar(state.todos),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const TodoAddPage()));
-                    },
-                    icon: const Icon(Icons.add, color: Color(0xffd86a04)),
-                    label: const Text("Todo Add", style: TextStyle(color: Color(0xffd86a04)),),
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: const Color(0xffffecda),
-                        backgroundColor: const Color(0xffffecda)
-                    ),
-                  ),
-                  _todoList(state.todos),
-                ],
-              );
-            }
-          },
-        ),
       ),
     );
   }
