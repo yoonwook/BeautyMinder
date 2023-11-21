@@ -26,9 +26,11 @@ class Config {
   static const getUserInfo = "user/me/";
 
   // Todo
+  static const Todo = "/todo";
   static const todoAPI = "/todo/all";
-  static const todoAddAPI = "/todo/add";
+  static const todoAddAPI = "/todo/create";
   static const todoDelAPI = "/todo/delete/";
+  static const todoUpdateAPI = "/todo/update/";
 
   //Baumann
   static const baumannSurveyAPI = "/baumann/survey";

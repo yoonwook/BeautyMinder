@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/services/auth_service.dart';
 import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
 import '../../config.dart';
 import '../dto/todo_model.dart';
+import '../dto/user_model.dart';
 import 'shared_service.dart';
 
 class TodoService {
@@ -34,16 +36,44 @@ class TodoService {
     );
   }
 
+  // PUT 방식으로 JSON 데이터 전송하는 일반 함수
+  static Future<Response> _putJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}) {
+    return client.put(
+      url,
+      options: _httpOptions('PUT', headers),
+      data: body,
+    );
+  }
+
   // Get All Todos
+  // test 성공
+  // queryParmeter로 userId가 필요함
   static Future<Result<List<Todo>>> getAllTodos() async {
     final user = await SharedService.getUser();
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
+    // AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //await SharedService.getAccessToken();
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    //await SharedService.getRefreshToken();
     final userId = user?.id ?? '-1';
 
+    //요청에 집어넣을 쿼리파라미터
+    // 실사용시에는 유저로뷰터 입력을 받아야함=
+    final queryParameters = {
+      'userId': '65499d8316f366541e3cc0a2',
+    };
+
     // Create the URI with the query parameter
-    final url =
-        Uri.http(Config.apiURL, Config.todoAPI, {'userId': userId}).toString();
+    // 형식 : todo/all
+    // 쿼리 파라미터 userId
+    // ?userId = 6522837112b53b37f109a508 형식으로 API 콜 뒤에 이어져야함
+    // ex) todo/all?userId = 6522837112b53b37f109a508
+    // todo model에서  userId를 넣어주면됨
+
+    final url = Uri.http(Config.apiURL, Config.todoAPI).toString();
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -57,6 +87,7 @@ class TodoService {
       );
 
       print("response: ${response.data} ${response.statusCode}");
+      print("statusCode : ${response.statusCode}");
       print("token: $accessToken | $refreshToken");
 
       if (response.statusCode == 200) {
@@ -69,13 +100,17 @@ class TodoService {
           return Result.failure("Unexpected response data type");
         }
 
-        print("Todo response: $decodedResponse");
         if (decodedResponse.containsKey('todos')) {
           List<dynamic> todoList = decodedResponse['todos'];
-          List<Todo> todos =
-              todoList.map((data) => Todo.fromJson(data)).toList();
-          print(todos);
-          return Result.success(todos);
+          try {
+            List<Todo> todos =
+                todoList.map((data) => Todo.fromJson(data)).toList();
+            print("todo length : ${todos.length}");
+            print("todo.task length : ${todos[0].tasks.length}");
+            return Result.success(todos);
+          } catch (e) {
+            print("Error : ${e}");
+          }
         }
         return Result.failure("Failed to get todos: No todos key in response");
       }
@@ -86,9 +121,18 @@ class TodoService {
   }
 
   // Add a new Todo
+  // Todo를 추가
+  // 테스트 성공
   static Future<Result<Todo>> addTodo(Todo todo) async {
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
+    // AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //await SharedService.getAccessToken();
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    //await SharedService.getRefreshToken();
+
+    print("addTodo ${todo.toJson()}");
 
     final url = Uri.http(Config.apiURL, Config.todoAddAPI).toString();
     final headers = {
@@ -98,19 +142,29 @@ class TodoService {
 
     try {
       final response = await _postJson(url, todo.toJson(), headers: headers);
-      return Result.success(Todo.fromJson(jsonDecode(response.data)));
+      print("response : ${response}");
+      return Result.success(todo);
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }
   }
 
   // Delete a Todo
-  static Future<Result<String>> deleteTodo(String todoId) async {
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
+  // test성공
+  static Future<Result<String>> deleteTodo(String? todoId) async {
+    // AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //await SharedService.getAccessToken();
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    //await SharedService.getRefreshToken();
 
-    final url =
-        Uri.http(Config.apiURL, Config.todoDelAPI + todoId).toString();
+    final queryParameters = {
+      'userId': '6522837112b53b37f109a508',
+    };
+
+    final url = Uri.http(Config.apiURL, Config.todoDelAPI + todoId!).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -129,6 +183,120 @@ class TodoService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+  // test성공
+  static Future<Result<Map<String, dynamic>>> getTodo() async {
+    final user = await SharedService.getUser();
+// AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //await SharedService.getAccessToken();
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    //await SharedService.getRefreshToken();
+// user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
+    final queryParameters = {
+      'userId': '6522837112b53b37f109a508',
+    };
+
+    final url =
+        Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
+    print(url);
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    try {
+      final response =
+          await authClient.get(url, options: _httpOptions('GET', headers));
+
+      print("response : ${response.data}, statuscode : ${response.statusCode}");
+      return Result.success(response.data);
+    } catch (e) {
+      print("Todoservice : ${e}");
+      return Result.failure("error");
+    }
+  }
+
+  // API 연동 성공
+  // task를 삭제
+  static Future<Result<Map<String, dynamic>>> deleteTask(
+      Todo? todo, Task? task) async {
+    // AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //await SharedService.getAccessToken();
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    //await SharedService.getRefreshToken();
+
+    final url = Uri.http(
+      Config.apiURL,
+      Config.todoUpdateAPI + todo!.id!,
+    ).toString();
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    Map<String, dynamic> delete = {
+      "taskIdsToDelete": [task?.taskId]
+    };
+
+    try {
+      //print("task.id : ${task?.taskId}");
+      //print("todo.id : ${todo.id}");
+      final response = await _putJson(url, delete, headers: headers);
+      print("response : ${response}");
+      return Result.success(response.data);
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
+  static Future<Result<Map<String, dynamic>>> taskUpdateTodo(
+      Todo? todo, Task? task) async {
+    // AccessToken가지고오기
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    //await SharedService.getAccessToken();
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    //await SharedService.getRefreshToken();
+
+    final url = Uri.http(
+      Config.apiURL,
+      Config.todoUpdateAPI + todo!.id!,
+    ).toString();
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    Map<String, dynamic> taskUpdate = {
+      "tasksToUpdate": [{
+        "taskId" : task?.taskId,
+        "description" : task?.description,
+        "isDone" : task?.done,
+        "category" :  task?.category,
+      }]
+    };
+
+    try {
+      //print("task.id : ${task?.taskId}");
+      //print("todo.id : ${todo.id}");
+      final response = await _putJson(url, taskUpdate, headers: headers);
+      print("response : ${response}");
+      return Result.success(response.data);
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
 }
 
 // 결과 클래스
