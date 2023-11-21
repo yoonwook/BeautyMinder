@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:beautyminder/pages/search/search_page.dart';
+import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../config.dart';
@@ -24,13 +25,33 @@ class SearchService {
 
   // 이름으로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByName(String name) async {
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'name' : '$name',
     };
 
     final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters).toString();
+// 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
 
-    final response = await client.get(url);
+
+    final response = await client.get(
+        url,
+        options: _httpOptions('GET', headers)
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
@@ -53,13 +74,34 @@ class SearchService {
 
   // 카테고리로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByCategory(String category) async {
+
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'category' : '$category',
     };
 
     final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters).toString();
 
-    final response = await client.get(url);
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
+    final response = await client.get(
+      url,
+      options: _httpOptions('GET', headers),
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
@@ -71,13 +113,33 @@ class SearchService {
   // 키워드로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByKeyword(String keyword) async {
 
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'keyword' : '$keyword',
     };
 
     final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters).toString();
 
-    final response = await client.get(url);
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
+    final response = await client.get(
+      url,
+      options: _httpOptions('GET', headers),
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((data) => Cosmetic.fromJson(data)).toList();
@@ -89,14 +151,32 @@ class SearchService {
   // 일반 검색
   static Future<List<Cosmetic>> searchAnything(String anything) async {
 
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     final parameters={
       'anything' : '$anything',
     };
 
     final url = Uri.http(Config.apiURL, Config.homeSearchKeywordAPI, parameters).toString();
+// 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
 
     try {
-      final response = await client.get(url);
+      final response = await client.get(
+        url,
+        options: _httpOptions("GET", headers)
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data;

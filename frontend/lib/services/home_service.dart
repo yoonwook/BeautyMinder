@@ -1,11 +1,11 @@
 import 'package:beautyminder/dto/baumann_model.dart';
-import 'package:beautyminder/dto/gptReview_model.dart';
+import 'package:beautyminder/dto/user_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../config.dart';
 
-class GPTReviewService {
+class HomeService {
   // Dio 객체 생성
   static final Dio client = Dio();
 
@@ -22,7 +22,18 @@ class GPTReviewService {
     );
   }
 
-  static Future<Result<GPTReviewInfo>> getGPTReviews(String id) async {
+  //POST 방식으로 JSON 데이터 전송하는 일반 함수
+  static Future<Response> postJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}){
+
+    return client.post(
+      url,
+      options: _httpOptions('POST', headers),
+      data: body,
+    );
+  }
+
+  static Future<HomePageResult<User>> getUserInfo(String userId) async {
 
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
@@ -33,8 +44,7 @@ class GPTReviewService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, '${Config.getGPTReviewAPI}/$id').toString();
-    print("******$url\n");
+    final url = Uri.http(Config.apiURL, Config.getUserInfo+userId).toString();
 
     // 헤더 설정
     final headers = {
@@ -51,35 +61,29 @@ class GPTReviewService {
         options: _httpOptions('GET', headers),
       );
 
-      print("hehehehehehh-----$response");
+      print("Here is HomeService response : $response");
 
       if (response.statusCode == 200) {
-        // 정보 파싱
-        // final user = SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
-        final gptReviewInfo = GPTReviewInfo.fromJson(response.data as Map<String, dynamic>);
-        print("dfdssdfsdfsfdsfdsfds\n");
-        print(gptReviewInfo);
-        print("aaaa\n");
-
-        return Result.success(gptReviewInfo);
+        // 사용자 정보 파싱
+        final user = User.fromJson(response.data as Map<String, dynamic>);
+        print("Here is HomeService user : $user");
+        return HomePageResult.success(user);
       }
-      print("fdffff\n");
-      return Result.failure("Failed to get GPT review information");
+      return HomePageResult.failure("Failed to get user profile");
     } catch (e) {
-      print("pppppeoeoooekdkkdk\n");
-      return Result.failure("An error occurred: $e");
+      return HomePageResult.failure("An error occurred: $e");
     }
   }
 
 }
 
 // 결과 클래스
-class Result<T> {
+class HomePageResult<T> {
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
+  HomePageResult.success(this.value) : error = null; // 성공
+  HomePageResult.failure(this.error) : value = null; // 실패
 
   bool get isSuccess => value != null;
 }

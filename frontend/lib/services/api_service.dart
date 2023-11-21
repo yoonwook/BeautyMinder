@@ -8,6 +8,10 @@ import 'package:beautyminder/dto/review_model.dart';
 import 'package:beautyminder/dto/update_request_model.dart';
 import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
+import 'package:file_picker/src/platform_file.dart';
+import 'package:http_parser/src/media_type.dart';
+import 'package:mime/src/mime_type.dart';
+
 import '../../config.dart';
 import '../dto/user_model.dart';
 import 'shared_service.dart';
@@ -49,6 +53,15 @@ class APIService {
     );
   }
 
+  static Future<Response> _patchJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}) {
+    return client.post(
+      url,
+      options: _httpOptions('PATCH', headers),
+      data: body,
+    );
+  }
+
   // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
@@ -62,6 +75,7 @@ class APIService {
     try {
       // POST 요청
       final response = await _postForm(url, formData);
+      print("response: $response");
       if (response.statusCode == 200) {
         await SharedService.setLoginDetails(loginResponseJson(response.data));
 
@@ -93,17 +107,22 @@ class APIService {
   static Future<Result<bool>> delete(DeleteRequestModel model) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.deleteAPI + userId).toString();
+    final url = Uri.http(Config.apiURL, Config.deleteAPI)
+        .toString(); //deleteAPI 뒤에 + userID 지움
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -121,18 +140,21 @@ class APIService {
   static Future<Result<User>> getUserProfile() async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, Config.userProfileAPI + userId).toString();
+    final url = Uri.http(Config.apiURL, Config.userProfileAPI).toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -155,21 +177,25 @@ class APIService {
   }
 
   // 즐겨찾기 조회 함수
-  static Future<Result<FavoriteModel>> getFavorites() async {
-    // 로그인 상세 정보 가져오기
+  static Future<Result<List<dynamic>>> getFavorites()  async {
+
+    /// 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, '/user/' + userId + '/favorites').toString();
+    final url = Uri.http(Config.apiURL, '/user/favorites').toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -181,10 +207,12 @@ class APIService {
 
       if (response.statusCode == 200) {
         // 사용자 정보 파싱
-        print('res:' + response.data.toString());
-        final favorites =
-            FavoriteModel.fromJson(response.data as Map<String, dynamic>);
-        return Result.success(favorites);
+        //print('res:' + response.data.toString());
+        //final favorites =
+        //    FavoriteModel.fromJson(response.data as Map<String, dynamic>);
+        //return Result.success(favorites);
+
+        return Result.success(response.data);
       }
 
       return Result.failure("Failed to get user favorites");
@@ -198,18 +226,21 @@ class APIService {
   static Future<Result<List<dynamic>>> getReviews() async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, '/user/' + userId + '/reviews').toString();
+    final url = Uri.http(Config.apiURL, '/user/reviews').toString();
 
     // 헤더 설정
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+   final headers = {
+    'Authorization': 'Bearer ${Config.acccessToken}',
+    'Cookie': 'XRT=${Config.refreshToken}',
+    // 'Authorization': 'Bearer $accessToken',
+    // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -234,25 +265,77 @@ class APIService {
   static Future<Result<bool>> sendEditInfo(UpdateRequestModel model) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url =
-        Uri.http(Config.apiURL, Config.userProfileAPI + userId).toString();
+    final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      final response = await _postJson(url, model.toJson());
-      return Result.success(true);
+      final response = await _patchJson(url, model.toJson(), headers: headers);
+      if (response.statusCode == 200) {
+        return Result.success(true);
+      }
+      return Result.failure("Failed to update user profile");
     } catch (e) {
       return Result.failure("An error occurred: $e");
+    }
+  }
+
+  //프로필 사진 변경
+  static Future<String> editProfileImgInfo(String image) async {
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.editProfileImg).toString();
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
+    final MediaType contentType = MediaType.parse(
+        lookupMimeType('new_profile.jpg') ?? 'application/octet-stream');
+
+    final formData = FormData.fromMap({
+      "image": MultipartFile.fromFileSync(
+        image,
+        //filename: 'new_profile.jpg',
+        contentType: contentType,
+      ),
+    });
+
+    // Use Dio's post method for multipart data
+    final response = await client.post(
+      url,
+      data: formData,
+      options: _httpOptions('POST', headers),
+    );
+
+    // final response = await _postJson(url, model.toJson(), headers: headers);
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('Failed to update review: ${response.statusMessage}');
     }
   }
 }
@@ -262,6 +345,9 @@ class Result<T> {
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
+  Result.success(this.value) : error = null;
+  Result.failure(this.error) : value = null;
+
+  bool get isSuccess => error == null;
+  bool get isFailure => !isSuccess;
 }

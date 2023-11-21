@@ -1,3 +1,4 @@
+import 'package:beautyminder/pages/home/home_page.dart';
 import 'package:beautyminder/widget/loginAppBar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +25,19 @@ class _LoginPageState extends State<LoginPage> {
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   String? email;
   String? password;
-  String? nickname; // 별명 필드 추가
 
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+
+  Color emailIconColor = Colors.grey.withOpacity(0.7);
+  Color passwordIconColor = Colors.grey.withOpacity(0.7);
 
 
   @override
   void initState() {
     super.initState();
+    email = "token@test";
+    password = '1234';
   }
 
 
@@ -38,18 +45,22 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: LoginAppBar(),
-        backgroundColor: Colors.white,
-        body: ProgressHUD(
-          child: Form(
-            key: globalFormKey,
-            child: _loginUI(context),
-          ),
-          inAsyncCall: isApiCallProcess,
-          opacity: 0.3,
-          key: UniqueKey(),
+      appBar: LoginAppBar(),
+      backgroundColor: Colors.white,
+      body:SingleChildScrollView(
+        child: Column(
+          children: [ ProgressHUD(
+            child: Form(
+              key: globalFormKey,
+              child: _loginUI(context),
+            ),
+            inAsyncCall: isApiCallProcess,
+            opacity: 0.3,
+            key: UniqueKey(),
+          )],
         ),
-      );
+      ) ,
+    );
   }
 
 
@@ -82,9 +93,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
-  // 이메일 필드
+  // Update _buildEmailField method
   Widget _buildEmailField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,20 +106,32 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: 16,
           ),
         ),
-        SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
-        TextFormField(
-          validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
-          onChanged: (val) => email = val,
-          obscureText: false,
-          style: TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "이메일을 입력하세요",
-            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-            prefixIcon: Icon(Icons.person),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+        SizedBox(height: 5),
+        Focus(
+          onFocusChange: (hasFocus) {
+            setState(() {
+              emailIconColor = hasFocus ? Color(0xffd86a04) : Colors.grey.withOpacity(0.7);
+            });
+          },
+          child: TextFormField(
+            initialValue: 'token@test',
+            focusNode: emailFocusNode,
+            validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
+            onChanged: (val) => email = val,
+            obscureText: false,
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              hintText: "이메일을 입력하세요",
+              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+              prefixIcon: Icon(
+                Icons.person,
+                color: emailIconColor,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+                ),
               ),
             ),
           ),
@@ -119,9 +140,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
-  // 비밀번호 필드
+// Update _buildPasswordField method
   Widget _buildPasswordField() {
     return Column (
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,31 +154,42 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         SizedBox(height: 5),
-        TextFormField(
-          validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
-          onChanged: (val) => password = val,
-          obscureText: hidePassword,
-          style: TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "비밀번호를 입력하세요",
-            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-            prefixIcon: Icon(Icons.lock),
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  hidePassword = !hidePassword;
-                });
-              },
-              color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
-              icon: Icon(
-                hidePassword ? Icons.visibility_off : Icons.visibility,
-                color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
+        Focus(
+          onFocusChange: (hasFocus) {
+            setState(() {
+              passwordIconColor = hasFocus ? Color(0xffd86a04) : Colors.grey.withOpacity(0.7);
+            });
+          },
+          child: TextFormField(
+            initialValue: '1234',
+            focusNode: passwordFocusNode,
+            validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
+            onChanged: (val) => password = val,
+            obscureText: hidePassword,
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              hintText: "비밀번호를 입력하세요",
+              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+              prefixIcon: Icon(
+                Icons.lock,
+                color: passwordIconColor,
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+              suffixIcon: InkWell(
+                onTap: () {
+                  setState(() {
+                    hidePassword = !hidePassword;
+                  });
+                },
+                child: Icon(
+                  hidePassword ? Icons.visibility_off : Icons.visibility,
+                  color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+                ),
               ),
             ),
           ),
@@ -167,6 +197,9 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
+
+
+
 
 
 
@@ -229,9 +262,12 @@ class _LoginPageState extends State<LoginPage> {
             final model = LoginRequestModel(email: email, password: password);
             final result = await APIService.login(model);
 
+            print("1111 : ${result.value}");
+
             if (result.value == true) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
+              final userProfileResult = await APIService.getUserProfile();
+              print("Here is LoginPage : ${userProfileResult.value}");
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
             } else {
               // 에러 토스트 메시지
               Fluttertoast.showToast(

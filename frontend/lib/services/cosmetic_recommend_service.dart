@@ -34,32 +34,25 @@ class CosmeticSearchService{
 
   // Get All Cosmetics
   static Future<Result<List<Cosmetic>>> getAllCosmetics() async {
-    // 유저 정보 가지고 오기
+    // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
-    //refreshToken 가지고오기
     final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     // final url = Uri.http(Config.apiURL, Config.CosmeticAPI).toString();
-    final url = Uri.http(Config.apiURL, "${Config.RecommendAPI}6515128b7a33fd3cc5dbebf5").toString();
+    final url = Uri.http(Config.apiURL, Config.RecommendAPI).toString();
 
-    //print("url1: ${url1}");
-    // (new) Uri Uri.http(
-    // String authority,
-    // [   String unencodedPath,
-    // Map<String, dynamic>? queryParameters, ])
-    // authority : host의 이름과 포트번호를 입력하는부분
-    // unencodedPath : URI경로, 선택적이므로 생략가능
-    // queryParameters : 쿼리 파라미터 kye = value 형식
-
+    // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
+
 
     try{
       final response = await authClient.get(

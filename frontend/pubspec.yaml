@@ -33,8 +33,10 @@ dependencies:
   snippet_coder_utils: ^1.0.9
   flutter_secure_storage: ^9.0.0
 
+  flutter_rating_bar: ^4.0.1
+
   equatable: ^2.0.5
-  flutter_bloc: ^8.1.1
+  flutter_bloc: ^8.1.0
   bloc_test: ^9.0.3
 
   fluttertoast: ^8.2.2
@@ -48,10 +50,18 @@ dependencies:
   #google_fonts: ˆ5.1.0
   kg_charts: ^0.0.4
   carousel_slider: ^4.0.0
-  intl: ^0.17.0
+  intl: ^0.18.1
   file_picker: ^6.1.1
   flutter_spinkit: ^5.1.0
   flutter_svg: ^2.0.9
+  flutter_slidable: ^3.0.1
+  image_picker: ^0.8.4
+  provider: ^6.1.1
+  shared_preferences: ^2.0.8
+  webview_flutter: ^4.2.0
+  webview_flutter_wkwebview: ^3.9.4
+  table_calendar: ^3.0.9
+
 
 dev_dependencies:
   flutter_test:

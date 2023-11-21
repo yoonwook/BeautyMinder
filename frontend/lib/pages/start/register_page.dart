@@ -33,7 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
   String? phoneNumber;
 
 
-
   @override
   void initState() {
     super.initState();
@@ -151,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
         SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
         TextFormField(
           validator: (val) => val!.isEmpty ? '전화번호가 입력되지 않았습니다.' : null,
-          onChanged: (val) => email = val,
+          onChanged: (val) => phoneNumber = val,
           obscureText: false,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
@@ -187,7 +186,7 @@ class _RegisterPageState extends State<RegisterPage> {
         SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
         TextFormField(
           validator: (val) => val!.isEmpty ? '닉네임이 입력되지 않았습니다.' : null,
-          onChanged: (val) => email = val,
+          onChanged: (val) => nickname = val,
           obscureText: false,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
@@ -259,7 +258,7 @@ class _RegisterPageState extends State<RegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          onChanged: (val) => password = val,
+          onChanged: (val) => checkpassword = val,
           validator: (val) {
             if (val!.isEmpty) {
               return '비밀번호가 입력되지 않았습니다.';
@@ -317,10 +316,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
           RegisterRequestModel model = RegisterRequestModel(
             email: email,
-            password: password,
-            nickname: nickname,
             phoneNumber: phoneNumber,
-
+            nickname: nickname,
+            password: password,
           );
 
           APIService.register(model).then(

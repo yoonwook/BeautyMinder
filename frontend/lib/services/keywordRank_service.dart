@@ -1,3 +1,4 @@
+import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../config.dart';
@@ -16,20 +17,41 @@ class KeywordRankService {
     'Content-Type': 'application/json',
   };
 
+  // 공통 HTTP 옵션 설정 함수
+  static Options _httpOptions(String method, Map<String, String>? headers) {
+    return Options(
+      method: method,
+      headers: headers,
+      receiveTimeout: const Duration(milliseconds: 1000),
+      sendTimeout: const Duration(milliseconds: 1000),
+    );
+  }
+
   static Future<Result<KeyWordRank>> getKeywordRank() async {
+
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.keywordRankAPI).toString();
+// 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
 
     try {
       // GET 요청
       final response = await client.get(
         url,
-        //
-        options: Options(
-          receiveTimeout: const Duration(milliseconds: 1000),
-          sendTimeout: const Duration(milliseconds: 1000),
-        )
-        //
+        options: _httpOptions('GET', headers),
       );
 
       if (response.statusCode == 200) {
@@ -53,18 +75,31 @@ class KeywordRankService {
 
 
   static Future<Result<ProductRank>> getProductRank() async {
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.productRankAPI).toString();
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
 
     try {
       // GET 요청
       final response = await client.get(
           url,
           //
-          options: Options(
-            receiveTimeout: const Duration(milliseconds: 1000),
-            sendTimeout: const Duration(milliseconds: 1000),
-          )
+          options: _httpOptions('GET', headers),
         //
       );
 

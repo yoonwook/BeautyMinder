@@ -10,11 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../services/api_service.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
-import '../pouch/pouch_page.dart';
+import '../pouch/expiry_page.dart';
 import '../todo/todo_page.dart';
 
 class RecPage extends StatefulWidget {
@@ -100,7 +101,7 @@ class _RecPage extends State<RecPage> {
           appBar: CommonAppBar(),
           body: Column(
             children: [
-              Container(height: 10,),
+              Container(height: 30),
               BlocBuilder<RecommendPageBloc, RecommendState>(
                   builder: (context, state) {
                     return Theme(
@@ -110,70 +111,76 @@ class _RecPage extends State<RecPage> {
                           selectedBorderColor: Color(0xffd86a04)
                         ),
                       ),
-                      child: ToggleButtons(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('전체', style: TextStyle(fontSize: 18)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('스킨케어', style: TextStyle(fontSize: 18)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('클렌징', style: TextStyle(fontSize: 18))
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('선케어', style: TextStyle(fontSize: 18))
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('베이스', style: TextStyle(fontSize: 18))
-                          ),
-                        ],
-                        isSelected: [
-                          isAll,
-                          isSkincare,
-                          isCleansing,
-                          isSuncare,
-                          isBase
-                        ],
-                        onPressed: (int index) {
-                          print({"index : $index"});
-                          toggleSelect(index);
-                          context.read<RecommendPageBloc>().add(
-                            RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
-                          );
-                        },
-                        // fillColor: Color(0xffffecda),
-                        fillColor: Colors.white,
+                      child: Container(
+                        height: 30,
+                        child: ToggleButtons(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('전체', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('스킨케어', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('클렌징', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('선케어', style: TextStyle(fontSize: 15)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              child: Text('베이스', style: TextStyle(fontSize: 15)),
+                            ),
+                          ],
+                          isSelected: [
+                            isAll,
+                            isSkincare,
+                            isCleansing,
+                            isSuncare,
+                            isBase
+                          ],
+                          onPressed: (int index) {
+                            print({"index : $index"});
+                            toggleSelect(index);
+                            context.read<RecommendPageBloc>().add(
+                              RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
+                            );
+                          },
+                          // fillColor: Color(0xffffecda),
+                          fillColor: Colors.white,
+                        ),
                       ),
                     );
               }),
+              Container(height: 20,),
               Expanded(child: RecPageImageWidget())
             ],
           ),
           bottomNavigationBar: Container(
             child: CommonBottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: (int index) {
-                  // 페이지 전환 로직 추가
-                  if (index == 1) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PouchPage()));
-                  } else if (index == 2) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const HomePage()));
-                  } else if (index == 3) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const TodoPage()));
-                  } else if (index == 4) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const MyPage()));
-                  }
-                }),
+              currentIndex: _currentIndex,
+              onTap: (int index) async {
+                // 페이지 전환 로직 추가
+                if (index == 1) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+                }
+                else if (index == 2) {
+                  final userProfileResult = await APIService.getUserProfile();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+                }
+                else if (index == 3) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
+                }
+                else if (index == 4) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const MyPage()));
+                }
+              },
+            ),
           )),
     );
   }
@@ -289,6 +296,11 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                         // Navigator.of(context).push(MaterialPageRoute(
                         //     builder: (context) => ProductDetailPage(
                         //         name: state.recCosmetics![index].name)));
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProductDetailPage(
+                            searchResults: state.recCosmetics![index],
+                          ),
+                        ));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -352,7 +364,8 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
       padding: const EdgeInsets.only(bottom: 4, left: 12),
       child: Text(
         content,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );
   }
