@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 import '../models/login_response_model.dart';
 
 class Task {
-  final String taskId;
+  late String? taskId;
   late String description;
   late String category;
   late  bool done;
 
   Task({
-    required this.taskId,
+      this.taskId,
     required this.category, // 아침/ 저녁 --> 프론트단에서 설정할 수 있게 하면
     required this.description,
     required this.done

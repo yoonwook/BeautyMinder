@@ -2,7 +2,7 @@ import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/event/TodoPageEvent.dart';
 import 'package:beautyminder/pages/TodoUpdatePage.dart';
-import 'package:beautyminder/pages/Todo_Add_Page_Test.dart';
+import 'package:beautyminder/pages/Todo_Add_Page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/todo_page.dart';
@@ -21,13 +21,6 @@ import '../dto/todo_model.dart';
 import '../widget/commonBottomNavigationBar.dart';
 import 'home_page.dart';
 import 'my_page.dart';
-
-class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
-
-  @override
-  _CalendarPageState createState() => _CalendarPageState();
-}
 
 class _CalendarPageState extends State<CalendarPage> {
   int _currentIndex = 3;
@@ -85,6 +78,13 @@ class todoListWidget extends StatefulWidget {
   _todoListWidget createState() => _todoListWidget();
 }
 
+class CalendarPage extends StatefulWidget {
+  const CalendarPage({Key? key}) : super(key: key);
+
+  @override
+  _CalendarPageState createState() => _CalendarPageState();
+}
+
 class _todoListWidget extends State<todoListWidget> {
   TextEditingController _controller = TextEditingController();
 
@@ -118,36 +118,45 @@ class _todoListWidget extends State<todoListWidget> {
     List<Widget> _children = [];
     List<Widget> _morningTasks = [];
     List<Widget> _dinnerTasks = [];
-    //var todos = TodoService.getAllTodos();
-
-    print("_buildChidren");
-    print("todos : ${todos}");
+    List<Widget> _otherTasks = [];
 
     taskList = todos!.expand((todo) => todo.tasks).toList();
 
     // taskList를 순회하며 작업 수행
-    taskList.forEach((task) {
+    for (var task in taskList) {
       if (task.category == 'morning') {
         print(task.taskId);
         _morningTasks.add(_todo(task, todos[0], todos));
       } else if (task.category == 'dinner') {
         print(task.taskId);
         _dinnerTasks.add(_todo(task, todos[0], todos));
+      } else {
+        _otherTasks.add(_todo(task, todos[0], todos));
       }
-    });
+    }
 
-    _children.add(_row('morning'));
-    _children.addAll(_morningTasks);
-    _children.add(_row('dinner'));
-    _children.addAll(_dinnerTasks);
+    if (_morningTasks.length != 0) {
+      _children.add(_row('morning'));
+      _children.addAll(_morningTasks);
+    }
+
+    if (_dinnerTasks.length != 0) {
+      _children.add(_row('dinner'));
+      _children.addAll(_dinnerTasks);
+    }
+
+    if (_otherTasks.length != 0) {
+      _children.add(_row('other'));
+      _children.addAll(_otherTasks);
+    }
 
     return _children;
   }
 
   Widget _calendar(List<Todo>? todos) {
-
-    List<Todo> _getTodosForDay(DateTime day){
-      return todos?.where((todo) => isSameDay(todo.createdAt, day)).toList() ?? [];
+    List<Todo> _getTodosForDay(DateTime day) {
+      return todos?.where((todo) => isSameDay(todo.createdAt, day)).toList() ??
+          [];
     }
 
     return TableCalendar(
@@ -211,7 +220,8 @@ class _todoListWidget extends State<todoListWidget> {
             onPressed: (context) {
               List<bool> isSelected = [
                 task.category == 'morning',
-                task.category == 'dinner'
+                task.category == 'dinner',
+                task.category != 'morning' && task.category != 'dinner'
               ];
 
               // context.read<TodoPageBloc>().add(TodoPageUpdateEvent(task: task, todo: todo));
@@ -226,8 +236,7 @@ class _todoListWidget extends State<todoListWidget> {
                           return AlertDialog(
                             title: Text('Update Todo'),
                             content: SingleChildScrollView(
-                              child: Column(
-                                children: [
+                              child: Column(children: [
                                   ToggleButtons(
                                     isSelected: isSelected,
                                     onPressed: (int index) {
@@ -238,11 +247,13 @@ class _todoListWidget extends State<todoListWidget> {
                                           isSelected[buttonIndex] =
                                               buttonIndex == index;
                                         }
-                                        task.category = isSelected[0]
-                                            ? 'morning'
-                                            : 'dinner';
-                                        print(
-                                            "task.category : ${task.category}");
+                                        if (index == 0) {
+                                          task.category = 'morning';
+                                        } else if (index == 1) {
+                                          task.category = 'dinner';
+                                        } else {
+                                          task.category = 'other';
+                                        }
                                       });
                                     },
                                     children: const [
@@ -255,7 +266,12 @@ class _todoListWidget extends State<todoListWidget> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10),
                                         child: Text('Dinner'),
-                                      )
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Text('Other'),
+                                      ),
                                     ],
                                   ),
                                   Row(
@@ -381,6 +397,19 @@ class _todoListWidget extends State<todoListWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   _calendar(state.todos),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const TodoAddPage()));
+                    },
+                    icon: Icon(Icons.add, color: Color(0xffd86a04)),
+                    label: Text("Todo Add", style: TextStyle(color: Color(0xffd86a04)),),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: const Color(0xffffecda),
+                      backgroundColor: const Color(0xffffecda)
+                      ),
+                  ),
+
                   _todoList(state.todos),
                 ],
               );
@@ -389,6 +418,18 @@ class _todoListWidget extends State<todoListWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   _calendar(state.todos),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const TodoAddPage()));
+                    },
+                    icon: const Icon(Icons.add, color: Color(0xffd86a04)),
+                    label: const Text("Todo Add", style: TextStyle(color: Color(0xffd86a04)),),
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor: const Color(0xffffecda),
+                        backgroundColor: const Color(0xffffecda)
+                    ),
+                  ),
                   _todoList(state.todos),
                 ],
               );

@@ -1,41 +1,50 @@
-import 'package:beautyminder/Bloc/RecommendPageBloc.dart';
+
 import 'package:beautyminder/Observer.dart';
-import 'package:beautyminder/pages/Todo_Add_Page_Test.dart';
+
 import 'package:beautyminder/pages/calendar_page.dart';
-import 'package:beautyminder/pages/camera_page.dart';
+
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
-import 'package:beautyminder/pages/todo_page.dart';
+
 import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 
 import 'Bloc/TodoPageBloc.dart';
-import 'State/TodoState.dart';
+
 import 'dto/task_model.dart';
 import 'dto/todo_model.dart';
 import 'dto/user_model.dart';
-import 'event/TodoPageEvent.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
+import 'package:logging/logging.dart';
 
 // Widget _defaultHome = WelcomePage();
+
+void _setupLogging() {
+  Logger.root.level = Level.ALL; // 모든 로그 레벨 활성화
+  Logger.root.onRecord.listen((record) {
+    // 로그 출력 형식을 여기서 설정
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = Observer();
+  _setupLogging();
 
   final TodoService todoService = TodoService();
 
-    // 첫 번째 Task 객체 생성
-    Task tas1 = Task(
-      taskId: 'task_001',
-      category: 'morning',
-      description: '캡디테스트입니다.',
-      done: false,
-    );
+  // 첫 번째 Task 객체 생성
+  Task tas1 = Task(
+    taskId: 'task_001',
+    category: 'morning',
+    description: '캡디테스트입니다.',
+    done: false,
+  );
   Task tas2 = Task(
     taskId: 'task_001',
     category: 'morning',
@@ -67,7 +76,6 @@ void main() async {
     done: false,
   );
 
-
   Task tas7 = Task(
     taskId: 'task_001',
     category: 'dinner',
@@ -89,38 +97,34 @@ void main() async {
     done: false,
   );
 
+  List<Task> tasks = [tas1, tas2, tas3, tas4, tas5, tas6, tas7, tas8, tas9];
 
-    List<Task> tasks = [tas1, tas2, tas3, tas4,tas5, tas6, tas7, tas8, tas9];
+  User user = User(
+    id: '65499d8316f366541e3cc0a2',
+    email: 'user@example.com',
+    password: 'securepassword123',
+    nickname: 'JohnDoe',
+    profileImage: 'path/to/image.jpg',
+    createdAt: DateTime.now(),
+    authorities: 'ROLE_USER',
+    phoneNumber: '0100101',
+  );
 
-    User user = User(
-      id: '65499d8316f366541e3cc0a2',
-      email: 'user@example.com',
-      password: 'securepassword123',
-      nickname: 'JohnDoe',
-      profileImage: 'path/to/image.jpg',
-      createdAt: DateTime.now(),
-      authorities: 'ROLE_USER',
-      phoneNumber: '0100101',
-    );
-
-    Todo todo = Todo(
-      id :'ddaa11',
+  Todo todo = Todo(
+      id: 'ddaa11',
       user: user,
-      date: DateTime.now(),
+      date: DateTime.parse('2023-08-26 00:00:00.000'),
       tasks: tasks,
-      createdAt: DateTime.now()
-    );
-
+      createdAt: DateTime.parse('2023-08-24 00:00:00.000'));
 
   // TodoPageBloc을 생성하고 초기화 이벤트를 추가합니다.
   final TodoPageBloc todoBloc = TodoPageBloc();
 
- // todoBloc.add(TodoPageAddEvent(todo));
+  // todoBloc.add(TodoPageAddEvent(todo));
   //todoBloc.add(TodoPageInitEvent());// 불러오기 까지 성공
   //todoBloc.add(TodoPageAddEvent(todo));
 
   // todoBloc.add(TodoPageAddEvent(todo));
-
 
   // // 초기화 이벤트를 추가합니다.
   //  todoBloc.add(TodoPageInitEvent());
@@ -142,7 +146,6 @@ void main() async {
     "newTask": "string111"
   };
 
-
   //final result = await TodoService.getAllTodos();
   //final result = await TodoService.addTodo(todo);
   //final result = await TodoService.deleteTodo("sss");
@@ -151,23 +154,31 @@ void main() async {
 
   //print("result.value : ${result.value}");
 
+  // runApp(MultiBlocProvider(
+  //     providers: [
+  //       BlocProvider<RecommendPageBloc>(
+  //         create: (context) => RecommendPageBloc(),
+  //       ),
+  //       BlocProvider<TodoPageBloc>(create: (create) => TodoPageBloc())
+  //     ],
+  //     child: MaterialApp(
+  //       title: 'BeautyMinder',
+  //       theme: ThemeData(
+  //         primaryColor: const Color(0xffffb876),
+  //       ),
+  //       home: //MyApp()
+  //       //TodoAddPage(),
+  //       CalendarPage()
+  //       //const TodoPage(),
+  //     )
+  //     //
+  //     ));
 
-
-  runApp( MultiBlocProvider(providers: [
-    BlocProvider<RecommendPageBloc>(
-         create: (context) => RecommendPageBloc(),
-       ),
-       BlocProvider<TodoPageBloc>(create: (create) => TodoPageBloc())],
-      child:  MaterialApp(
-        title: 'BeautyMinder',
-        theme: ThemeData(
-          primaryColor: const Color(0xffffb876),
-        ),
-        home: CalendarPage()
-        //const TodoPage(),
-      )
-    //MyApp()
-    )
+  runApp(
+    MaterialApp(
+      title: 'BeautyMinder',
+      home: CalendarPage(),
+    ),
   );
 
   // runApp(MaterialApp(
@@ -182,7 +193,6 @@ void main() async {
   //   )
   //
   // );
-
 }
 
 class MyApp extends StatelessWidget {
@@ -191,8 +201,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return
-      MaterialApp(
+    return MaterialApp(
       title: 'BeautyMinder',
       theme: ThemeData(
         primaryColor: const Color(0xffffb876),
@@ -203,12 +212,11 @@ class MyApp extends StatelessWidget {
         // '/': (context) => _defaultHome,
         '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/recommend': (context) =>  const RecPage(),
+        '/recommend': (context) => const RecPage(),
         '/pouch': (context) => const PouchPage(),
         // '/home': (context) => const HomePage(),
         '/todo': (context) => const CalendarPage(),
         '/my': (context) => const MyPage(),
-
       },
     );
   }

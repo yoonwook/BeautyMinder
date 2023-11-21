@@ -37,10 +37,8 @@ class CosmeticSearchService{
     // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //await SharedService.getAccessToken();
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
-    //await SharedService.getRefreshToken();
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
      // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
      final userId = user?.id ?? '-1';
@@ -48,18 +46,13 @@ class CosmeticSearchService{
     // final url = Uri.http(Config.apiURL, Config.CosmeticAPI).toString();
     final url = Uri.http(Config.apiURL, Config.RecommendAPI).toString();
     print("url : ${url}");
-    //print("url1: ${url1}");
-    // (new) Uri Uri.http(
-     // String authority,
-     // [   String unencodedPath,
-     // Map<String, dynamic>? queryParameters, ])
-     // authority : host의 이름과 포트번호를 입력하는부분
-     // unencodedPath : URI경로, 선택적이므로 생략가능
-     // queryParameters : 쿼리 파라미터 kye = value 형식
+
 
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try{

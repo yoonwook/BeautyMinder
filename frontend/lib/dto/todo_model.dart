@@ -9,14 +9,14 @@ class Todo {
     this.id,
     required this.date,
     required this.tasks,
-    required this.user,
+    this.user,
     this.createdAt,
   });
 
   late final String? id;
-  late final DateTime date;
+  late final DateTime? date;
   late final List<Task> tasks;
-  late final User user;
+  late User? user;
   late final DateTime? createdAt;
 
 

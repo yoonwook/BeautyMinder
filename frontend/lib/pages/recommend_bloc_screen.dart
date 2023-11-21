@@ -103,27 +103,37 @@ class _RecPage extends State<RecPage> {
                 return ToggleButtons(
                   children: [
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width%5*1.5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).width % 5 * 1.5),
                         child: Text('전체',
                             style:
                                 TextStyle(fontSize: 18, color: Colors.black))),
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width%5*1.5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).width % 5 * 1.5),
                         child: Text('스킨케어',
                             style:
                                 TextStyle(fontSize: 18, color: Colors.black))),
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width%5*1.5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).width % 5 * 1.5),
                         child: Text('클렌징',
                             style:
                                 TextStyle(fontSize: 18, color: Colors.black))),
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal:MediaQuery.sizeOf(context).width%5*1.5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).width % 5 * 1.5),
                         child: Text('선케어',
                             style:
                                 TextStyle(fontSize: 18, color: Colors.black))),
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width%5*1.5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).width % 5 * 1.5),
                         child: Text('베이스',
                             style:
                                 TextStyle(fontSize: 18, color: Colors.black))),
@@ -294,12 +304,14 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
                                 height: 100,
                                 color: const Color.fromRGBO(71, 71, 71, 1),
                                 child: state.recCosmetics != null &&
-                                        state.recCosmetics![index].thumbnailUrl !=
+                                        state.recCosmetics![index]
+                                                .thumbnailUrl !=
                                             null &&
                                         state.recCosmetics![index].thumbnailUrl!
                                             .isNotEmpty
                                     ? Image.network(
-                                        state.recCosmetics![index].thumbnailUrl!,
+                                        state
+                                            .recCosmetics![index].thumbnailUrl!,
                                         fit: BoxFit.cover,
                                       )
                                     : Container(),
