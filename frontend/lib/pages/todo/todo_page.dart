@@ -18,6 +18,7 @@ import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
+import '../recommend/recommend_bloc_screen.dart';
 import 'Todo_Add_Page.dart';
 
 class _CalendarPageState extends State<CalendarPage> {
@@ -51,22 +52,24 @@ class _CalendarPageState extends State<CalendarPage> {
               currentIndex: _currentIndex,
               onTap: (int index) async {
                 // 페이지 전환 로직 추가
-                if (index == 1) {
+                if (index == 0) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecPage()));
+                }
+                else if (index == 1) {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
                 }
                 else if (index == 2) {
                   final userProfileResult = await APIService.getUserProfile();
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
                 }
-                else if (index == 3) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
-                }
                 else if (index == 4) {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const MyPage()));
                 }
               },
-            )));
+            ),
+        )
+    );
   }
 }
 

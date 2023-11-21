@@ -66,6 +66,7 @@ class Config {
   static const createCosmeticExpiryAPI = "/expiry/create";
   static const getAllExpiryByUserIdAPI = "/expiry/user/";
   static const getExpiryByUserIdandExpiryIdAPI = "/expiry/";
+  static const getAllExpiriesAPI = "/expiry";
 
   //favorites
   static const uploadFavoritesAPI = "/user/favorites/";
