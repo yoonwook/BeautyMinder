@@ -2,6 +2,7 @@ import 'package:beautyminder/Bloc/RecommendPageBloc.dart';
 import 'package:beautyminder/State/RecommendState.dart';
 import 'package:beautyminder/event/RecommendPageEvent.dart';
 import 'package:beautyminder/pages/CosmeticDetail_Page.dart';
+import 'package:beautyminder/pages/calendar_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -176,7 +177,7 @@ class _RecPage extends State<RecPage> {
                         builder: (context) => const HomePage()));
                   } else if (index == 3) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const TodoPage()));
+                        builder: (context) => const CalendarPage()));
                   } else if (index == 4) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const MyPage()));

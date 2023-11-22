@@ -159,11 +159,16 @@ class _todoListWidget extends State<todoListWidget> {
 
   Widget _calendar(List<Todo>? todos) {
     List<Todo> _getTodosForDay(DateTime day) {
-      return todos?.where((todo) => isSameDay(todo.createdAt, day)).toList() ??
+      return todos?.where((todo) => isSameDay(todo.date, day)).toList() ??
           [];
     }
 
     return TableCalendar(
+      // calendarBuilders: CalendarBuilders(
+      //   markerBuilder: (context, date, dynamicevent){
+      //
+      //   }
+      // ),
       firstDay: DateTime.utc(2010, 10, 16),
       lastDay: DateTime.utc(2030, 3, 14),
       focusedDay: _focusedDay,
@@ -380,17 +385,22 @@ class _todoListWidget extends State<todoListWidget> {
       child: BlocBuilder<TodoPageBloc, TodoState>(
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: GestureDetector(
-                child: SpinKitThreeInOut(
-                  color: Color(0xffd86a04),
-                  size: 50.0,
-                  duration: Duration(seconds: 2),
-                ),
-              ),
+            return  Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                  SpinKitThreeInOut(
+                        color: Color(0xffd86a04),
+                        size: 50.0,
+                        duration: Duration(seconds: 2),
+                      )
+                  ],
+                )
             );
+
           } else if (state is TodoLoadedState) {
             return Column(
               mainAxisSize: MainAxisSize.max,
