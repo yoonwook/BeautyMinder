@@ -114,7 +114,23 @@ class _RecPage extends State<RecPage> {
                       child: Container(
                         height: 30,
                         child: ToggleButtons(
-                          children: [
+                          isSelected: [
+                            isAll,
+                            isSkincare,
+                            isCleansing,
+                            isSuncare,
+                            isBase
+                          ],
+                          onPressed: (int index) {
+                            print({"index : $index"});
+                            toggleSelect(index);
+                            context.read<RecommendPageBloc>().add(
+                              RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
+                            );
+                          },
+                          // fillColor: Color(0xffffecda),
+                          fillColor: Colors.white,
+                          children: const [
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                               child: Text('전체', style: TextStyle(fontSize: 15)),
@@ -136,22 +152,6 @@ class _RecPage extends State<RecPage> {
                               child: Text('베이스', style: TextStyle(fontSize: 15)),
                             ),
                           ],
-                          isSelected: [
-                            isAll,
-                            isSkincare,
-                            isCleansing,
-                            isSuncare,
-                            isBase
-                          ],
-                          onPressed: (int index) {
-                            print({"index : $index"});
-                            toggleSelect(index);
-                            context.read<RecommendPageBloc>().add(
-                              RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
-                            );
-                          },
-                          // fillColor: Color(0xffffecda),
-                          fillColor: Colors.white,
                         ),
                       ),
                     );

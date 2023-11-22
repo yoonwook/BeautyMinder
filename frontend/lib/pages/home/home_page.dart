@@ -96,7 +96,9 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ]),
-      body: _homePageUI(),
+      body: SingleChildScrollView(
+        child:_homePageUI(),
+      ),
       bottomNavigationBar: _underNavigation(),
     );
   }
