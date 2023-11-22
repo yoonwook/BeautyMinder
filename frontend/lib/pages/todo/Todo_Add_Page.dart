@@ -1,6 +1,5 @@
 
 
-
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +29,7 @@ class _TodoAddPage extends State<TodoAddPage> {
   List<String> categorys = [];
   Todo? todo;
   DateTime? picked;
+  bool isEmptyTextField = false;
 
   late List<Task> tasks;
 
@@ -109,7 +109,13 @@ class _TodoAddPage extends State<TodoAddPage> {
       return Task(category: category, description: description, done: false);
     });
 
-    return tasks;
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].description.isEmpty) {
+        tasks.removeAt(i);
+      }
+    }
+
+    return tasks.length < 1 ? [] : tasks;
   }
 
   Todo? createRoutine() {
@@ -139,12 +145,18 @@ class _TodoAddPage extends State<TodoAddPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
                     createRoutine();
-                    TodoService.addTodo(todo!);
 
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CalendarPage()));
+                    if (tasks.length == 0) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CalendarPage()));
+                    } else {
+                      await TodoService.addTodo(todo!);
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CalendarPage()));
+                    }
                   },
                   icon: const Icon(Icons.add_box_rounded,
                       size: 50, color: Color(0xffd86a04)),
@@ -162,16 +174,18 @@ class _TodoAddPage extends State<TodoAddPage> {
                   child: AbsorbPointer(
                     child: TextField(
                       controller: _dateController,
-                      decoration:  InputDecoration(
-                          prefixStyle: TextStyle(
-                              color: Color(0xffd86a04)
-                          ),
+                      decoration: InputDecoration(
+                          prefixStyle: TextStyle(color: Color(0xffd86a04)),
                           labelText: 'Date',
                           hintText: 'Date',
-                          icon: const Icon(Icons.calendar_month, color: Color(0xffd86a04),),
+                          icon: const Icon(
+                            Icons.calendar_month,
+                            color: Color(0xffd86a04),
+                          ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.black, width: 1.0)),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 1.0)),
                           contentPadding: EdgeInsets.all(3)),
                     ),
                   ),
@@ -190,14 +204,14 @@ class _TodoAddPage extends State<TodoAddPage> {
                           decoration: InputDecoration(
                               labelText: 'Todo $index',
                               hintText: 'Enter Todo $index',
-                              icon: const Icon(Icons.add_task_sharp,  color: Color(0xffd86a04)),
-                              border:  OutlineInputBorder(
+                              icon: const Icon(Icons.add_task_sharp,
+                                  color: Color(0xffd86a04)),
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.amber, width: 2.0)
-                              )
-                          ),
+                                  borderSide: BorderSide(
+                                      color: Colors.amber, width: 2.0))),
                         ),
                       ),
                       const SizedBox(width: 10),
