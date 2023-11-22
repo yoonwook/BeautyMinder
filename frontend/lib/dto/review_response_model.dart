@@ -9,6 +9,9 @@ class ReviewResponse {
   final User user;
   final Cosmetic cosmetic;
   final DateTime createdAt;
+  final String nlpAnalysis; // NLP 분석 결과
+  final bool isFiltered;
+
 
   ReviewResponse({
     required this.id,
@@ -18,6 +21,8 @@ class ReviewResponse {
     required this.user,
     required this.cosmetic,
     required this.createdAt,
+    required this.nlpAnalysis,
+    required this.isFiltered,
   });
 
   factory ReviewResponse.fromJson(Map<String, dynamic> json) {
@@ -29,6 +34,8 @@ class ReviewResponse {
       user: User.fromJson(json['user'] as Map<String, dynamic>),
       cosmetic: Cosmetic.fromJson(json['cosmetic'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
+      nlpAnalysis: json['nlpAnalysis'] != null ? json['nlpAnalysis'].toString() : '',
+      isFiltered: json['filtered'] as bool? ?? false,
     );
   }
 }

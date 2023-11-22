@@ -247,9 +247,23 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  review.content,
-                  style: TextStyle(fontSize: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (review.isFiltered)
+                      Text(
+                        '누가 욕쓰라고 했냐?', // 필터링된 메시지 표시
+                        style: TextStyle(fontSize: 16, color: Colors.red),
+                      )
+                    else
+                      Text(
+                        review.content, // 리뷰 내용 표시
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    SizedBox(height: 10),
+                    if (review.nlpAnalysis.isNotEmpty)
+                      Text('NLP Analysis: ${review.nlpAnalysis}') // NLP 분석 결과 표시
+                  ],
                 ),
               ),
               /***trailing: Row(
