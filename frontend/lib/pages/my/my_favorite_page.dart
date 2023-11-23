@@ -115,5 +115,4 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
     );
   }
 
-
 }
