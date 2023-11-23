@@ -292,6 +292,66 @@ class APIService {
       throw Exception('Failed to update review: ${response.statusMessage}');
     }
   }
+
+
+  // 리뷰 수정 함수
+  static Future<Result<List<dynamic>>> updateReview(id) async {
+    // 유저 정보 가지고 오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    //refreshToken 가지고오기
+    final refreshToken = await SharedService.getRefreshToken();
+
+    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
+    final userId = user?.id ?? '-1';
+
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.getReviewAPI+id).toString();
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    try {
+      // put 요청
+      final response = await DioClient.sendRequest('PUT', url, headers: headers);
+      return Result.success(response.data);
+    } catch (e) {
+      print(e);
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
+  // 리뷰 삭제 함수
+  static Future<Result<List<dynamic>>> deleteReview(String id) async {
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    //refreshToken 가지고오기
+    final refreshToken = await SharedService.getRefreshToken();
+
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.getReviewAPI+id).toString();
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
+    };
+
+    try {
+      // del 요청
+      final response = await DioClient.sendRequest('DELETE', url, headers: headers);
+      print('res is ${response.data}');
+      return Result.success(response.data);
+
+    } catch (e) {
+      print(e);
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
+
 }
 
 // 결과 클래스

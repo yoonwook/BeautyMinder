@@ -1,14 +1,12 @@
 import 'dart:developer';
 import 'dart:convert';
 
+import 'package:beautyminder/config.dart';
+import 'package:beautyminder/dto/review_request_model.dart';
+import 'package:beautyminder/dto/review_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-
-import '../config.dart';
-
-import '../dto/review_request_model.dart';
-import '../dto/review_response_model.dart';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
@@ -96,7 +94,7 @@ class ReviewService {
     setAccessToken();
 
     final url =
-        Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
+    Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
 
     var response = await client.get(url);
     if (response.statusCode == 200) {
@@ -112,7 +110,7 @@ class ReviewService {
   static Future<void> deleteReview(String reviewId) async {
     setAccessToken();
     final url =
-        Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
+    Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
 
     var response = await client.delete(url);
     if (response.statusCode != 200) {
@@ -124,8 +122,10 @@ class ReviewService {
   static Future<ReviewResponse> updateReview(String reviewId,
       ReviewRequest reviewRequest, List<PlatformFile> imageFiles) async {
     setAccessToken();
-    final url =
-        Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI + '/' + reviewId)
+        .toString();
+
+    print(url);
 
     var formData = FormData();
 
@@ -152,8 +152,9 @@ class ReviewService {
         contentType: MediaType('application', 'json'),
       ),
     ));
-    formData.files
-        .addAll(multipartImageList.map((file) => MapEntry('images', file)));
+    if (multipartImageList != [])
+      formData.files
+          .addAll(multipartImageList.map((file) => MapEntry('images', file)));
 
     // Dio 클라이언트를 사용하여 서버로 요청을 보내고 응답을 받습니다.
     var response = await client.put(url, data: formData);
@@ -172,7 +173,7 @@ class ReviewService {
     };
 
     final url =
-        Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
+    Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
 
     try {
       var response = await client.get(url);
