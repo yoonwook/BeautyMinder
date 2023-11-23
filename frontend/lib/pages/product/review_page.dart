@@ -83,7 +83,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       ))
           ?.files;
     } on PlatformException catch (e) {
-      log('Unsupported operation' + e.toString());
+      log('Unsupported operation : ' + e.toString());
     } catch (e) {
       log(e.toString());
     }

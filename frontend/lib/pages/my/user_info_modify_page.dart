@@ -90,6 +90,7 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
                       child: SingleChildScrollView(
                         child: Column(children: [
                           MyPageHeader('회원정보 수정'),
+                          SizedBox(height: 20),
                           UserInfoProfile(
                             nickname: user!.nickname ?? user!.email,
                             profileImage: user!.profileImage ?? '',
@@ -118,7 +119,7 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
                         ]),
                       )),
                   Positioned(
-                    bottom: 10, // 원하는 위치에 배치
+                    bottom: 50, // 원하는 위치에 배치
                     left: 10, // 원하는 위치에 배치
                     right: 10, // 원하는 위치에 배치
                     child: Padding(
