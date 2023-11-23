@@ -10,8 +10,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../dto/baumann_result_model.dart';
+import '../../dto/cosmetic_expiry_model.dart';
 import '../../dto/user_model.dart';
 import '../../services/baumann_service.dart';
+import '../../services/expiry_service.dart';
 import '../../services/home_service.dart';
 import '../../services/shared_service.dart';
 import '../../services/todo_service.dart';
@@ -127,34 +129,24 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          SizedBox(
-            height: 40,
-          ),
+          SizedBox(height: 40,),
           _invalidProjectBtn(),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20,),
           Row(
             children: <Widget>[
               _recommendProductBtn(),
-              SizedBox(
-                width: 30,
-              ),
+              SizedBox(width: 30,),
               Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   _personalSkinTypeBtn(),
-                  SizedBox(
-                    height: 25,
-                  ),
+                  SizedBox(height: 25,),
                   _chatBtn(),
                 ],
               )
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20,),
           _todoListBtn(),
           // _label()
         ],
@@ -164,11 +156,45 @@ class _HomePageState extends State<HomePage> {
 
   Widget _invalidProjectBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
+    List<CosmeticExpiry> expiries = [];
+    // void _loadExpiryData() async {
+    //   final expiryData = await ExpiryService.getAllExpiries();
+    //   setState(() {
+    //     expiries = expiryData;
+    //   });
+    // }
 
     return ElevatedButton(
-      onPressed: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+      onPressed: () async {
+        if (isApiCallProcess) {
+          return;
+        }
+        setState(() {
+          isApiCallProcess = true;
+        });
+        try {
+          expiries = await ExpiryService.getAllExpiries();
+
+          print("This is Valid Button in Home Page : ${expiries}");
+
+          if (expiries.isNotEmpty && expiries.length!=0) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+            print("This is Valid Button in Home Page2 : ${expiries}");
+          } else {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+            print("This is Valid Button in Home Page3 : ${expiries}");
+          }
+        } catch (e) {
+          // Handle the error case
+          print('An error occurred: $e');
+        } finally {
+          // API 호출 상태를 초기화합니다.
+          setState(() {
+            isApiCallProcess = false;
+          });
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffb876),
@@ -182,12 +208,41 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
       ),
-      child: const Align(
+      child: Align(
         alignment: Alignment.topLeft,
-        child: Text("유통기한 임박 화장품"),
+        // child: Text("유통기한 임박 화장품"),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "유통기한 임박 화장품 ",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                    // Add any other styling properties as needed
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Text((expiries.length !=0) ? "등록된 화장품이 있습니다" : "등록된 화장품이 없습니다.",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
       ),
     );
   }
+
+
 
   Widget _recommendProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 40;
@@ -367,7 +422,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text("Todo 리스트"),
+        child: Text("오늘의 루틴"),
       ),
     );
   }
@@ -380,12 +435,13 @@ class _HomePageState extends State<HomePage> {
           if (index == 0) {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => const RecPage()));
-          } else if (index == 1) {
+          }
+          else if (index == 1) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           }
           // else if (index == 2) {
-          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
           // }
           else if (index == 3) {
             Navigator.of(context).push(
