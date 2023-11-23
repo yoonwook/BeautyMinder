@@ -102,9 +102,14 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
           );
         },
         child: ListTile(
-          leading: Image.network(favorites[index]['images'][0] ?? ''),
+          contentPadding: EdgeInsets.all(10),
+          leading: Image.network(
+            favorites[index]['images'][0] ?? '',
+            height: 80, // 이미지의 높이를 40으로 고정
+            width: 80,
+          ),
           title: Text(favorites[index]['name']),
-          subtitle: Text(favorites[index]['createdAt']),
+          // subtitle: Text(favorites[index]['createdAt']),
         ),
       ),
     );
