@@ -117,7 +117,7 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           _noKeywordRanking(),
           _noProductRanking(),
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
         ],
       );
     } else if ((widget.data?.keywords?.length != 0) &&
@@ -303,7 +303,7 @@ class _SearchPageState extends State<SearchPage> {
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
     return Container(
-      height: 350,
+      height: 400,
       child: Column(
         children: [
           const SizedBox(height: 40),
