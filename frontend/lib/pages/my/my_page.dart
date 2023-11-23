@@ -76,7 +76,7 @@ class _MyPageState extends State<MyPage> {
                       const MyDivider(),
                       const SizedBox(height: 20),
                       MyPageMenu(
-                        title: '즐겨찾기 해둔 제품',
+                        title: '즐겨찾기 제품',
                         onTap: () {
                           Navigator.push(
                             context,
