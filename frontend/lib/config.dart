@@ -67,6 +67,9 @@ class Config {
   static const getExpiryByUserIdandExpiryIdAPI = "/expiry/";
   static const getAllExpiriesAPI = "/expiry";
 
+  //OCR
+  static const ocrAPI = "/vision/ocr";
+
   //favorites
   static const uploadFavoritesAPI = "/user/favorites/";
 
