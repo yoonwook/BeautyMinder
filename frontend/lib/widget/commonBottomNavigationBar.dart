@@ -13,23 +13,23 @@ class CommonBottomNavigationBar extends BottomNavigationBar {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
-              label: 'REC',
+              label: '추천',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.business_center),
-              label: 'POUCH',
+              label: '파우치',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'HOME',
+              label: '홈',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.check_box),
-              label: 'TODO',
+              label: '루틴',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),
-              label: 'MY',
+              label: '마이',
             ),
           ],
         );
