@@ -1,5 +1,4 @@
 import 'dart:io' show Platform;
-import 'package:beautyminder/globalVariable/globals.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Config {

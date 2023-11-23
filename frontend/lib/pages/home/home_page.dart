@@ -110,8 +110,9 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
+          SizedBox(height: 40,),
           _invalidProjectBtn(),
-          // SizedBox(height: 50,),
+          SizedBox(height: 20,),
           Row(
             children: <Widget>[
               _recommendProductBtn(),
@@ -126,6 +127,7 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
+          SizedBox(height: 20,),
           _todoListBtn(),
           // _label()
         ],

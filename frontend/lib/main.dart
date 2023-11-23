@@ -1,16 +1,8 @@
-import 'package:beautyminder/dto/keywordRank_model.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_start_page.dart';
-import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
-import 'package:beautyminder/pages/baumann/baumann_test_page.dart';
 import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/expiry_page.dart';
-import 'package:beautyminder/pages/product/product_detail_page.dart';
-import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_bloc_screen.dart';
-import 'package:beautyminder/pages/search/search_page.dart';
-import 'package:beautyminder/pages/start/splash_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
-import 'package:beautyminder/pages/start/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

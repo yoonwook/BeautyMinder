@@ -6,7 +6,6 @@ import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
 import '../../config.dart';
 import '../dto/todo_model.dart';
-import '../dto/user_model.dart';
 import 'shared_service.dart';
 
 class TodoService {
