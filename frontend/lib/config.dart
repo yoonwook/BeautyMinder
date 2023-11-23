@@ -4,16 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class Config {
   static const String appName = "BeautyMinder";
 
-  static String get apiURL {
-    if (kIsWeb) {
-      return "211.221.220.124:8080";
-    }
-    if (Platform.isAndroid) {
-      return '211.221.220.124:8080';
-    } else {
-      return '211.221.220.124:8080';
-    }
-  }
+  static const apiURL = "211.221.220.124:8080";
 
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";

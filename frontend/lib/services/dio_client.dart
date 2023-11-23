@@ -8,7 +8,7 @@ class DioClient {
   static final Dio client = Dio(
     // Make this static
     BaseOptions(
-      baseUrl: Config.apiURL,
+      // baseUrl: Config.apiURL,
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
     ),
