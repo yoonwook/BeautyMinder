@@ -36,9 +36,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _currentIndex = 2;
   bool isApiCallProcess = false;
+
   // late Future<HomePageResult<User>> userInfo;
 
   // late Future<Result<List<Todo>>> futureTodoList;
@@ -49,16 +49,15 @@ class _HomePageState extends State<HomePage> {
   //   futureTodoList = TodoService.getAllTodos();
   // }
 
-
   @override
   Widget build(BuildContext context) {
     print("Here is Home Page : ${widget.user?.id}");
     print("Here is Home Page : ${widget.user}");
 
     return Scaffold(
-      appBar: HomepageAppBar(actions: <Widget> [
+      appBar: HomepageAppBar(actions: <Widget>[
         IconButton(
-          icon:Icon(Icons.search),
+          icon: Icon(Icons.search),
           onPressed: () async {
             // 이미 API 호출이 진행 중인지 확인
             if (isApiCallProcess) {
@@ -77,17 +76,35 @@ class _HomePageState extends State<HomePage> {
 
               if (result.isSuccess) {
                 // SearchPage로 이동하고 가져온 데이터를 전달합니다.
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: result.value!, data2: result2.value!,),),);
-              }
-              else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(
+                      data: result.value!,
+                      data2: result2.value!,
+                    ),
+                  ),
+                );
+              } else {
                 // API 호출 실패를 처리합니다.
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: null, data2: null,),),);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(
+                      data: null,
+                      data2: null,
+                    ),
+                  ),
+                );
               }
-            }
-            catch (e) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(data: null, data2: null),),);
-            }
-            finally {
+            } catch (e) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchPage(data: null, data2: null),
+                ),
+              );
+            } finally {
               // API 호출 상태를 초기화합니다.
               setState(() {
                 isApiCallProcess = false;
@@ -97,7 +114,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ]),
       body: SingleChildScrollView(
-        child:_homePageUI(),
+        child: _homePageUI(),
       ),
       bottomNavigationBar: _underNavigation(),
     );
@@ -110,24 +127,34 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          SizedBox(height: 40,),
+          SizedBox(
+            height: 40,
+          ),
           _invalidProjectBtn(),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Row(
             children: <Widget>[
               _recommendProductBtn(),
-              SizedBox(width: 30,),
+              SizedBox(
+                width: 30,
+              ),
               Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   _personalSkinTypeBtn(),
-                  SizedBox(height:25,),
+                  SizedBox(
+                    height: 25,
+                  ),
                   _chatBtn(),
                 ],
               )
             ],
           ),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           _todoListBtn(),
           // _label()
         ],
@@ -139,13 +166,17 @@ class _HomePageState extends State<HomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ElevatedButton(
-      onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+      onPressed: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xffffb876),  // 버튼의 배경색을 검정색으로 설정
-        foregroundColor: Colors.white, // 버튼의 글씨색을 하얀색으로 설정
-        elevation: 0, // 그림자 없애기
+        backgroundColor: Color(0xffffb876),
+        // 버튼의 배경색을 검정색으로 설정
+        foregroundColor: Colors.white,
+        // 버튼의 글씨색을 하얀색으로 설정
+        elevation: 0,
+        // 그림자 없애기
         minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -155,21 +186,24 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.topLeft,
         child: Text("유통기한 임박 화장품"),
       ),
-
     );
   }
 
   Widget _recommendProductBtn() {
-    final screenWidth = MediaQuery.of(context).size.width/2-40;
+    final screenWidth = MediaQuery.of(context).size.width / 2 - 40;
 
     return ElevatedButton(
-      onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const RecPage()));
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xffffecda), // 버튼의 배경색을 검정색으로 설정
-        foregroundColor: Color(0xffff820e), // 버튼의 글씨색을 하얀색으로 설정
-        elevation: 0, // 그림자 없애기
+        backgroundColor: Color(0xffffecda),
+        // 버튼의 배경색을 검정색으로 설정
+        foregroundColor: Color(0xffff820e),
+        // 버튼의 글씨색을 하얀색으로 설정
+        elevation: 0,
+        // 그림자 없애기
         minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -179,13 +213,13 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.topLeft,
         child: Text("추천 화장품"),
       ),
-
     );
   }
 
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
-    BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
+    BaumResult<List<BaumannResult>> result =
+        BaumResult<List<BaumannResult>>.success([]);
 
     return ElevatedButton(
       onPressed: () async {
@@ -208,11 +242,10 @@ class _HomePageState extends State<HomePage> {
                     BaumannHistoryPage(resultData: result.value)));
             print("This is BaumannButton in HomePage2 : ${result.value}");
           } else {
-
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannStartPage()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => BaumannStartPage()));
             print("This is Baumann Button in Home Page2 : ${result.isSuccess}");
           }
-
         } catch (e) {
           // Handle the error case
           print('An error occurred: $e');
@@ -224,9 +257,12 @@ class _HomePageState extends State<HomePage> {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xfffe9738), // 버튼의 배경색을 검정색으로 설정
-        foregroundColor: Colors.white, // 버튼의 글씨색을 하얀색으로 설정
-        elevation: 0, // 그림자 없애기
+        backgroundColor: Color(0xfffe9738),
+        // 버튼의 배경색을 검정색으로 설정
+        foregroundColor: Colors.white,
+        // 버튼의 글씨색을 하얀색으로 설정
+        elevation: 0,
+        // 그림자 없애기
         minimumSize: Size(screenWidth, 90.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -258,8 +294,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 5),
               Text((result.value != null) ? "${widget.user?.baumann}" : "테스트하기",
-                style: TextStyle(fontSize:25, fontWeight: FontWeight.bold)
-              ),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -267,19 +302,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
-
   Widget _chatBtn() {
-    final screenWidth = MediaQuery.of(context).size.width/2-30;
+    final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
 
     return ElevatedButton(
-      onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatPage()));
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ChatPage()));
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xffffd1a6), // 버튼의 배경색을 검정색으로 설정
-        foregroundColor: Color(0xffd86a04), // 버튼의 글씨색을 하얀색으로 설정
-        elevation: 0, // 그림자 없애기
+        backgroundColor: Color(0xffffd1a6),
+        // 버튼의 배경색을 검정색으로 설정
+        foregroundColor: Color(0xffd86a04),
+        // 버튼의 글씨색을 하얀색으로 설정
+        elevation: 0,
+        // 그림자 없애기
         minimumSize: Size(screenWidth, 90.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -305,7 +342,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-
     );
   }
 
@@ -313,13 +349,17 @@ class _HomePageState extends State<HomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ElevatedButton(
-      onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
+      onPressed: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const CalendarPage()));
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xffe7e4e1), // 버튼의 배경색을 검정색으로 설정
-        foregroundColor: Color(0xffff820e), // 버튼의 글씨색을 하얀색으로 설정
-        elevation: 0, // 그림자 없애기
+        backgroundColor: Color(0xffe7e4e1),
+        // 버튼의 배경색을 검정색으로 설정
+        foregroundColor: Color(0xffff820e),
+        // 버튼의 글씨색을 하얀색으로 설정
+        elevation: 0,
+        // 그림자 없애기
         minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -329,7 +369,6 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.topLeft,
         child: Text("Todo 리스트"),
       ),
-
     );
   }
 
@@ -339,22 +378,22 @@ class _HomePageState extends State<HomePage> {
         onTap: (int index) {
           // 페이지 전환 로직 추가
           if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecPage()));
-          }
-          else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const RecPage()));
+          } else if (index == 1) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           }
           // else if (index == 2) {
           //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
           // }
           else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const CalendarPage()));
+          } else if (index == 4) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const MyPage()));
           }
-          else if (index == 4) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));
-          }
-        }
-    );
+        });
   }
 }
-

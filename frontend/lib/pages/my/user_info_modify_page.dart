@@ -33,17 +33,16 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
 
   Future<void> onImageChanged(String? imagePath) async {
     final updatedUser = User(
-      id: user!.id,
-      email: user!.email,
-      password: user!.password,
-      nickname: user!.nickname,
-      profileImage: imagePath,
-      createdAt: user!.createdAt,
-      authorities: user!.authorities,
-      phoneNumber: user!.phoneNumber,
-      baumann: user?.baumann,
-      baumannScores: user?.baumannScores
-    );
+        id: user!.id,
+        email: user!.email,
+        password: user!.password,
+        nickname: user!.nickname,
+        profileImage: imagePath,
+        createdAt: user!.createdAt,
+        authorities: user!.authorities,
+        phoneNumber: user!.phoneNumber,
+        baumann: user?.baumann,
+        baumannScores: user?.baumannScores);
 
     await SharedService.updateUser(updatedUser);
 

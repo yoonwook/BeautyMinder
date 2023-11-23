@@ -37,9 +37,6 @@
 //
 // }
 
-
-
-
 class Cosmetic {
   final String id;
   final String name;
@@ -78,9 +75,15 @@ class Cosmetic {
       brand: json['brand'],
       images: List<String>.from(json['images'] ?? []),
       glowpickUrl: json['glowpickUrl'],
-      expirationDate: json['expirationDate'] != null ? DateTime.tryParse(json['expirationDate']) : null,
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
-      purchasedDate: json['purchasedDate'] != null ? DateTime.tryParse(json['purchasedDate']) : null,
+      expirationDate: json['expirationDate'] != null
+          ? DateTime.tryParse(json['expirationDate'])
+          : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      purchasedDate: json['purchasedDate'] != null
+          ? DateTime.tryParse(json['purchasedDate'])
+          : null,
       category: json['category'] ?? 'Unknown',
       averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] as int? ?? 0,
@@ -111,7 +114,8 @@ class Cosmetic {
     reviewCount++;
     totalRating += newRating;
     averageRating = totalRating / reviewCount;
-    averageRating = (averageRating * 100).roundToDouble() / 100;  // Round to 2 decimal places
+    averageRating = (averageRating * 100).roundToDouble() /
+        100; // Round to 2 decimal places
   }
 
   @override

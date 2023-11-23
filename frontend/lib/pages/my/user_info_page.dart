@@ -139,6 +139,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
 class UserInfoProfile extends StatelessWidget {
   final String nickname;
   final String profileImage;
+
   const UserInfoProfile(
       {super.key, required this.nickname, required this.profileImage});
 

@@ -30,9 +30,7 @@ void main() async {
           primaryColor: const Color(0xffffb876),
         ),
         home: MyApp(),
-      )
-
-  ));
+      )));
 }
 
 class MyApp extends StatelessWidget {
@@ -61,7 +59,7 @@ class MyApp extends StatelessWidget {
         '/todo': (context) => const CalendarPage(),
         '/my': (context) => const MyPage(),
         // '/baumann/survey' : (context) => BaumannTestPage(),
-        '/baumann/test' : (context) => BaumannStartPage(),
+        '/baumann/test': (context) => BaumannStartPage(),
       },
     );
   }

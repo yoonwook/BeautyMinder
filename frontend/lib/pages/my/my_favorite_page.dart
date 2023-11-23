@@ -47,11 +47,13 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      body: isLoading ? SpinKitThreeInOut(
-        color: Color(0xffd86a04),
-        size: 50.0,
-        duration: Duration(seconds: 2),
-      ) : _body(),
+      body: isLoading
+          ? SpinKitThreeInOut(
+              color: Color(0xffd86a04),
+              size: 50.0,
+              duration: Duration(seconds: 2),
+            )
+          : _body(),
     );
   }
 
@@ -92,10 +94,13 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
                       ? DateTime.tryParse(favorites[index]['purchasedDate'])
                       : null,
                   category: favorites[index]['category'] ?? 'Unknown',
-                  averageRating: (favorites[index]['averageRating'] as num?)?.toDouble() ?? 0.0,
+                  averageRating:
+                      (favorites[index]['averageRating'] as num?)?.toDouble() ??
+                          0.0,
                   reviewCount: favorites[index]['reviewCount'] as int? ?? 0,
                   totalRating: favorites[index]['totalRating'] as int? ?? 0,
-                  keywords: List<String>.from(favorites[index]['keywords'] ?? []),
+                  keywords:
+                      List<String>.from(favorites[index]['keywords'] ?? []),
                 ),
               ),
             ),
@@ -114,5 +119,4 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
       ),
     );
   }
-
 }

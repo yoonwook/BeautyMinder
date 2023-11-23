@@ -134,7 +134,8 @@ class _MyPageState extends State<MyPage> {
                 MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           } else if (index == 2) {
             final userProfileResult = await APIService.getUserProfile();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HomePage(user: userProfileResult.value)));
           } else if (index == 3) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const CalendarPage()));

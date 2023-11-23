@@ -1,5 +1,3 @@
-
-
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -84,8 +82,8 @@ class _TodoAddPage extends State<TodoAddPage> {
                     primary: Color(0xffffecda),
                     onPrimary: Colors.black87,
                     onSurface: Colors.black
-                  // onSurface: Colors.black87
-                ),
+                    // onSurface: Colors.black87
+                    ),
                 textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
                         backgroundColor: const Color(0xffffecda),
@@ -195,7 +193,7 @@ class _TodoAddPage extends State<TodoAddPage> {
               TextEditingController controller = entry.value;
               return Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Row(
                     children: [
                       Expanded(
@@ -221,8 +219,8 @@ class _TodoAddPage extends State<TodoAddPage> {
                           setState(() {
                             if (!_toggleSelections[index][buttonIndex]) {
                               for (int i = 0;
-                              i < _toggleSelections[index].length;
-                              i++) {
+                                  i < _toggleSelections[index].length;
+                                  i++) {
                                 _toggleSelections[index][i] = i == buttonIndex;
                               }
                             }
@@ -266,7 +264,7 @@ class _TodoAddPage extends State<TodoAddPage> {
               children: [
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: ElevatedButton(
                     style: FilledButton.styleFrom(
                         backgroundColor: const Color(0xffffecda)),
@@ -281,8 +279,8 @@ class _TodoAddPage extends State<TodoAddPage> {
                     child: ElevatedButton(
                       style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xffffecda)
-                        //Color(0xffffecda),
-                      ),
+                          //Color(0xffffecda),
+                          ),
                       onPressed: _removeTextField,
                       child: const Icon(
                         Icons.remove,
@@ -300,18 +298,18 @@ class _TodoAddPage extends State<TodoAddPage> {
         onTap: (int index) async {
           // 페이지 전환 로직 추가
           if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-          }
-          else if (index == 2) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+          } else if (index == 2) {
             final userProfileResult = await APIService.getUserProfile();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
-          }
-          else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
-          }
-          else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const MyPage()));
+                builder: (context) => HomePage(user: userProfileResult.value)));
+          } else if (index == 3) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const CalendarPage()));
+          } else if (index == 4) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const MyPage()));
           }
         },
       ),

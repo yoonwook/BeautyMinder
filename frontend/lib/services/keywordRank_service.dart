@@ -28,7 +28,6 @@ class KeywordRankService {
   }
 
   static Future<Result<KeyWordRank>> getKeywordRank() async {
-
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -62,7 +61,6 @@ class KeywordRankService {
       }
 
       return Result.failure("Failed to get user profile");
-
     } catch (e) {
       //
       if (e is DioException && e.type == DioExceptionType.connectionTimeout) {
@@ -72,7 +70,6 @@ class KeywordRankService {
       return Result.failure("An error occurred: $e");
     }
   }
-
 
   static Future<Result<ProductRank>> getProductRank() async {
     // 로그인 상세 정보 가져오기
@@ -97,9 +94,9 @@ class KeywordRankService {
     try {
       // GET 요청
       final response = await client.get(
-          url,
-          //
-          options: _httpOptions('GET', headers),
+        url,
+        //
+        options: _httpOptions('GET', headers),
         //
       );
 
@@ -111,7 +108,6 @@ class KeywordRankService {
       }
 
       return Result.failure("Failed to get user profile");
-
     } catch (e) {
       //
       if (e is DioException && e.type == DioExceptionType.connectionTimeout) {
@@ -121,7 +117,6 @@ class KeywordRankService {
       return Result.failure("An error occurred: $e");
     }
   }
-
 }
 
 // 결과 클래스

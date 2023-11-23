@@ -18,6 +18,7 @@ class ExpiryInputDialog extends StatefulWidget {
 
 class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
   bool isOpened = false;
+
   //DateTime expiryDate = DateTime.now().add(Duration(days: 365));
   DateTime? expiryDate = DateTime.now();
   DateTime? openedDate = DateTime.now(); // 개봉 날짜 기본값
@@ -26,7 +27,8 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     return DateFormat('yyyy-MM-dd').format(date);
   }
 
-  Future<void> _selectDate(BuildContext context, {bool isExpiryDate = true}) async {
+  Future<void> _selectDate(BuildContext context,
+      {bool isExpiryDate = true}) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: (isExpiryDate ? expiryDate : openedDate) ?? DateTime.now(),
@@ -81,6 +83,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
       _showErrorDialog("No image selected for OCR.");
     }
   }
+
   // 에러 메시지를 보여주는 함수
   void _showErrorDialog(String message) {
     showDialog(
@@ -129,8 +132,6 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -153,13 +154,18 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             activeTrackColor: Colors.orangeAccent,
           ),
           ListTile(
-            title: Text(expiryDate != null ? '유통기한: ${formatDate(expiryDate!)}' : '유통기한 선택'),
+            title: Text(expiryDate != null
+                ? '유통기한: ${formatDate(expiryDate!)}'
+                : '유통기한 선택'),
             trailing: Icon(Icons.calendar_today),
-            onTap: () => _showExpiryDateChoiceDialog(), // 유통기한 선택 방법을 선택하는 다이얼로그를 표시하는 함수 호출
+            onTap: () =>
+                _showExpiryDateChoiceDialog(), // 유통기한 선택 방법을 선택하는 다이얼로그를 표시하는 함수 호출
           ),
           if (isOpened)
             ListTile(
-              title: Text(openedDate != null ? '개봉 날짜: ${formatDate(openedDate!)}' : '개봉 날짜 선택'),
+              title: Text(openedDate != null
+                  ? '개봉 날짜: ${formatDate(openedDate!)}'
+                  : '개봉 날짜 선택'),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, isExpiryDate: false),
             ),
@@ -167,7 +173,8 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop([isOpened, expiryDate, openedDate]),
+          onPressed: () =>
+              Navigator.of(context).pop([isOpened, expiryDate, openedDate]),
           child: Text('Submit'),
           style: TextButton.styleFrom(foregroundColor: Colors.orange),
         ),
@@ -175,4 +182,3 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     );
   }
 }
-

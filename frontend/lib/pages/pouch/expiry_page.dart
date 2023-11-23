@@ -15,7 +15,6 @@ import '../todo/todo_page.dart';
 import 'expiry_edit_dialog.dart';
 import 'expiry_input_dialog.dart';
 
-
 class CosmeticExpiryPage extends StatefulWidget {
   @override
   _CosmeticExpiryPageState createState() => _CosmeticExpiryPageState();
@@ -29,7 +28,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
     if (date == null) return 'N/A'; // 날짜가 null인 경우 처리
     return DateFormat('yyyy-MM-dd').format(date); // 날짜를 'yyyy-MM-dd' 형식으로 변환
   }
-
 
   @override
   void initState() {
@@ -77,10 +75,10 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
           isOpened: isOpened,
           openedDate: openedDate,
 
-
           // 다른 필드들 추가
         );
-        final CosmeticExpiry addedExpiry = await ExpiryService.createCosmeticExpiry(newExpiry);
+        final CosmeticExpiry addedExpiry =
+            await ExpiryService.createCosmeticExpiry(newExpiry);
         setState(() {
           expiries.add(addedExpiry);
         });
@@ -96,7 +94,8 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
     if (updatedExpiry != null) {
       try {
-        final CosmeticExpiry updated = await ExpiryService.updateExpiry(expiry.id!, updatedExpiry);
+        final CosmeticExpiry updated =
+            await ExpiryService.updateExpiry(expiry.id!, updatedExpiry);
         setState(() {
           expiries[index] = updated;
         });
@@ -105,7 +104,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +137,8 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         itemCount: expiries.length,
         itemBuilder: (context, index) {
           final cosmetic = expiries[index];
-          final daysLeft = cosmetic.expiryDate.difference(DateTime.now()).inDays;
+          final daysLeft =
+              cosmetic.expiryDate.difference(DateTime.now()).inDays;
 
           return Card(
             clipBehavior: Clip.antiAlias,
@@ -152,7 +151,8 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                   children: [
                     // 이미지 표시
                     cosmetic.imageUrl != null
-                        ? Image.network(cosmetic.imageUrl!, width: 128, height: 128, fit: BoxFit.cover)
+                        ? Image.network(cosmetic.imageUrl!,
+                            width: 128, height: 128, fit: BoxFit.cover)
                         : Icon(Icons.image, size: 100),
                     // 제품 이름
                     Text(
@@ -161,17 +161,22 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                       textAlign: TextAlign.center,
                     ),
                     // 브랜드 이름
-                    Text('Brand: ${cosmetic.brandName ?? 'N/A'}', style: TextStyle(fontSize: 14)),
+                    Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
+                        style: TextStyle(fontSize: 14)),
                     // D-Day
-                    Text('D-${daysLeft}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    Text('D-${daysLeft}',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                     // 만료일
-                    Text('유통기한: ${formatDate(cosmetic.expiryDate)}', style: TextStyle(fontSize: 14)),
+                    Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
+                        style: TextStyle(fontSize: 14)),
                     // 개봉 여부
                     Text(
                         '개봉여부: ${cosmetic.isOpened ? 'Yes' : 'No'}' +
-                            (cosmetic.isOpened ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}' : ''),
-                        style: TextStyle(fontSize: 14)
-                    ),
+                            (cosmetic.isOpened
+                                ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
+                                : ''),
+                        style: TextStyle(fontSize: 14)),
                     // 삭제 버튼
                     IconButton(
                         icon: Icon(Icons.delete),
@@ -181,8 +186,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                           } else {
                             print("Invalid data");
                           }
-                        }
-                    ),
+                        }),
                     // 수정 버튼
                     IconButton(
                       icon: Icon(Icons.edit),
@@ -200,26 +204,21 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         onTap: (int index) async {
           // 페이지 전환 로직 추가
           if (index == 0) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecPage()));
-          }
-          else if (index == 2) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => RecPage()));
+          } else if (index == 2) {
             final userProfileResult = await APIService.getUserProfile();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
-          }
-          else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalendarPage()));
-          }
-          else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const MyPage()));
+                builder: (context) => HomePage(user: userProfileResult.value)));
+          } else if (index == 3) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => CalendarPage()));
+          } else if (index == 4) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const MyPage()));
           }
         },
       ),
     );
   }
 }
-
-
-
-
-

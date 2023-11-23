@@ -23,7 +23,6 @@ class GPTReviewService {
   }
 
   static Future<Result<GPTReviewInfo>> getGPTReviews(String id) async {
-
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -33,7 +32,8 @@ class GPTReviewService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, '${Config.getGPTReviewAPI}/$id').toString();
+    final url =
+        Uri.http(Config.apiURL, '${Config.getGPTReviewAPI}/$id').toString();
     print("******$url\n");
 
     // 헤더 설정
@@ -56,7 +56,8 @@ class GPTReviewService {
       if (response.statusCode == 200) {
         // 정보 파싱
         // final user = SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
-        final gptReviewInfo = GPTReviewInfo.fromJson(response.data as Map<String, dynamic>);
+        final gptReviewInfo =
+            GPTReviewInfo.fromJson(response.data as Map<String, dynamic>);
         print("dfdssdfsdfsfdsfdsfds\n");
         print(gptReviewInfo);
         print("aaaa\n");
@@ -70,7 +71,6 @@ class GPTReviewService {
       return Result.failure("An error occurred: $e");
     }
   }
-
 }
 
 // 결과 클래스

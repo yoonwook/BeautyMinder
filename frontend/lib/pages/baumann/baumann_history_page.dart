@@ -1,4 +1,3 @@
-
 import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_start_page.dart';
 import 'package:beautyminder/pages/baumann/watch_result_page.dart';
@@ -18,7 +17,8 @@ import 'baumann_result_page.dart';
 class BaumannHistoryPage extends StatelessWidget {
   final List<BaumannResult>? resultData;
 
-  const BaumannHistoryPage({Key? key, required this.resultData}) : super(key: key);
+  const BaumannHistoryPage({Key? key, required this.resultData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,9 @@ class BaumannHistoryPage extends StatelessWidget {
           _baumannHistoryUI(),
           _divider(),
           _retestButton(context),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: _baumannHistoryListView(),
           ),
@@ -45,7 +47,9 @@ class BaumannHistoryPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Text(
@@ -78,7 +82,8 @@ class BaumannHistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
+  Widget _resultButton(
+      BuildContext context, BaumannResult result, bool isEven) {
     Color buttonColor = isEven ? Colors.white : Color(0xffffb876);
     Color textColor = isEven ? Colors.black : Colors.white;
 
@@ -88,7 +93,8 @@ class BaumannHistoryPage extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: 8),
         child: ElevatedButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WatchResultPage(resultData: result)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => WatchResultPage(resultData: result)));
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: buttonColor,
@@ -102,9 +108,14 @@ class BaumannHistoryPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('피부타입: ${result.baumannType}', style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('피부타입: ${result.baumannType}',
+                      style: TextStyle(
+                          color: textColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
                   SizedBox(width: 16),
-                  Text('테스트 일시: ${result.date}', style: TextStyle(color: textColor, fontSize: 18)),
+                  Text('테스트 일시: ${result.date}',
+                      style: TextStyle(color: textColor, fontSize: 18)),
                 ],
               ),
               _baumannResultContent(result, isEven),
@@ -128,11 +139,16 @@ class BaumannHistoryPage extends StatelessWidget {
             subtitle: Column(
               children: [
                 SizedBox(height: 5),
-                Text('색소침착도: ${result.baumannScores['pigmentation']}/57', style: TextStyle(color: textColor)),
-                Text('유수분 밸런스: ${result.baumannScores['hydration']}/44', style: TextStyle(color: textColor)),
-                Text('탄력: ${result.baumannScores['elasticity']}/85', style: TextStyle(color: textColor)),
-                Text('수분 보유력: ${result.baumannScores['moistureRetention']}/65', style: TextStyle(color: textColor)),
-                Text('민감도: ${result.baumannScores['sensitivity']}/64', style: TextStyle(color: textColor)),
+                Text('색소침착도: ${result.baumannScores['pigmentation']}/57',
+                    style: TextStyle(color: textColor)),
+                Text('유수분 밸런스: ${result.baumannScores['hydration']}/44',
+                    style: TextStyle(color: textColor)),
+                Text('탄력: ${result.baumannScores['elasticity']}/85',
+                    style: TextStyle(color: textColor)),
+                Text('수분 보유력: ${result.baumannScores['moistureRetention']}/65',
+                    style: TextStyle(color: textColor)),
+                Text('민감도: ${result.baumannScores['sensitivity']}/64',
+                    style: TextStyle(color: textColor)),
                 SizedBox(height: 10),
               ],
             ),
@@ -144,41 +160,39 @@ class BaumannHistoryPage extends StatelessWidget {
 
   Widget _retestButton(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Align(
-          alignment: Alignment.topRight,
-          child: SizedBox(
-            height: 30,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => BaumannStartPage(),
-                ));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffefefef), // Background color
-                elevation: 0, // color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
-                  side: BorderSide(color: Colors.blueGrey),
-                ),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: SizedBox(
+          height: 30,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BaumannStartPage(),
+              ));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xffefefef), // Background color
+              elevation: 0, // color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                side: BorderSide(color: Colors.blueGrey),
               ),
-              child: Padding(
-                padding: EdgeInsets.all(0.0),
-                child: Text(
-                  '다시 테스트하기',
-                  style: TextStyle(
-                    color: Colors.blueGrey, // Text color
-                  ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(0.0),
+              child: Text(
+                '다시 테스트하기',
+                style: TextStyle(
+                  color: Colors.blueGrey, // Text color
                 ),
               ),
             ),
           ),
         ),
+      ),
     );
   }
-
-
 
   Widget _divider() {
     return const Divider(

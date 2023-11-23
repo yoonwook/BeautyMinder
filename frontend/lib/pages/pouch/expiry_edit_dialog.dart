@@ -17,7 +17,6 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
   late DateTime expiryDate;
   DateTime? openedDate;
 
-
   String formatDate(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
   }
@@ -30,7 +29,8 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
     openedDate = widget.expiry.openedDate;
   }
 
-  Future<void> _selectDate(BuildContext context, {bool isExpiryDate = true}) async {
+  Future<void> _selectDate(BuildContext context,
+      {bool isExpiryDate = true}) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isExpiryDate ? expiryDate : openedDate ?? DateTime.now(),
@@ -74,7 +74,9 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
           ),
           if (isOpened)
             ListTile(
-              title: Text(openedDate != null ? '개봉 날짜: ${formatDate(openedDate!)}' : '개봉 날짜 선택'),
+              title: Text(openedDate != null
+                  ? '개봉 날짜: ${formatDate(openedDate!)}'
+                  : '개봉 날짜 선택'),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, isExpiryDate: false),
             ),
@@ -88,7 +90,8 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
               id: widget.expiry.id,
               productName: widget.expiry.productName,
               brandName: widget.expiry.brandName,
-              expiryDate: expiryDate, // 수정된 expiryDate
+              expiryDate: expiryDate,
+              // 수정된 expiryDate
               isExpiryRecognized: widget.expiry.isExpiryRecognized,
               imageUrl: widget.expiry.imageUrl,
               cosmeticId: widget.expiry.cosmeticId,
@@ -99,7 +102,6 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
           },
           child: Text('Submit'),
         ),
-
       ],
     );
   }

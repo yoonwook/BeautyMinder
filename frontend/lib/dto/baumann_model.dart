@@ -4,8 +4,8 @@ class SurveyWrapper {
   SurveyWrapper({required this.surveys});
 
   factory SurveyWrapper.fromJson(Map<String, dynamic> json) {
-    Map<String, BaumannSurveys> surveysMap = json.map((key, value) =>
-        MapEntry(key, BaumannSurveys.fromJson(value)));
+    Map<String, BaumannSurveys> surveysMap =
+        json.map((key, value) => MapEntry(key, BaumannSurveys.fromJson(value)));
 
     return SurveyWrapper(surveys: surveysMap);
   }
@@ -34,7 +34,9 @@ class BaumannSurveys {
   factory BaumannSurveys.fromJson(Map<String, dynamic> json) {
     return BaumannSurveys(
       questionKr: json['question_kr'],
-      options: (json['options'] as List).map((item) => Option.fromJson(item)).toList(),
+      options: (json['options'] as List)
+          .map((item) => Option.fromJson(item))
+          .toList(),
     );
   }
 }

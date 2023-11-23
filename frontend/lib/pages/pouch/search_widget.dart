@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../services/homeSearch_service.dart';
 
-
-
 class CosmeticSearchWidget extends StatefulWidget {
   @override
   _CosmeticSearchWidgetState createState() => _CosmeticSearchWidgetState();

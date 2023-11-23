@@ -14,54 +14,10 @@ import 'package:mime/src/mime_type.dart';
 
 import '../../config.dart';
 import '../dto/user_model.dart';
+import 'dio_client.dart';
 import 'shared_service.dart';
 
 class APIService {
-  // Dio 객체 생성
-  static final Dio client = Dio();
-
-  // JSON 헤더 설정
-  static const Map<String, String> jsonHeaders = {
-    'Content-Type': 'application/json',
-  };
-
-  // 공통 HTTP 옵션 설정 함수
-  static Options _httpOptions(String method, Map<String, String>? headers) {
-    return Options(
-      method: method,
-      headers: headers,
-    );
-  }
-
-  // POST 방식으로 JSON 데이터 전송하는 일반 함수
-  static Future<Response> _postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}) {
-    return client.post(
-      url,
-      options: _httpOptions('POST', headers),
-      data: body,
-    );
-  }
-
-  // POST 방식으로 FormData 데이터 전송하는 일반 함수
-  static Future<Response> _postForm(String url, FormData body,
-      {Map<String, String>? headers}) {
-    return client.post(
-      url,
-      options: _httpOptions('POST', headers),
-      data: body,
-    );
-  }
-
-  static Future<Response> _patchJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}) {
-    return client.post(
-      url,
-      options: _httpOptions('PATCH', headers),
-      data: body,
-    );
-  }
-
   // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
@@ -74,7 +30,7 @@ class APIService {
 
     try {
       // POST 요청
-      final response = await _postForm(url, formData);
+      final response = await DioClient.sendRequest('POST', url, body: formData);
       print("response: $response");
       if (response.statusCode == 200) {
         await SharedService.setLoginDetails(loginResponseJson(response.data));
@@ -95,7 +51,8 @@ class APIService {
 
     try {
       // POST 요청
-      final response = await _postJson(url, model.toJson());
+      final response =
+          await DioClient.sendRequest('POST', url, body: model.toJson());
       return Result.success(
           registerResponseJson(response.data as Map<String, dynamic>));
     } catch (e) {
@@ -126,10 +83,7 @@ class APIService {
     };
 
     try {
-      final response = await client.delete(
-        url,
-        options: _httpOptions('DEL', headers),
-      );
+      await DioClient.sendRequest('DELETE', url, headers: headers);
       return Result.success(true);
     } catch (e) {
       return Result.failure("An error occurred: $e");
@@ -159,9 +113,10 @@ class APIService {
 
     try {
       // GET 요청
-      final response = await client.get(
+      final response = await DioClient.sendRequest(
+        'GET',
         url,
-        options: _httpOptions('GET', headers),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
@@ -177,8 +132,7 @@ class APIService {
   }
 
   // 즐겨찾기 조회 함수
-  static Future<Result<List<dynamic>>> getFavorites()  async {
-
+  static Future<Result<List<dynamic>>> getFavorites() async {
     /// 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -200,9 +154,9 @@ class APIService {
 
     try {
       // GET 요청
-      final response = await client.get(
+      final response = await DioClient.sendRequest('GET',
         url,
-        options: _httpOptions('GET', headers),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
@@ -233,21 +187,21 @@ class APIService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, '/user/reviews').toString();
+    final url = Uri.http(Config.apiURL, Config.getUserReview).toString();
 
     // 헤더 설정
-   final headers = {
-    'Authorization': 'Bearer ${Config.acccessToken}',
-    'Cookie': 'XRT=${Config.refreshToken}',
-    // 'Authorization': 'Bearer $accessToken',
-    // 'Cookie': 'XRT=$refreshToken',
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
       // GET 요청
-      final response = await client.get(
+      final response = await DioClient.sendRequest('GET',
         url,
-        options: _httpOptions('GET', headers),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
@@ -283,7 +237,7 @@ class APIService {
     };
 
     try {
-      final response = await _patchJson(url, model.toJson(), headers: headers);
+      final response = await DioClient.sendRequest('PATCH', url, body: model.toJson(), headers: headers);
       if (response.statusCode == 200) {
         return Result.success(true);
       }
@@ -325,13 +279,12 @@ class APIService {
     });
 
     // Use Dio's post method for multipart data
-    final response = await client.post(
+    final response = await DioClient.sendRequest('POST',
       url,
-      data: formData,
-      options: _httpOptions('POST', headers),
+      body: formData,
+      headers: headers,
     );
 
-    // final response = await _postJson(url, model.toJson(), headers: headers);
     if (response.statusCode == 200) {
       return response.data;
     } else {
@@ -346,8 +299,10 @@ class Result<T> {
   final String? error;
 
   Result.success(this.value) : error = null;
+
   Result.failure(this.error) : value = null;
 
   bool get isSuccess => error == null;
+
   bool get isFailure => !isSuccess;
 }

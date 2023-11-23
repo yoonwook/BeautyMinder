@@ -10,7 +10,6 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 import '../../dto/login_request_model.dart';
 import '../../widget/registerAppBar.dart';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -18,10 +17,7 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-
-
 class _RegisterPageState extends State<RegisterPage> {
-
   bool isApiCallProcess = false;
   bool hidePassword = true;
   static final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
@@ -32,13 +28,10 @@ class _RegisterPageState extends State<RegisterPage> {
   String? nickname;
   String? phoneNumber;
 
-
   @override
   void initState() {
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +50,10 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   // 로그인 UI
   Widget _registerUI(BuildContext context) {
-    return SingleChildScrollView( // SingleChildScrollView로 감싼다
+    return SingleChildScrollView(
+      // SingleChildScrollView로 감싼다
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         height: MediaQuery.of(context).size.height,
@@ -69,25 +61,18 @@ class _RegisterPageState extends State<RegisterPage> {
           children: <Widget>[
             SizedBox(height: 50),
             _buildEmailField(),
-
             SizedBox(height: 30),
             _buildNumberField(),
-
             SizedBox(height: 30),
             _buildNicknameField(),
-
             SizedBox(height: 30),
             _buildPasswordField(),
-
             SizedBox(height: 20),
             _buildPasswordCheckField(),
-
             SizedBox(height: 60),
             _buildRegisterButton(),
-
             SizedBox(height: 50),
             _buildOrText(),
-
             SizedBox(height: 30),
             _buildSignupText(),
           ],
@@ -95,8 +80,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-
 
   // 이메일 필드
   Widget _buildEmailField() {
@@ -132,8 +115,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   // 전화번호 필드
   Widget _buildNumberField() {
     return Column(
@@ -167,8 +148,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ],
     );
   }
-
-
 
   // 닉네임 필드
   Widget _buildNicknameField() {
@@ -204,11 +183,9 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   // 비밀번호 필드
   Widget _buildPasswordField() {
-    return Column (
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -234,10 +211,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   hidePassword = !hidePassword;
                 });
               },
-              color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
+              color: hidePassword
+                  ? Colors.grey.withOpacity(0.7)
+                  : Color(0xffd86a04),
               icon: Icon(
                 hidePassword ? Icons.visibility_off : Icons.visibility,
-                color: hidePassword ? Colors.grey.withOpacity(0.7) : Color(0xffd86a04),
+                color: hidePassword
+                    ? Colors.grey.withOpacity(0.7)
+                    : Color(0xffd86a04),
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -254,7 +235,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // 비밀번호 확인 필드
   Widget _buildPasswordCheckField() {
-    return Column (
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
@@ -283,8 +264,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ],
     );
   }
-
-
 
   // 회원가입 버튼
   Widget _buildRegisterButton() {
@@ -322,45 +301,42 @@ class _RegisterPageState extends State<RegisterPage> {
           );
 
           APIService.register(model).then(
-              (result) {
-                setState(() {
-                  isApiCallProcess = false;
-                });
+            (result) {
+              setState(() {
+                isApiCallProcess = false;
+              });
 
-                if (result.value != null) {
-                  FormHelper.showSimpleAlertDialog(
-                    context,
-                    Config.appName,
-                    "가입이 완료되었습니다.",
-                    "확인",
-                        () {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/login',
-                            (route) => false,
-                      );
-                    },
-                  );
-                }
-                else {
-                  FormHelper.showSimpleAlertDialog(
-                    context,
-                    Config.appName,
-                    result.error ?? "Register Failed",
-                    "OK",
-                    () {
+              if (result.value != null) {
+                FormHelper.showSimpleAlertDialog(
+                  context,
+                  Config.appName,
+                  "가입이 완료되었습니다.",
+                  "확인",
+                  () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/login',
+                      (route) => false,
+                    );
+                  },
+                );
+              } else {
+                FormHelper.showSimpleAlertDialog(
+                  context,
+                  Config.appName,
+                  result.error ?? "Register Failed",
+                  "OK",
+                  () {
                     Navigator.of(context).pop();
-                    },
-                  );
-                }
-              },
+                  },
+                );
+              }
+            },
           );
         }
       },
     );
   }
-
-
 
   // OR 텍스트
   Widget _buildOrText() {
@@ -374,8 +350,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-
 
   // 로그인 텍스트
   Widget _buildSignupText() {
@@ -405,8 +379,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-
 
   // 입력 유효성 검사
   bool validateAndSave() {

@@ -75,9 +75,10 @@ class _MyReviewPageState extends State<MyReviewPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
                             child: Text(
-                                reviews?[index]['cosmetic']['name'],
+                              reviews?[index]['cosmetic']['name'],
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -85,7 +86,8 @@ class _MyReviewPageState extends State<MyReviewPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
                             child: Text(
                               reviews?[index]['content'],
                               textAlign: TextAlign.justify,

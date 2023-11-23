@@ -19,7 +19,6 @@ class Todo {
   late User? user;
   late final DateTime? createdAt;
 
-
   @override
   String toString() {
     return '''
@@ -33,8 +32,9 @@ Todo {
   }
 
   factory Todo.fromJson(Map<String, dynamic> json) {
-
-    List<Task> tasksList = (json['tasks'] as List).map((taskJson) => Task.fromJson(taskJson)).toList();
+    List<Task> tasksList = (json['tasks'] as List)
+        .map((taskJson) => Task.fromJson(taskJson))
+        .toList();
 
     return Todo(
       id: json['id'],
@@ -46,15 +46,15 @@ Todo {
   }
 
   Map<String, dynamic> toJson() {
-
-    List<Map<String, dynamic>> tasksJson = tasks.map((task) => task.toJson()).toList();
+    List<Map<String, dynamic>> tasksJson =
+        tasks.map((task) => task.toJson()).toList();
 
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     return {
       //'userId': user.id,
-      'userId' : '65499d8316f366541e3cc0a2',
+      'userId': '65499d8316f366541e3cc0a2',
       'date': date,
-      'tasks' : tasksJson, // Assuming you have a toJson in User model
+      'tasks': tasksJson, // Assuming you have a toJson in User model
       'createdAt': createdAt?.toIso8601String(),
     };
   }

@@ -23,9 +23,6 @@ class CosmeticExpiry {
     this.openedDate,
   });
 
-
-
-
   factory CosmeticExpiry.fromJson(Map<String, dynamic> json) {
     return CosmeticExpiry(
       id: json['id'] as String,
@@ -36,7 +33,9 @@ class CosmeticExpiry {
       imageUrl: json['imageUrl'] as String?,
       cosmeticId: json['cosmeticId'] as String?,
       isOpened: (json['opened'] as bool?) ?? false,
-      openedDate: json['openedDate'] != null ? DateTime.parse(json['openedDate'] as String) : null,
+      openedDate: json['openedDate'] != null
+          ? DateTime.parse(json['openedDate'] as String)
+          : null,
     );
   }
 

@@ -33,11 +33,13 @@ class SearchService {
 
     final userId = user?.id ?? '-1';
 
-    final parameters={
-      'name' : '$name',
+    final parameters = {
+      'name': '$name',
     };
 
-    final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters).toString();
+    final url =
+        Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters)
+            .toString();
 // 헤더 설정
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
@@ -46,11 +48,8 @@ class SearchService {
       // 'Cookie': 'XRT=$refreshToken',
     };
 
-
-    final response = await client.get(
-        url,
-        options: _httpOptions('GET', headers)
-    );
+    final response =
+        await client.get(url, options: _httpOptions('GET', headers));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
@@ -73,8 +72,8 @@ class SearchService {
   // }
 
   // 카테고리로 화장품 검색
-  static Future<List<Cosmetic>> searchCosmeticsByCategory(String category) async {
-
+  static Future<List<Cosmetic>> searchCosmeticsByCategory(
+      String category) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -83,11 +82,13 @@ class SearchService {
 
     final userId = user?.id ?? '-1';
 
-    final parameters={
-      'category' : '$category',
+    final parameters = {
+      'category': '$category',
     };
 
-    final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters).toString();
+    final url =
+        Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters)
+            .toString();
 
     // 헤더 설정
     final headers = {
@@ -112,7 +113,6 @@ class SearchService {
 
   // 키워드로 화장품 검색
   static Future<List<Cosmetic>> searchCosmeticsByKeyword(String keyword) async {
-
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -121,11 +121,13 @@ class SearchService {
 
     final userId = user?.id ?? '-1';
 
-    final parameters={
-      'keyword' : '$keyword',
+    final parameters = {
+      'keyword': '$keyword',
     };
 
-    final url = Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters).toString();
+    final url =
+        Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters)
+            .toString();
 
     // 헤더 설정
     final headers = {
@@ -150,7 +152,6 @@ class SearchService {
 
   // 일반 검색
   static Future<List<Cosmetic>> searchAnything(String anything) async {
-
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -159,11 +160,12 @@ class SearchService {
 
     final userId = user?.id ?? '-1';
 
-    final parameters={
-      'anything' : '$anything',
+    final parameters = {
+      'anything': '$anything',
     };
 
-    final url = Uri.http(Config.apiURL, Config.homeSearchKeywordAPI, parameters).toString();
+    final url = Uri.http(Config.apiURL, Config.homeSearchKeywordAPI, parameters)
+        .toString();
 // 헤더 설정
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
@@ -173,10 +175,8 @@ class SearchService {
     };
 
     try {
-      final response = await client.get(
-        url,
-        options: _httpOptions("GET", headers)
-      );
+      final response =
+          await client.get(url, options: _httpOptions("GET", headers));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data;
@@ -189,7 +189,5 @@ class SearchService {
       // return []; // 빈 리스트를 반환하거나 다른 적절한 기본값을 반환할 수 있어요.
       return [];
     }
-
   }
-
 }

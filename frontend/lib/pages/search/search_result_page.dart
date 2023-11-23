@@ -12,7 +12,9 @@ class SearchResultPage extends StatefulWidget {
   final List<Cosmetic> searchResults;
   final String searchQuery;
 
-  const SearchResultPage({Key? key, required this.searchQuery, required this.searchResults}) : super(key: key);
+  const SearchResultPage(
+      {Key? key, required this.searchQuery, required this.searchResults})
+      : super(key: key);
 
   @override
   _SearchResultPageState createState() => _SearchResultPageState();
@@ -26,8 +28,8 @@ class _SearchResultPageState extends State<SearchResultPage> {
   Widget build(BuildContext context) {
     // 이곳에서 검색 결과를 표시하거나 처리할 수 있음
     return Scaffold(
-        appBar: SearchAppBar(title:_title()),
-        body: _searchResultPageUI(),
+      appBar: SearchAppBar(title: _title()),
+      body: _searchResultPageUI(),
     );
   }
 
@@ -85,7 +87,13 @@ class _SearchResultPageState extends State<SearchResultPage> {
                 final result = await SearchService.searchAnything(searchQuery);
                 print(result);
 
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: searchQuery, searchResults: result, )),);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => SearchResultPage(
+                            searchQuery: searchQuery,
+                            searchResults: result,
+                          )),
+                );
                 print('////////////searchQuery : $searchQuery');
               } catch (e) {
                 print('Error searching anything: $e');
@@ -103,13 +111,13 @@ class _SearchResultPageState extends State<SearchResultPage> {
 
   Widget _searchResultPageUI() {
     return Container(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: 40),
-          _resultText(),
-          _divider(),
-          const SizedBox(height: 20),
-          widget.searchResults.isEmpty
+        child: Column(
+      children: <Widget>[
+        const SizedBox(height: 40),
+        _resultText(),
+        _divider(),
+        const SizedBox(height: 20),
+        widget.searchResults.isEmpty
             ? const Center(
                 child: Text(
                   '검색결과가 없습니다',
@@ -120,10 +128,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   ),
                 ),
               )
-              : _productList(),
-        ],
-      )
-    );
+            : _productList(),
+      ],
+    ));
   }
 
   Widget _resultText() {
@@ -165,7 +172,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
             child: Container(
               height: 70,
               child: ListTile(
-                leading:(product?.images != null && product.images!.isNotEmpty)
+                leading: (product?.images != null && product.images!.isNotEmpty)
                     ? Container(
                         width: 70,
                         height: 70,
