@@ -309,9 +309,15 @@ class APIService {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.getReviewAPI+id).toString();
 
+    // final headers = {
+    //   'Authorization': 'Bearer $accessToken',
+    //   'Cookie': 'XRT=$refreshToken',
+    // };
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -334,9 +340,15 @@ class APIService {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.getReviewAPI+id).toString();
 
+    // final headers = {
+    //   'Authorization': 'Bearer $accessToken',
+    //   'Cookie': 'XRT=$refreshToken',
+    // };
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
