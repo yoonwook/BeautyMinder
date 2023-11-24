@@ -41,15 +41,30 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 2;
   bool isApiCallProcess = false;
 
+  List<CosmeticExpiry> expiries = [];
+
   // late Future<HomePageResult<User>> userInfo;
 
   // late Future<Result<List<Todo>>> futureTodoList;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   futureTodoList = TodoService.getAllTodos();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _loadExpiries();
+    // futureTodoList = TodoService.getAllTodos();
+  }
+
+  Future<void> _loadExpiries() async {
+    try {
+      expiries = await ExpiryService.getAllExpiries();
+      // Force a rebuild of the UI after fetching data
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      print('An error occurred while loading expiries: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,13 +171,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _invalidProjectBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
-    List<CosmeticExpiry> expiries = [];
-    // void _loadExpiryData() async {
-    //   final expiryData = await ExpiryService.getAllExpiries();
-    //   setState(() {
-    //     expiries = expiryData;
-    //   });
-    // }
 
     return ElevatedButton(
       onPressed: () async {
@@ -173,23 +181,22 @@ class _HomePageState extends State<HomePage> {
           isApiCallProcess = true;
         });
         try {
-          expiries = await ExpiryService.getAllExpiries();
+          // List<CosmeticExpiry> newExpiries = await ExpiryService.getAllExpiries();
 
-          print("This is Valid Button in Home Page : ${expiries}");
+          // print("This is Valid Button in Home Page : ${newExpiries}");
+          // print("asdsa : ${newExpiries.isNotEmpty}");
+          // print("aa : ${newExpiries.length}");
 
-          if (expiries.isNotEmpty && expiries.length!=0) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-            print("This is Valid Button in Home Page2 : ${expiries}");
-          } else {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-            print("This is Valid Button in Home Page3 : ${expiries}");
-          }
+          // setState(() {
+          //   expiries = newExpiries; // 상태 업데이트
+          // });
+
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
         } catch (e) {
           // Handle the error case
           print('An error occurred: $e');
-        } finally {
+        }
+        finally {
           // API 호출 상태를 초기화합니다.
           setState(() {
             isApiCallProcess = false;
@@ -211,33 +218,155 @@ class _HomePageState extends State<HomePage> {
       child: Align(
         alignment: Alignment.topLeft,
         // child: Text("유통기한 임박 화장품"),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "유통기한 임박 화장품 ",
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 18,
+        child: (expiries.isNotEmpty && expiries.length != 0)
+            ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "유통기한 임박 화장품 ",
+                          style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        ),
+                      ],
                     ),
+                    _buildExpiryInfo(),
+                  ],
+                ),
+              )
+            : Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "유통기한 임박 화장품 ",
+                          style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        ),
+                      ],
+                    ),
+                    _buildDefaultText(),
+                  ],
+                ),
+              )
+        // child: Center(
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       Row(
+        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           Text(
+        //             "유통기한 임박 화장품 ",
+        //             style: TextStyle(
+        //               // fontWeight: FontWeight.bold,
+        //               fontSize: 18,
+        //             ),
+        //           ),
+        //           Icon(
+        //             Icons.arrow_forward_ios,
+        //             size: 15,
+        //           ),
+        //         ],
+        //       ),
+        //       SizedBox(height: 5),
+        //       Text((expiries.isNotEmpty && expiries.length!=0) ?
+        //       "등록된 화장품이 있습니다" :
+        //       "등록된 화장품이 없습니다.\n화장품 등록하기\nhello: ${expiries.isNotEmpty}, ${expiries.length}",
+        //           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+        //       ),
+        //     ],
+        //   ),
+        // ),
+      ),
+    );
+  }
+
+  Widget _buildExpiryInfo() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: expiries.take(3).map((expiry) {
+          DateTime now = DateTime.now();
+          DateTime expiryDate = expiry.expiryDate ?? DateTime.now();
+          Duration difference = expiryDate.difference(now);
+          bool isDatePassed = difference.isNegative;
+          // Customize this part according to your expiry model
+          return Container(
+            margin: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                // Display your image here, you can use Image.network or Image.asset
+                // Example: Image.network(expiry.imageUrl ?? 'fallback_image_url', width: 50, height: 50),
+                // Example: Image.asset('assets/images/sample_image.png', width: 50, height: 50),
+                // Replace 'expiry.imageUrl' with the actual field in your expiry model
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey, // 네모 박스의 색상
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                    // Add any other styling properties as needed
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Text((expiries.length !=0) ? "등록된 화장품이 있습니다" : "등록된 화장품이 없습니다.",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-            ],
+                  child: (expiry.imageUrl != null)
+                      ? Image.network(
+                    expiry.imageUrl!,
+                    width: 10,
+                    height: 10,
+                    fit: BoxFit.cover,
+                  )
+                      : SizedBox(), // 이미지가 없는 경우
+                ),
+                // Display D-day or any other information here
+                Text(isDatePassed ? 'D+${difference.inDays.abs() + 1}' : 'D-${difference.inDays}'),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+
+  Widget _buildDefaultText() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "유통기한 임박 화장품 ",
+            style: TextStyle(
+              fontSize: 18,
+            ),
           ),
-        ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 15,
+          ),
+          SizedBox(height: 5),
+          Text(
+            "등록된 화장품이 없습니다.\n화장품 등록하기",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

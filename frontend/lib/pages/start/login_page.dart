@@ -108,28 +108,31 @@ class _LoginPageState extends State<LoginPage> {
                   hasFocus ? Color(0xffd86a04) : Colors.grey.withOpacity(0.7);
             });
           },
-          child: TextFormField(
-            initialValue: 'token@test',
-            focusNode: emailFocusNode,
-            validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
-            onChanged: (val) => email = val,
-            obscureText: false,
-            style: TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "이메일을 입력하세요",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              prefixIcon: Icon(
-                Icons.person,
-                color: emailIconColor,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+          child: Container(
+            height: 60,
+            child: TextFormField(
+              initialValue: 'token@test',
+              focusNode: emailFocusNode,
+              validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
+              onChanged: (val) => email = val,
+              obscureText: false,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                hintText: "이메일을 입력하세요",
+                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: emailIconColor,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+                  ),
                 ),
               ),
             ),
-          ),
+          )
         ),
       ],
     );
@@ -156,37 +159,40 @@ class _LoginPageState extends State<LoginPage> {
                   hasFocus ? Color(0xffd86a04) : Colors.grey.withOpacity(0.7);
             });
           },
-          child: TextFormField(
-            initialValue: '1234',
-            focusNode: passwordFocusNode,
-            validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
-            onChanged: (val) => password = val,
-            obscureText: hidePassword,
-            style: TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "비밀번호를 입력하세요",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: passwordIconColor,
-              ),
-              suffixIcon: InkWell(
-                onTap: () {
-                  setState(() {
-                    hidePassword = !hidePassword;
-                  });
-                },
-                child: Icon(
-                  hidePassword ? Icons.visibility_off : Icons.visibility,
-                  color: hidePassword
-                      ? Colors.grey.withOpacity(0.7)
-                      : Color(0xffd86a04),
+          child: Container(
+            height: 60,
+            child: TextFormField(
+              initialValue: '1234',
+              focusNode: passwordFocusNode,
+              validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
+              onChanged: (val) => password = val,
+              obscureText: hidePassword,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                hintText: "비밀번호를 입력하세요",
+                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+                prefixIcon: Icon(
+                  Icons.lock,
+                  color: passwordIconColor,
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+                suffixIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      hidePassword = !hidePassword;
+                    });
+                  },
+                  child: Icon(
+                    hidePassword ? Icons.visibility_off : Icons.visibility,
+                    color: hidePassword
+                        ? Colors.grey.withOpacity(0.7)
+                        : Color(0xffd86a04),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+                  ),
                 ),
               ),
             ),

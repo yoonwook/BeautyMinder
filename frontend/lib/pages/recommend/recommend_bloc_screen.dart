@@ -356,7 +356,10 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
             },
             separatorBuilder: (context, index) {
               return Divider(
+                height: 20,
                 thickness: 1,
+                indent: 10,
+                endIndent: 10,
                 color: Colors.grey,
               );
             },
