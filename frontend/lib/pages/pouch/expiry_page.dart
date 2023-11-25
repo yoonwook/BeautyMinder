@@ -137,8 +137,12 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         itemCount: expiries.length,
         itemBuilder: (context, index) {
           final cosmetic = expiries[index];
-          final daysLeft =
-              cosmetic.expiryDate.difference(DateTime.now()).inDays;
+          final daysLeft = cosmetic.expiryDate.difference(DateTime.now()).inDays;
+
+          DateTime now = DateTime.now();
+          DateTime expiryDate = cosmetic.expiryDate ?? DateTime.now();
+          Duration difference = expiryDate.difference(now);
+          bool isDatePassed = difference.isNegative;
 
           return Card(
             clipBehavior: Clip.antiAlias,
@@ -164,9 +168,18 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                     Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
                         style: TextStyle(fontSize: 14)),
                     // D-Day
-                    Text('D-${daysLeft}',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    Text(
+                      isDatePassed
+                          ? 'D+${difference.inDays.abs() + 1}'
+                          : 'D-${difference.inDays}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    // Text('D-${daysLeft}',
+                    //     style: TextStyle(
+                    //         fontSize: 20, fontWeight: FontWeight.bold)),
                     // 만료일
                     Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
                         style: TextStyle(fontSize: 14)),

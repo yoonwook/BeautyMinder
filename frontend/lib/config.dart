@@ -4,9 +4,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class Config {
   static const String appName = "BeautyMinder";
 
-  // static const apiURL = "211.221.220.124:8080";
-  static const apiURL = "***REMOVED***:8080";
-
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
   static const deleteAPI = "/user/delete";
