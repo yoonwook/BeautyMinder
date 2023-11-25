@@ -267,35 +267,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               )
-        // child: Center(
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: [
-        //       Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           Text(
-        //             "유통기한 임박 화장품 ",
-        //             style: TextStyle(
-        //               // fontWeight: FontWeight.bold,
-        //               fontSize: 18,
-        //             ),
-        //           ),
-        //           Icon(
-        //             Icons.arrow_forward_ios,
-        //             size: 15,
-        //           ),
-        //         ],
-        //       ),
-        //       SizedBox(height: 5),
-        //       Text((expiries.isNotEmpty && expiries.length!=0) ?
-        //       "등록된 화장품이 있습니다" :
-        //       "등록된 화장품이 없습니다.\n화장품 등록하기\nhello: ${expiries.isNotEmpty}, ${expiries.length}",
-        //           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ),
     );
   }
@@ -319,9 +290,10 @@ class _HomePageState extends State<HomePage> {
                 // Example: Image.network(expiry.imageUrl ?? 'fallback_image_url', width: 50, height: 50),
                 // Example: Image.asset('assets/images/sample_image.png', width: 50, height: 50),
                 // Replace 'expiry.imageUrl' with the actual field in your expiry model
+                SizedBox(height: 10,),
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: 95,
+                  height: 95,
                   decoration: BoxDecoration(
                     color: Colors.grey, // 네모 박스의 색상
                     borderRadius: BorderRadius.circular(8.0),
@@ -333,8 +305,9 @@ class _HomePageState extends State<HomePage> {
                     height: 10,
                     fit: BoxFit.cover,
                   )
-                      : SizedBox(), // 이미지가 없는 경우
+                      : Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
                 ),
+                SizedBox(height: 10,),
                 // Display D-day or any other information here
                 Text(isDatePassed ? 'D+${difference.inDays.abs() + 1}' : 'D-${difference.inDays}'),
               ],
@@ -395,7 +368,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text("추천 화장품"),
+        child: Text("즐겨찾기 제품"),
       ),
     );
   }
