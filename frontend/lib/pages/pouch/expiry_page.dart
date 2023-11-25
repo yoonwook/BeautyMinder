@@ -157,7 +157,9 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                     cosmetic.imageUrl != null
                         ? Image.network(cosmetic.imageUrl!,
                             width: 128, height: 128, fit: BoxFit.cover)
-                        : Icon(Icons.image, size: 100),
+                        : Image.asset('assets/images/noImg.jpg',
+                            width: 128, height: 128,
+                            fit: BoxFit.cover),
                     // 제품 이름
                     Text(
                       cosmetic.productName,
