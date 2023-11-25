@@ -2,6 +2,7 @@ import 'package:beautyminder/dto/keywordRank_model.dart';
 import 'package:beautyminder/globalVariable/globals.dart';
 import 'package:beautyminder/pages/baumann/baumann_history_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
+import 'package:beautyminder/pages/my/my_favorite_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
 import 'package:beautyminder/widget/homepageAppBar.dart';
@@ -9,9 +10,11 @@ import 'package:beautyminder/widget/searchAppBar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:marquee/marquee.dart';
 import '../../dto/baumann_result_model.dart';
 import '../../dto/cosmetic_expiry_model.dart';
 import '../../dto/user_model.dart';
+import '../../services/api_service.dart';
 import '../../services/baumann_service.dart';
 import '../../services/expiry_service.dart';
 import '../../services/home_service.dart';
@@ -42,6 +45,9 @@ class _HomePageState extends State<HomePage> {
   bool isApiCallProcess = false;
 
   List<CosmeticExpiry> expiries = [];
+  List favorites = [];
+
+  bool isLoading = true;
 
   // late Future<HomePageResult<User>> userInfo;
 
@@ -51,6 +57,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadExpiries();
+    _getfavorites();
     // futureTodoList = TodoService.getAllTodos();
   }
 
@@ -63,6 +70,18 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       print('An error occurred while loading expiries: $e');
+    }
+  }
+
+  Future<void> _getfavorites() async {
+    try {
+      final info = await APIService.getFavorites();
+      setState(() {
+        favorites = info.value!;
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -145,11 +164,11 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           SizedBox(height: 40,),
-          _invalidProjectBtn(),
+          _invalidProductBtn(),
           SizedBox(height: 20,),
           Row(
             children: <Widget>[
-              _recommendProductBtn(),
+              _favoriteProductBtn(),
               SizedBox(width: 30,),
               Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -169,7 +188,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _invalidProjectBtn() {
+  Widget _invalidProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ElevatedButton(
@@ -324,16 +343,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "유통기한 임박 화장품 ",
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 15,
-          ),
           SizedBox(height: 5),
           Text(
             "등록된 화장품이 없습니다.\n화장품 등록하기",
@@ -346,13 +355,15 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  Widget _recommendProductBtn() {
+  Widget _favoriteProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 40;
 
     return ElevatedButton(
       onPressed: () {
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => const RecPage()));
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const RecPage()));
+            .push(MaterialPageRoute(builder: (context) => const MyFavoritePage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffecda),
@@ -368,7 +379,116 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text("즐겨찾기 제품"),
+        child: (favorites.isNotEmpty && favorites.length != 0)
+            ? Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "즐겨찾기 제품 ",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+                ],
+              ),
+              SizedBox(height: 15,),
+              _buildFavoriteText(),
+            ],
+          ),
+        )
+        : Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "즐겨찾기 제품 ",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+                ],
+              ),
+              _buildFavoriteDefaultText(),
+            ],
+          ),
+        )
+
+      ),
+    );
+  }
+
+  Widget _buildFavoriteText(){
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: favorites.take(3).map((item) {
+          return Container(
+            margin: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: 10,),
+                Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.grey, // 네모 박스의 색상
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child:
+                    (item['images'][0] != null)
+                        ? Image.network(
+                      item['images'][0],
+                      width: 10,
+                      height: 10,
+                      fit: BoxFit.cover,
+                    )
+                        :
+                    Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
+                ),
+                SizedBox(width: 10,),
+                Container(
+                  width: MediaQuery.of(context).size.width / 2 - 120,
+                  child: Text(
+                    item['name'],
+                    style: TextStyle(fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      );
+  }
+
+  Widget _buildFavoriteDefaultText() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 5),
+          Text(
+            "즐겨찾기된 화장품이 없습니다.\n화장품 등록하기",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

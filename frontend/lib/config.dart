@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class Config {
   static const String appName = "BeautyMinder";
 
+
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
   static const deleteAPI = "/user/delete";
