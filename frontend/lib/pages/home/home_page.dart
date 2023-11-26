@@ -76,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   //     print('An error occurred while loading expiries: $e');
   //   }
   // }
+
   Future<void> _getExpiries() async {
     setState(() {
       isLoading = true;
@@ -523,32 +524,63 @@ class _HomePageState extends State<HomePage> {
   //   );
   // }
 
-  Widget _buildRecommendText(){
+  // Widget _buildRecommendText(){
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: recommends.take(1).map((item) {
+  //       return Container(
+  //         margin: EdgeInsets.all(8.0),
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: [
+  //             Container(
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.grey, // 네모 박스의 색상
+  //                   borderRadius: BorderRadius.circular(8.0),
+  //                 ),
+  //                 child:
+  //                 (item.images[0] != null)
+  //                     ? Image.network(
+  //                   item.images[0],
+  //                   width: 90,
+  //                   height: 90,
+  //                   fit: BoxFit.cover,
+  //                 )
+  //                     :
+  //                 Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
+  //             ),
+  //             SizedBox(height: 5,),
+  //             Container(
+  //               width: MediaQuery.of(context).size.width / 2 - 100,
+  //               child: Text(
+  //                 item.name,
+  //                 style: TextStyle(color: Colors.black, fontSize: 15),
+  //                 overflow: TextOverflow.ellipsis,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
+  Widget _buildRecommendText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: recommends.take(1).map((item) {
         return Container(
-          margin: EdgeInsets.all(8.0),
+          // margin: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey, // 네모 박스의 색상
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child:
-                  (item.images[0] != null)
-                      ? Image.network(
-                    item.images[0],
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.cover,
-                  )
-                      :
-                  Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
+              CircleAvatar(
+                radius: 50, // Adjust the radius as needed
+                backgroundColor: Colors.grey,
+                backgroundImage: (item.images[0] != null)
+                    ? NetworkImage(item.images[0])
+                    : AssetImage('assets/images/noImg.jpg') as ImageProvider,
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 10),
               Container(
                 width: MediaQuery.of(context).size.width / 2 - 100,
                 child: Text(
@@ -563,6 +595,7 @@ class _HomePageState extends State<HomePage> {
       }).toList(),
     );
   }
+
 
 
   Widget _buildRecommendDefaultText() {
