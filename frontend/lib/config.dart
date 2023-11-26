@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Config {
   static const String appName = "BeautyMinder";
-
+  
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
   static const deleteAPI = "/user/delete";
@@ -16,7 +16,7 @@ class Config {
   static const getUserInfo = "user/me/";
 
   // Todo
-  static const Todo = "/todo";
+  static const Todo = "/todo/";
   static const todoAPI = "/todo/all";
   static const todoAddAPI = "/todo/create";
   static const todoDelAPI = "/todo/delete/";

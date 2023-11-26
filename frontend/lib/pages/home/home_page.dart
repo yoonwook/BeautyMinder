@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   List<CosmeticExpiry> expiries = [];
   // List favorites = [];
   List recommends = [];
-  List todayTodos = [];
+  late Map<String, dynamic> todayTodos;
 
   bool isLoading = true;
 
@@ -105,9 +105,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getTodayTodos() async {
     try {
-      final info = await CosmeticSearchService.getAllCosmetics();
+      final info = await TodoService.getTodo();
       setState(() {
-        recommends = info.value!;
+        todayTodos = info.value!;
         isLoading = false;
       });
     } catch (e) {
@@ -726,7 +726,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 SizedBox(height: 15,),
-                _buildRecommendText(),
+                _buildTodoText(),
               ],
             ),
           )
@@ -750,13 +750,115 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                _buildRecommendDefaultText(),
+                _buildTodoDefaultText(),
               ],
             ),
           )
       ),
     );
   }
+
+  Widget _buildTodoText(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+        margin: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 5,),
+            Container(
+              width: MediaQuery.of(context).size.width / 2 - 60,
+              child: Text(
+                todayTodos.values.first.toString(),
+                style: TextStyle(fontSize: 15),
+                // overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      )],
+    );
+  }
+  // Widget _buildTodoText() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       Container(
+  //         margin: EdgeInsets.all(8.0),
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: [
+  //             SizedBox(height: 5,),
+  //             Container(
+  //               width: MediaQuery.of(context).size.width / 2 - 60,
+  //               child: Column(
+  //                 children: todayTodos.values.map((item) {
+  //                   // Assuming 'tasks' is a key in your map and it contains a list of tasks
+  //                   dynamic tasks = item['tasks'];
+  //
+  //                   // Add a null check and ensure 'tasks' is a List
+  //                   if (tasks != null && tasks is List) {
+  //                     // Extracting descriptions from tasks
+  //                     List<String> descriptions = tasks
+  //                         .map((task) => task['description'].toString())
+  //                         .toList() ?? [];
+  //
+  //                     return Text(
+  //                       descriptions.join(', '),
+  //                       style: TextStyle(fontSize: 15),
+  //                     );
+  //                   } else {
+  //                     // Handle the case where 'tasks' is null or not a List
+  //                     return Text('No tasks available');
+  //                   }
+  //                 }).toList(),
+  //
+  //                 // children: todayTodos.values.map((item) {
+  //                 //   // Assuming 'tasks' is a key in your map and it contains a list of tasks
+  //                 //   List<dynamic> tasks = item['tasks'];
+  //                 //
+  //                 //   // Extracting descriptions from tasks
+  //                 //   List<String> descriptions = tasks
+  //                 //       ?.map((task) => task['description'].toString())
+  //                 //       ?.toList() ?? [];
+  //                 //
+  //                 //   return Text(
+  //                 //     descriptions.join(', '),
+  //                 //     style: TextStyle(fontSize: 15),
+  //                 //   );
+  //                 // }).toList(),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+
+
+
+
+  Widget _buildTodoDefaultText() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 5),
+          Text(
+            "등록된 루틴이 없습니다.\n화장품 사용 루틴 등록하기",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
 
   Widget _underNavigation() {
     return CommonBottomNavigationBar(
