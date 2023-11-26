@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 20,),
           Row(
             children: <Widget>[
-              _recommendProductBtn(),
+              Expanded(child: _recommendProductBtn()),
               SizedBox(width: 30,),
               Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,

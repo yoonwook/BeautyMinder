@@ -105,7 +105,7 @@ class _todoListWidget extends State<todoListWidget> {
 
   Widget _todoList(List<Todo>? todos) {
     return Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(10),
         child: Column(
           children: _buildChildren(todos),
         ));
@@ -190,7 +190,7 @@ class _todoListWidget extends State<todoListWidget> {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: EdgeInsets.zero,
           child: Container(
             width: 100,
             height: 35,
@@ -392,8 +392,8 @@ class _todoListWidget extends State<todoListWidget> {
                   ],
                 ));
           } else if (state is TodoLoadedState) {
-            return Column(
-              mainAxisSize: MainAxisSize.max,
+            return SingleChildScrollView(child:Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _calendar(state.todos),
                 ElevatedButton.icon(
@@ -412,7 +412,7 @@ class _todoListWidget extends State<todoListWidget> {
                 ),
                 _todoList(state.todos),
               ],
-            );
+            ));
           } else if (state is TodoDeletedState) {
             return Column(
               mainAxisSize: MainAxisSize.max,
