@@ -18,6 +18,7 @@ import '../../dto/user_model.dart';
 import '../../services/api_service.dart';
 import '../../services/baumann_service.dart';
 import '../../services/expiry_service.dart';
+import '../../services/homeSearch_service.dart';
 import '../../services/home_service.dart';
 import '../../services/shared_service.dart';
 import '../../services/todo_service.dart';
@@ -48,13 +49,9 @@ class _HomePageState extends State<HomePage> {
   List<CosmeticExpiry> expiries = [];
   // List favorites = [];
   List recommends = [];
-  late Map<String, dynamic> todayTodos;
+  Todo? todayTodos;
 
   bool isLoading = true;
-
-  // late Future<HomePageResult<User>> userInfo;
-
-  // late Future<Result<List<Todo>>> futureTodoList;
 
   @override
   void initState() {
@@ -64,18 +61,51 @@ class _HomePageState extends State<HomePage> {
     _getRecommends();
     _getTodayTodos();
     print("hello this is : ${recommends}");
+    print("hello this is : ${todayTodos}");
     // futureTodoList = TodoService.getAllTodos();
   }
 
+  // Future<void> _getExpiries() async {
+  //   try {
+  //     expiries = await ExpiryService.getAllExpiries();
+  //     // Force a rebuild of the UI after fetching data
+  //     if (mounted) {
+  //       setState(() {});
+  //     }
+  //   } catch (e) {
+  //     print('An error occurred while loading expiries: $e');
+  //   }
+  // }
   Future<void> _getExpiries() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      expiries = await ExpiryService.getAllExpiries();
-      // Force a rebuild of the UI after fetching data
-      if (mounted) {
-        setState(() {});
+      List<CosmeticExpiry> loadedExpiries = await ExpiryService.getAllExpiries();
+
+      // 각 expiry에 대한 이미지 URL 로드
+      for (var expiry in loadedExpiries) {
+        try {
+          // 예시: productName을 이용하여 관련 이미지 URL 검색
+          var cosmetic = await SearchService.searchCosmeticsByName(expiry.productName);
+          if (cosmetic.isNotEmpty) {
+            expiry.imageUrl = cosmetic.first.images.isNotEmpty ? cosmetic.first.images.first : null;
+          }
+        } catch (e) {
+          print("Error loading image for ${expiry.productName}: $e");
+        }
       }
+
+      setState(() {
+        expiries = loadedExpiries;
+        isLoading = false;
+      });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -523,7 +553,7 @@ class _HomePageState extends State<HomePage> {
                 width: MediaQuery.of(context).size.width / 2 - 100,
                 child: Text(
                   item.name,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(color: Colors.black, fontSize: 15),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -553,8 +583,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
-    BaumResult<List<BaumannResult>> result =
-        BaumResult<List<BaumannResult>>.success([]);
+    BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
 
     return ElevatedButton(
       onPressed: () async {
@@ -685,10 +714,8 @@ class _HomePageState extends State<HomePage> {
 
     return ElevatedButton(
       onPressed: () {
-        // Navigator.of(context)
-        //     .push(MaterialPageRoute(builder: (context) => const RecPage()));
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RecPage()));
+            .push(MaterialPageRoute(builder: (context) => CalendarPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffe7e4e1),
@@ -758,87 +785,39 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildTodoText(){
+  Widget _buildTodoText() {
+    print("hello this is 2: ${todayTodos}");
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-        margin: EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 5,),
-            Container(
-              width: MediaQuery.of(context).size.width / 2 - 60,
-              child: Text(
-                todayTodos.values.first.toString(),
-                style: TextStyle(fontSize: 15),
-                // overflow: TextOverflow.ellipsis,
+          margin: EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 5),
+              Container(
+                width: MediaQuery.of(context).size.width / 2 - 60,
+                child: todayTodos != null && todayTodos!.tasks.isNotEmpty
+                    ? Column(
+                  children: todayTodos!.tasks
+                      .map((task) => Text(
+                    task.description,
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ))
+                      .toList(),
+                )
+                    : Text(
+                  '등록된 루틴이 없습니다',
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      )],
+      ],
     );
   }
-  // Widget _buildTodoText() {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       Container(
-  //         margin: EdgeInsets.all(8.0),
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             SizedBox(height: 5,),
-  //             Container(
-  //               width: MediaQuery.of(context).size.width / 2 - 60,
-  //               child: Column(
-  //                 children: todayTodos.values.map((item) {
-  //                   // Assuming 'tasks' is a key in your map and it contains a list of tasks
-  //                   dynamic tasks = item['tasks'];
-  //
-  //                   // Add a null check and ensure 'tasks' is a List
-  //                   if (tasks != null && tasks is List) {
-  //                     // Extracting descriptions from tasks
-  //                     List<String> descriptions = tasks
-  //                         .map((task) => task['description'].toString())
-  //                         .toList() ?? [];
-  //
-  //                     return Text(
-  //                       descriptions.join(', '),
-  //                       style: TextStyle(fontSize: 15),
-  //                     );
-  //                   } else {
-  //                     // Handle the case where 'tasks' is null or not a List
-  //                     return Text('No tasks available');
-  //                   }
-  //                 }).toList(),
-  //
-  //                 // children: todayTodos.values.map((item) {
-  //                 //   // Assuming 'tasks' is a key in your map and it contains a list of tasks
-  //                 //   List<dynamic> tasks = item['tasks'];
-  //                 //
-  //                 //   // Extracting descriptions from tasks
-  //                 //   List<String> descriptions = tasks
-  //                 //       ?.map((task) => task['description'].toString())
-  //                 //       ?.toList() ?? [];
-  //                 //
-  //                 //   return Text(
-  //                 //     descriptions.join(', '),
-  //                 //     style: TextStyle(fontSize: 15),
-  //                 //   );
-  //                 // }).toList(),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-
 
 
 
@@ -873,9 +852,6 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           }
-          // else if (index == 2) {
-          //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
-          // }
           else if (index == 3) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const CalendarPage()));
