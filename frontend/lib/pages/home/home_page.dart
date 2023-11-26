@@ -4,6 +4,7 @@ import 'package:beautyminder/pages/baumann/baumann_history_page.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/pages/my/my_favorite_page.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
+import 'package:beautyminder/services/Cosmetic_Recommend_Service.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
 import 'package:beautyminder/widget/homepageAppBar.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
@@ -45,7 +46,9 @@ class _HomePageState extends State<HomePage> {
   bool isApiCallProcess = false;
 
   List<CosmeticExpiry> expiries = [];
-  List favorites = [];
+  // List favorites = [];
+  List recommends = [];
+  List todayTodos = [];
 
   bool isLoading = true;
 
@@ -56,12 +59,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _loadExpiries();
-    _getfavorites();
+    _getExpiries();
+    // _getFavorites();
+    _getRecommends();
+    _getTodayTodos();
+    print("hello this is : ${recommends}");
     // futureTodoList = TodoService.getAllTodos();
   }
 
-  Future<void> _loadExpiries() async {
+  Future<void> _getExpiries() async {
     try {
       expiries = await ExpiryService.getAllExpiries();
       // Force a rebuild of the UI after fetching data
@@ -73,15 +79,39 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _getfavorites() async {
+  // Future<void> _getFavorites() async {
+  //   try {
+  //     final info = await APIService.getFavorites();
+  //     setState(() {
+  //       favorites = info.value!;
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print('An error occurred while loading expiries: $e');
+  //   }
+  // }
+
+  Future<void> _getRecommends() async {
     try {
-      final info = await APIService.getFavorites();
+      final info = await CosmeticSearchService.getAllCosmetics();
       setState(() {
-        favorites = info.value!;
+        recommends = info.value!;
         isLoading = false;
       });
     } catch (e) {
-      print(e);
+      print('An error occurred while loading expiries: $e');
+    }
+  }
+
+  Future<void> _getTodayTodos() async {
+    try {
+      final info = await CosmeticSearchService.getAllCosmetics();
+      setState(() {
+        recommends = info.value!;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('An error occurred while loading expiries: $e');
     }
   }
 
@@ -168,7 +198,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 20,),
           Row(
             children: <Widget>[
-              _favoriteProductBtn(),
+              _recommendProductBtn(),
               SizedBox(width: 30,),
               Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -181,7 +211,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(height: 20,),
-          _todoListBtn(),
+          _routineBtn(),
           // _label()
         ],
       ),
@@ -200,15 +230,6 @@ class _HomePageState extends State<HomePage> {
           isApiCallProcess = true;
         });
         try {
-          // List<CosmeticExpiry> newExpiries = await ExpiryService.getAllExpiries();
-
-          // print("This is Valid Button in Home Page : ${newExpiries}");
-          // print("asdsa : ${newExpiries.isNotEmpty}");
-          // print("aa : ${newExpiries.length}");
-
-          // setState(() {
-          //   expiries = newExpiries; // 상태 업데이트
-          // });
 
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
         } catch (e) {
@@ -236,7 +257,6 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        // child: Text("유통기한 임박 화장품"),
         child: (expiries.isNotEmpty && expiries.length != 0)
             ? Center(
                 child: Column(
@@ -305,10 +325,6 @@ class _HomePageState extends State<HomePage> {
             margin: EdgeInsets.all(8.0),
             child: Column(
               children: [
-                // Display your image here, you can use Image.network or Image.asset
-                // Example: Image.network(expiry.imageUrl ?? 'fallback_image_url', width: 50, height: 50),
-                // Example: Image.asset('assets/images/sample_image.png', width: 50, height: 50),
-                // Replace 'expiry.imageUrl' with the actual field in your expiry model
                 SizedBox(height: 10,),
                 Container(
                   width: 95,
@@ -328,7 +344,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: 10,),
                 // Display D-day or any other information here
-                Text(isDatePassed ? 'D+${difference.inDays.abs() + 1}' : 'D-${difference.inDays}'),
+                Text(isDatePassed ? 'D+${difference.inDays.abs() + 1}' : 'D-${difference.inDays}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           );
@@ -354,16 +374,15 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-
-  Widget _favoriteProductBtn() {
+  Widget _recommendProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 40;
 
     return ElevatedButton(
       onPressed: () {
-        // Navigator.of(context)
-        //     .push(MaterialPageRoute(builder: (context) => const RecPage()));
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MyFavoritePage()));
+            .push(MaterialPageRoute(builder: (context) => const RecPage()));
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => const MyFavoritePage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffecda),
@@ -378,120 +397,159 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       child: Align(
-        alignment: Alignment.topLeft,
-        child: (favorites.isNotEmpty && favorites.length != 0)
-            ? Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "즐겨찾기 제품 ",
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 18,
+          alignment: Alignment.topLeft,
+          child: (recommends.isNotEmpty && recommends.length != 0)
+              ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "추천 제품 ",
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ],
-              ),
-              SizedBox(height: 15,),
-              _buildFavoriteText(),
-            ],
-          ),
-        )
-        : Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "즐겨찾기 제품 ",
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
-                ],
-              ),
-              _buildFavoriteDefaultText(),
-            ],
-          ),
-        )
+                  ],
+                ),
+                SizedBox(height: 15,),
+                _buildRecommendText(),
+              ],
+            ),
+          )
+              : Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "추천 제품 ",
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
+                  ],
+                ),
+                _buildRecommendDefaultText(),
+              ],
+            ),
+          )
 
       ),
     );
   }
 
-  Widget _buildFavoriteText(){
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: favorites.take(3).map((item) {
-          return Container(
-            margin: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 10,),
-                Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.grey, // 네모 박스의 색상
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child:
-                    (item['images'][0] != null)
-                        ? Image.network(
-                      item['images'][0],
-                      width: 10,
-                      height: 10,
-                      fit: BoxFit.cover,
-                    )
-                        :
-                    Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
-                ),
-                SizedBox(width: 10,),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 120,
-                  child: Text(
-                    item['name'],
-                    style: TextStyle(fontSize: 15),
-                    overflow: TextOverflow.ellipsis,
+  // Widget _buildFavoriteText(){
+  //   return Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: favorites.take(3).map((item) {
+  //         return Container(
+  //           margin: EdgeInsets.all(8.0),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.start,
+  //             children: [
+  //               SizedBox(width: 10,),
+  //               Container(
+  //                 width: MediaQuery.of(context).size.width / 2 - 100,
+  //                 child: Text(
+  //                   item['name'],
+  //                   style: TextStyle(fontSize: 15),
+  //                   overflow: TextOverflow.ellipsis,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       }).toList(),
+  //     );
+  // }
+  //
+  // Widget _buildFavoriteDefaultText() {
+  //   return Center(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         SizedBox(height: 5),
+  //         Text(
+  //           "즐겨찾기된 화장품이 없습니다.\n화장품 등록하기",
+  //           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildRecommendText(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: recommends.take(1).map((item) {
+        return Container(
+          margin: EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey, // 네모 박스의 색상
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  child:
+                  (item.images[0] != null)
+                      ? Image.network(
+                    item.images[0],
+                    width: 90,
+                    height: 90,
+                    fit: BoxFit.cover,
+                  )
+                      :
+                  Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
+              ),
+              SizedBox(height: 5,),
+              Container(
+                width: MediaQuery.of(context).size.width / 2 - 100,
+                child: Text(
+                  item.name,
+                  style: TextStyle(fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
-          );
-        }).toList(),
-      );
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 
-  Widget _buildFavoriteDefaultText() {
+
+  Widget _buildRecommendDefaultText() {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 5),
           Text(
-            "즐겨찾기된 화장품이 없습니다.\n화장품 등록하기",
+            "추천 화장품이 없습니다.\n화장품 추천받기",
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
+
 
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
@@ -622,13 +680,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _todoListBtn() {
+  Widget _routineBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const CalendarPage()));
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (context) => const RecPage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => RecPage()));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffe7e4e1),
@@ -643,8 +703,57 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       child: Align(
-        alignment: Alignment.topLeft,
-        child: Text("오늘의 루틴"),
+          alignment: Alignment.topLeft,
+          child: (recommends.isNotEmpty && recommends.length != 0)
+              ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "나의 루틴 확인하기 ",
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15,),
+                _buildRecommendText(),
+              ],
+            ),
+          )
+              : Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "나의 루틴 확인하기 ",
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                    ),
+                  ],
+                ),
+                _buildRecommendDefaultText(),
+              ],
+            ),
+          )
       ),
     );
   }
