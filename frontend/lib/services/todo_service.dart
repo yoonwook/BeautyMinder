@@ -6,6 +6,7 @@ import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
 import '../../config.dart';
 import '../dto/todo_model.dart';
+import 'dio_client.dart';
 import 'shared_service.dart';
 
 class TodoService {
@@ -176,12 +177,47 @@ class TodoService {
     }
   }
 
+  // // test성공
+  // static Future<Result<Map<String, dynamic>>> getTodo() async {
+  //   final user = await SharedService.getUser();
+  //   // AccessToken가지고오기
+  //   final accessToken = await SharedService.getAccessToken();
+  //   final refreshToken = await SharedService.getRefreshToken();
+  //
+  //   final userId = user?.id ?? '-1';
+  //
+  //   final queryParameters = {
+  //     'userId': '6522837112b53b37f109a508',
+  //   };
+  //
+  //   final url =
+  //       Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
+  //   print(url);
+  //   final headers = {
+  //     'Authorization': 'Bearer ${Config.acccessToken}',
+  //     'Cookie': 'XRT=${Config.refreshToken}',
+  //     // 'Authorization': 'Bearer $accessToken',
+  //     // 'Cookie': 'XRT=$refreshToken',
+  //   };
+  //
+  //   try {
+  //     final response =
+  //         await authClient.get(url, options: _httpOptions('GET', headers));
+  //
+  //     print("response : ${response.data}, statuscode : ${response.statusCode}");
+  //     return Result.success(response.data);
+  //   } catch (e) {
+  //     print("Todoservice : ${e}");
+  //     return Result.failure("error");
+  //   }
+  // }
   // test성공
   static Future<Result<Map<String, dynamic>>> getTodo() async {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
+    final todaysDate = DateTime.now();
 
     final userId = user?.id ?? '-1';
 
@@ -190,7 +226,7 @@ class TodoService {
     };
 
     final url =
-        Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
+    Uri.http(Config.apiURL, Config.Todo+"2023-11-23").toString();
     print(url);
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
@@ -201,7 +237,7 @@ class TodoService {
 
     try {
       final response =
-          await authClient.get(url, options: _httpOptions('GET', headers));
+      await DioClient.sendRequest('GET', url, headers: headers);
 
       print("response : ${response.data}, statuscode : ${response.statusCode}");
       return Result.success(response.data);
