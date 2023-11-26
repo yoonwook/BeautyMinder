@@ -1,12 +1,13 @@
-import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/pages/pouch/search_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 import '../../dto/cosmetic_expiry_model.dart';
 import '../../dto/cosmetic_model.dart';
 import '../../services/api_service.dart';
 import '../../services/expiry_service.dart';
+import '../../services/homeSearch_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
@@ -23,6 +24,7 @@ class CosmeticExpiryPage extends StatefulWidget {
 class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
   int _currentIndex = 1;
   List<CosmeticExpiry> expiries = [];
+  bool isLoading = true;
 
   String formatDate(DateTime? date) {
     if (date == null) return 'N/A'; // 날짜가 null인 경우 처리
@@ -36,11 +38,38 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
   }
 
   void _loadExpiryData() async {
-    final expiryData = await ExpiryService.getAllExpiries();
     setState(() {
-      expiries = expiryData;
+      isLoading = true; // 로딩 시작
     });
+
+    try {
+      final expiryData = await ExpiryService.getAllExpiries();
+      for (var expiry in expiryData) {
+        try {
+          // productName을 이용하여 관련 Cosmetic 검색
+          List<Cosmetic> cosmetics = await SearchService.searchCosmeticsByName(expiry.productName);
+          if (cosmetics.isNotEmpty) {
+            // 첫 번째 일치하는 Cosmetic의 이미지 URL 사용
+            expiry.imageUrl = cosmetics.first.images.isNotEmpty ? cosmetics.first.images.first : null;
+          }
+        } catch (e) {
+          print("Error loading cosmetic data for ${expiry.productName}: $e");
+        }
+      }
+
+      setState(() {
+        expiries = expiryData;
+        isLoading = false; // 로딩 완료
+      });
+    } catch (e) {
+      print("Error loading cosmetic expiries: $e");
+      setState(() {
+        isLoading = false; // 에러 발생 시 로딩 완료 처리
+      });
+    }
   }
+
+
 
   void _deleteExpiry(String expiryId, int index) async {
     try {
@@ -126,7 +155,15 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
           ),
         ],
       ),
-      body: GridView.builder(
+      body: isLoading
+          ? Center(
+        child: SpinKitThreeInOut(
+          color: Color(0xffd86a04),
+          size: 50.0,
+          duration: Duration(seconds: 2),
+        ),
+      ) // 로딩 인디케이터 표시
+          : GridView.builder(
         padding: EdgeInsets.all(8),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
