@@ -77,11 +77,15 @@ class _MyReviewPageState extends State<MyReviewPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
-                          child: Text(
-                            reviews?[index]['cosmetic']['name'],
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: Text(
+                              reviews?[index]['cosmetic']['name'],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
