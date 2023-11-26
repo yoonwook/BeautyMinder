@@ -10,6 +10,7 @@ abstract class TodoState extends Equatable {
   final Todo? todo; // 삭제, 수정에 사용될 객체
   final Task? task;
 
+
   const TodoState({this.isError = false, this.todos, this.todo, this.task});
 }
 

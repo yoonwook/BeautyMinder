@@ -4,6 +4,7 @@ import 'package:beautyminder/services/Cosmetic_Recommend_Service.dart';
 import 'package:beautyminder/services/keywordRank_service.dart';
 import 'package:beautyminder/widget/homepageAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../dto/baumann_result_model.dart';
 import '../../dto/cosmetic_expiry_model.dart';
@@ -130,7 +131,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getTodayTodos() async {
     try {
-      final info = await TodoService.getTodo();
+      String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      final info = await TodoService.getTodoOf(todayFormatted);
       setState(() {
         todayTodos = info.value!;
         isLoading = false;

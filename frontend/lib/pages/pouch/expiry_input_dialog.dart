@@ -36,7 +36,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Colors.orange, // 달력의 주요 색상을 오렌지로 설정
             ),
           ),
@@ -44,7 +44,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
         );
       },
     );
-    if (picked != null)
+    if (picked != null) {
       setState(() {
         if (isExpiryDate) {
           expiryDate = picked;
@@ -52,6 +52,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
           openedDate = picked;
         }
       });
+    }
   }
 
   // OCR 페이지로 이동하고 결과를 받아오는 함수

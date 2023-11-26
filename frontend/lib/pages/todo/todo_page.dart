@@ -16,7 +16,7 @@ import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
-import 'Todo_Add_Page.dart';
+import 'Todo_add_page.dart';
 
 class _CalendarPageState extends State<CalendarPage> {
   int _currentIndex = 3;
@@ -33,6 +33,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // String todayFormatted = DateFormat('yyyy-MM-dd').format(_focusedDay); 하면 될 듯?
+
     return BlocProvider(
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
         lazy: false,
@@ -376,7 +378,7 @@ class _todoListWidget extends State<todoListWidget> {
       child: BlocBuilder<TodoPageBloc, TodoState>(
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
-            return Container(
+            return SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: const Column(
