@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   List<CosmeticExpiry> expiries = [];
   // List favorites = [];
   List recommends = [];
+  List todayTodos = [];
 
   bool isLoading = true;
 
@@ -58,14 +59,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _loadExpiries();
-    // _getfavorites();
-    _getrecommends();
+    _getExpiries();
+    // _getFavorites();
+    _getRecommends();
+    _getTodayTodos();
     print("hello this is : ${recommends}");
     // futureTodoList = TodoService.getAllTodos();
   }
 
-  Future<void> _loadExpiries() async {
+  Future<void> _getExpiries() async {
     try {
       expiries = await ExpiryService.getAllExpiries();
       // Force a rebuild of the UI after fetching data
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Future<void> _getfavorites() async {
+  // Future<void> _getFavorites() async {
   //   try {
   //     final info = await APIService.getFavorites();
   //     setState(() {
@@ -89,7 +91,19 @@ class _HomePageState extends State<HomePage> {
   //   }
   // }
 
-  Future<void> _getrecommends() async {
+  Future<void> _getRecommends() async {
+    try {
+      final info = await CosmeticSearchService.getAllCosmetics();
+      setState(() {
+        recommends = info.value!;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('An error occurred while loading expiries: $e');
+    }
+  }
+
+  Future<void> _getTodayTodos() async {
     try {
       final info = await CosmeticSearchService.getAllCosmetics();
       setState(() {
@@ -490,8 +504,6 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                  width: 90,
-                  height: 90,
                   decoration: BoxDecoration(
                     color: Colors.grey, // 네모 박스의 색상
                     borderRadius: BorderRadius.circular(8.0),
@@ -500,16 +512,16 @@ class _HomePageState extends State<HomePage> {
                   (item.images[0] != null)
                       ? Image.network(
                     item.images[0],
-                    width: 10,
-                    height: 10,
+                    width: 90,
+                    height: 90,
                     fit: BoxFit.cover,
                   )
                       :
                   Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover,)// 이미지가 없는 경우
               ),
-              // SizedBox(height: 10,),
+              SizedBox(height: 5,),
               Container(
-                width: MediaQuery.of(context).size.width / 2 - 160,
+                width: MediaQuery.of(context).size.width / 2 - 100,
                 child: Text(
                   item.name,
                   style: TextStyle(fontSize: 15),
