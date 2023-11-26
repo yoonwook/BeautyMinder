@@ -39,11 +39,11 @@ class HomePage extends StatefulWidget {
   final User? user;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 2;
+  final int _currentIndex = 2;
   bool isApiCallProcess = false;
 
   List<CosmeticExpiry> expiries = [];
