@@ -177,56 +177,18 @@ class TodoService {
     }
   }
 
-  // // test성공
-  // static Future<Result<Map<String, dynamic>>> getTodo() async {
-  //   final user = await SharedService.getUser();
-  //   // AccessToken가지고오기
-  //   final accessToken = await SharedService.getAccessToken();
-  //   final refreshToken = await SharedService.getRefreshToken();
-  //
-  //   final userId = user?.id ?? '-1';
-  //
-  //   final queryParameters = {
-  //     'userId': '6522837112b53b37f109a508',
-  //   };
-  //
-  //   final url =
-  //       Uri.http(Config.apiURL, Config.todoAPI, queryParameters).toString();
-  //   print(url);
-  //   final headers = {
-  //     'Authorization': 'Bearer ${Config.acccessToken}',
-  //     'Cookie': 'XRT=${Config.refreshToken}',
-  //     // 'Authorization': 'Bearer $accessToken',
-  //     // 'Cookie': 'XRT=$refreshToken',
-  //   };
-  //
-  //   try {
-  //     final response =
-  //         await authClient.get(url, options: _httpOptions('GET', headers));
-  //
-  //     print("response : ${response.data}, statuscode : ${response.statusCode}");
-  //     return Result.success(response.data);
-  //   } catch (e) {
-  //     print("Todoservice : ${e}");
-  //     return Result.failure("error");
-  //   }
-  // }
   // test성공
-  static Future<Result<Map<String, dynamic>>> getTodo() async {
+  static Future<Result<Todo>> getTodo() async {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
-    final todaysDate = DateTime.now();
 
     final userId = user?.id ?? '-1';
 
-    final queryParameters = {
-      'userId': '6522837112b53b37f109a508',
-    };
 
     final url =
-    Uri.http(Config.apiURL, Config.Todo+"2023-11-23").toString();
+    Uri.http(Config.apiURL, Config.Todo+"2023-11-26").toString();
     print(url);
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
@@ -239,7 +201,33 @@ class TodoService {
       final response =
       await DioClient.sendRequest('GET', url, headers: headers);
 
-      print("response : ${response.data}, statuscode : ${response.statusCode}");
+      if(response.statusCode == 200){
+        Map<String, dynamic> decodedResponse;
+        if(response.data is String){
+          decodedResponse =  jsonDecode(response.data);
+        }else if(response.data is Map){
+          decodedResponse = response.data;
+        }else{
+          return Result.failure("Unexpected response date Type");
+        }
+        print("response : ${response.data}, statuscode : ${response.statusCode}");
+        if(decodedResponse.containsKey('todos') && decodedResponse['todos'] != []){
+          List<dynamic> todos = decodedResponse['todos'];
+
+          if (todos.isNotEmpty) {
+            Todo todo = Todo.fromJson(todos[0]);
+            return Result.success(todo);
+          } else {
+            // todos가 비어 있을 때 빈 리스트 반환
+            Todo? todo = null;
+            return Result.success(todo);
+          }
+        }
+
+        return Result.failure("Failed to get todos: No todos key in response");
+      }
+
+
       return Result.success(response.data);
     } catch (e) {
       print("Todoservice : ${e}");

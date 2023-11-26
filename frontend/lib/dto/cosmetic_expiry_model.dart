@@ -6,7 +6,7 @@ class CosmeticExpiry {
   final String? brandName;
   DateTime expiryDate;
   final bool isExpiryRecognized;
-  final String? imageUrl;
+  String? imageUrl;
   final String? cosmeticId;
   bool isOpened;
   DateTime? openedDate;
