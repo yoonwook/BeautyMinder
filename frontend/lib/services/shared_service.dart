@@ -1,7 +1,8 @@
 import 'dart:convert';
+
+import 'package:beautyminder/dto/login_response_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:beautyminder/dto/login_response_model.dart';
 
 import '../dto/user_model.dart';
 

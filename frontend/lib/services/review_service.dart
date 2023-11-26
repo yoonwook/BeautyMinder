@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:beautyminder/config.dart';
 import 'package:beautyminder/dto/review_request_model.dart';
@@ -7,7 +7,6 @@ import 'package:beautyminder/dto/review_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
@@ -94,7 +93,7 @@ class ReviewService {
     setAccessToken();
 
     final url =
-    Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
+        Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
 
     var response = await client.get(url);
     if (response.statusCode == 200) {
@@ -110,7 +109,7 @@ class ReviewService {
   static Future<void> deleteReview(String reviewId) async {
     setAccessToken();
     final url =
-    Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
+        Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
 
     var response = await client.delete(url);
     if (response.statusCode != 200) {
@@ -173,7 +172,7 @@ class ReviewService {
     };
 
     final url =
-    Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
+        Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
 
     try {
       var response = await client.get(url);

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../pages/search/search_page.dart';
-
 class HomepageAppBar extends AppBar {
   final List<Widget> actions;
 

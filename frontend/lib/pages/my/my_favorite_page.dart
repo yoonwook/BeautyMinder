@@ -1,6 +1,4 @@
-import 'package:beautyminder/dto/favorite_model.dart';
 import 'package:beautyminder/services/api_service.dart';
-import 'package:beautyminder/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

@@ -1,7 +1,4 @@
-import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:flutter/material.dart';
-
-import '../pages/search/search_result_page.dart';
 
 class SearchAppBar extends AppBar {
   final Widget title;

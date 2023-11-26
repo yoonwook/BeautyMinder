@@ -10,7 +10,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'Bloc/RecommendPageBloc.dart';
 import 'Bloc/TodoPageBloc.dart';
-import 'pages/home/home_page.dart';
 import 'pages/start/login_page.dart';
 import 'pages/start/register_page.dart';
 

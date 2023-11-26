@@ -1,5 +1,4 @@
 import 'package:beautyminder/pages/recommend/recommend_bloc_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -392,7 +391,8 @@ class _todoListWidget extends State<todoListWidget> {
                   ],
                 ));
           } else if (state is TodoLoadedState) {
-            return SingleChildScrollView(child:Column(
+            return SingleChildScrollView(
+                child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _calendar(state.todos),

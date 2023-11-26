@@ -1,5 +1,4 @@
 import 'package:beautyminder/dto/delete_request_model.dart';
-import 'package:beautyminder/dto/update_request_model.dart';
 import 'package:beautyminder/dto/user_model.dart';
 import 'package:beautyminder/pages/my/user_info_modify_page.dart';
 import 'package:beautyminder/pages/my/widgets/my_divider.dart';

@@ -186,9 +186,7 @@ class TodoService {
 
     final userId = user?.id ?? '-1';
 
-
-    final url =
-    Uri.http(Config.apiURL, Config.Todo+"2023-11-26").toString();
+    final url = Uri.http(Config.apiURL, Config.Todo + "2023-11-26").toString();
     print(url);
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
@@ -199,19 +197,21 @@ class TodoService {
 
     try {
       final response =
-      await DioClient.sendRequest('GET', url, headers: headers);
+          await DioClient.sendRequest('GET', url, headers: headers);
 
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         Map<String, dynamic> decodedResponse;
-        if(response.data is String){
-          decodedResponse =  jsonDecode(response.data);
-        }else if(response.data is Map){
+        if (response.data is String) {
+          decodedResponse = jsonDecode(response.data);
+        } else if (response.data is Map) {
           decodedResponse = response.data;
-        }else{
+        } else {
           return Result.failure("Unexpected response date Type");
         }
-        print("response : ${response.data}, statuscode : ${response.statusCode}");
-        if(decodedResponse.containsKey('todos') && decodedResponse['todos'] != []){
+        print(
+            "response : ${response.data}, statuscode : ${response.statusCode}");
+        if (decodedResponse.containsKey('todos') &&
+            decodedResponse['todos'] != []) {
           List<dynamic> todos = decodedResponse['todos'];
 
           if (todos.isNotEmpty) {
@@ -226,7 +226,6 @@ class TodoService {
 
         return Result.failure("Failed to get todos: No todos key in response");
       }
-
 
       return Result.success(response.data);
     } catch (e) {

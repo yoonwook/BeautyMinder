@@ -4,7 +4,6 @@ import 'package:beautyminder/services/baumann_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../dto/baumann_model.dart';
 import '../../services/api_service.dart';
 
 class BaumannStartPage extends StatefulWidget {

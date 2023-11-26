@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
-import '../../services/api_service.dart';
 import '../../dto/login_request_model.dart';
+import '../../services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -102,38 +102,37 @@ class _LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: 5),
         Focus(
-          onFocusChange: (hasFocus) {
-            setState(() {
-              emailIconColor =
-                  hasFocus ? Color(0xffd86a04) : Colors.grey.withOpacity(0.7);
-            });
-          },
-          child: Container(
-            height: 60,
-            child: TextFormField(
-              initialValue: 'token@test',
-              focusNode: emailFocusNode,
-              validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
-              onChanged: (val) => email = val,
-              obscureText: false,
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                hintText: "이메일을 입력하세요",
-                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-                prefixIcon: Icon(
-                  Icons.person,
-                  color: emailIconColor,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+            onFocusChange: (hasFocus) {
+              setState(() {
+                emailIconColor =
+                    hasFocus ? Color(0xffd86a04) : Colors.grey.withOpacity(0.7);
+              });
+            },
+            child: Container(
+              height: 60,
+              child: TextFormField(
+                initialValue: 'token@test',
+                focusNode: emailFocusNode,
+                validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
+                onChanged: (val) => email = val,
+                obscureText: false,
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                  hintText: "이메일을 입력하세요",
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: emailIconColor,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ),
+            )),
       ],
     );
   }

@@ -2,12 +2,8 @@ import 'package:beautyminder/Bloc/RecommendPageBloc.dart';
 import 'package:beautyminder/State/RecommendState.dart';
 import 'package:beautyminder/event/RecommendPageEvent.dart';
 import 'package:beautyminder/pages/product/product_detail_page.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../services/api_service.dart';
