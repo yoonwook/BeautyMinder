@@ -257,7 +257,6 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
         alignment: Alignment.topLeft,
-        // child: Text("유통기한 임박 화장품"),
         child: (expiries.isNotEmpty && expiries.length != 0)
             ? Center(
                 child: Column(
@@ -326,10 +325,6 @@ class _HomePageState extends State<HomePage> {
             margin: EdgeInsets.all(8.0),
             child: Column(
               children: [
-                // Display your image here, you can use Image.network or Image.asset
-                // Example: Image.network(expiry.imageUrl ?? 'fallback_image_url', width: 50, height: 50),
-                // Example: Image.asset('assets/images/sample_image.png', width: 50, height: 50),
-                // Replace 'expiry.imageUrl' with the actual field in your expiry model
                 SizedBox(height: 10,),
                 Container(
                   width: 95,
@@ -349,7 +344,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: 10,),
                 // Display D-day or any other information here
-                Text(isDatePassed ? 'D+${difference.inDays.abs() + 1}' : 'D-${difference.inDays}'),
+                Text(isDatePassed ? 'D+${difference.inDays.abs() + 1}' : 'D-${difference.inDays}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           );
