@@ -99,32 +99,39 @@ class _ChatPageState extends State<ChatPage> {
                     initialUrlRequest: URLRequest(url: Uri.parse(api), headers: {
                       "Authorization": "Bearer ${Config.acccessToken}"
                     }),
-                    // shouldOverrideUrlLoading: (controller, navigationAction) async {
-                    //   print("WEB: 222");
-                    //   var request = navigationAction.request;
-                    //   var url = request.url;
-                    //   var isUrlMatching = url != null &&
-                    //       url.host.contains('ec2') &&
-                    //       url.path.contains('/chat');
-                    //
-                    //   // set the cookie
-                    //   await cookieManager.setCookie(
-                    //     url: url!,
-                    //     name: "Access-Token",
-                    //     value: Config.acccessToken,
-                    //   );
-                    //
-                    //   if (isUrlMatching) {
-                    //     request.headers = {
-                    //       "Authorization": "Bearer ${Config.acccessToken}"
-                    //     };
-                    //     controller.loadUrl(urlRequest: request);
-                    //     return NavigationActionPolicy.CANCEL;
-                    //   }
-                    //
-                    //   // always allow all the other requests
-                    //   return NavigationActionPolicy.ALLOW;
-                    // },
+                    shouldOverrideUrlLoading: (controller, navigationAction) async {
+                      print("WEB: 222");
+                      var request = navigationAction.request;
+                      var url = request.url;
+                      var isUrlMatching = url != null &&
+                          url.host.contains('ec2') &&
+                          url.path.contains('/chat');
+
+                      // set the cookie
+                      await cookieManager.setCookie(
+                        url: url!,
+                        name: "Access-Token",
+                        value: Config.acccessToken,
+                      );
+                      print("WEB :333");
+                      if (isUrlMatching && request.headers != null) {
+                        print("WEB: 444444");
+                        return NavigationActionPolicy.ALLOW;
+                      }
+
+                      if (isUrlMatching) {
+                        print("Web:5541d");
+                        request.headers = {
+                          "Authorization": "Bearer ${Config.acccessToken}"
+                        };
+                        print("dfdfadsf");
+                        controller.loadUrl(urlRequest: request);
+                        return NavigationActionPolicy.CANCEL;
+                      }
+                      print("end");
+                      // always allow  all the other requests
+                      return NavigationActionPolicy.ALLOW;
+                    },
                     initialOptions: InAppWebViewGroupOptions(
                       crossPlatform: InAppWebViewOptions(
                         useShouldOverrideUrlLoading: true, // URL 로딩 제어

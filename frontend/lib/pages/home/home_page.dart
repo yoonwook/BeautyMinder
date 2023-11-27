@@ -701,7 +701,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "나의 루틴 확인하기 ",
+                            "오늘의 루틴 확인하기 ",
                             style: TextStyle(
                               // fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -755,6 +755,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
+          height: 100,
           margin: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -765,12 +766,16 @@ class _HomePageState extends State<HomePage> {
                 child: todayTodos != null && todayTodos!.tasks.isNotEmpty
                     ? Column(
                         children: todayTodos!.tasks
-                            .map((task) => Text(
-                                  task.description,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                ))
-                            .toList(),
+                            .map((task) => Column(
+                          children: [
+                            Text(
+                              task.description,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 15),
+                            ),
+                            SizedBox(height: 5,)
+                          ],
+                        )).toList(),
                       )
                     : _buildTodoDefaultText(),
               ),
