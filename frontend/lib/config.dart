@@ -5,7 +5,6 @@ class Config {
   static const String appName = "BeautyMinder";
 
   //Config
-  static const apiURL = "ec2-43-202-92-163.ap-northeast-2.compute.amazonaws.com:8080";
 
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
