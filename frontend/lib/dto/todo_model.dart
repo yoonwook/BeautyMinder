@@ -14,7 +14,7 @@ class Todo {
   });
 
   late final String? id;
-  late final DateTime? date;
+  late final String? date;
   late final List<Task> tasks;
   late User? user;
   late final DateTime? createdAt;
@@ -38,7 +38,8 @@ Todo {
 
     return Todo(
       id: json['id'],
-      date: DateTime.parse(json['date']),
+      date: json['date'],
+      // DateTime.parse(json['date']),
       tasks: tasksList,
       user: User.fromJson(json['user']),
       createdAt: DateTime.parse(json['createdAt']),
@@ -49,7 +50,7 @@ Todo {
 
     List<Map<String, dynamic>> tasksJson = tasks.map((task) => task.toJson()).toList();
 
-    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    //String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     return {
       //'userId': user.id,
       //'userId' : '65499d8316f366541e3cc0a2',

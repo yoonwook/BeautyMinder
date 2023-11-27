@@ -1,7 +1,6 @@
 import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/event/TodoPageEvent.dart';
-import 'package:beautyminder/pages/TodoUpdatePage.dart';
 import 'package:beautyminder/pages/Todo_Add_Page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
@@ -12,9 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import 'package:beautyminder/services/todo_service.dart';
-import 'package:test/test.dart';
 
 import '../../State/TodoState.dart';
 import '../dto/todo_model.dart';
@@ -106,69 +102,79 @@ class _todoListWidget extends State<todoListWidget> {
     super.dispose();
   }
 
-  Widget _todoList(List<Todo>? todos) {
+  Widget _todoList(List<Todo>? todos, Todo? todo) {
+    // Todos
     return Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          children: _buildChildren(todos),
+          children: _buildChildren(todos, todo),
         ));
   }
 
-  List<Widget> _buildChildren(List<Todo>? todos) {
-    List<Widget> _children = [];
-    List<Widget> _morningTasks = [];
-    List<Widget> _dinnerTasks = [];
-    List<Widget> _otherTasks = [];
+  List<Widget> _buildChildren(List<Todo>? todos, Todo? todo) {
+    List<Widget> children = [];
+    List<Widget> morningTasks = [];
+    List<Widget> dinnerTasks = [];
+    List<Widget> otherTasks = [];
+
+    debugPrint("todo.id : ${todo?.id} ");
 
     if (todos == null || todos.isEmpty) {
-      return _children;
+      return children;
     }
 
-    taskList = todos!.expand((todo) => todo.tasks).toList();
+    //taskList = todos!.expand((todo) => todo.tasks).toList();
+
+    taskList = [];
+
+    if (todo != null || todo?.tasks != null) {
+      for (Task task in todo!.tasks) {
+        taskList.add(task);
+      }
+    }
 
     // taskList를 순회하며 작업 수행
     for (var task in taskList) {
       if (task.category == 'morning') {
         print(task.taskId);
-        _morningTasks.add(_todo(task, todos[0], todos));
+        morningTasks.add(_todo(task, todo!, todos));
       } else if (task.category == 'dinner') {
         print(task.taskId);
-        _dinnerTasks.add(_todo(task, todos[0], todos));
+        dinnerTasks.add(_todo(task, todo!, todos));
       } else {
-        _otherTasks.add(_todo(task, todos[0], todos));
+        otherTasks.add(_todo(task, todo!, todos));
       }
     }
 
-    if (_morningTasks.length != 0) {
-      _children.add(_row('morning'));
-      _children.addAll(_morningTasks);
+    if (morningTasks.isNotEmpty) {
+      children.add(_row('morning'));
+      children.addAll(morningTasks);
     }
 
-    if (_dinnerTasks.length != 0) {
-      _children.add(_row('dinner'));
-      _children.addAll(_dinnerTasks);
+    if (dinnerTasks.isNotEmpty) {
+      children.add(_row('dinner'));
+      children.addAll(dinnerTasks);
     }
 
-    if (_otherTasks.length != 0) {
-      _children.add(_row('other'));
-      _children.addAll(_otherTasks);
+    if (otherTasks.isNotEmpty) {
+      children.add(_row('other'));
+      children.addAll(otherTasks);
     }
 
-    return _children;
+    return children;
   }
 
   Widget _calendar(List<Todo>? todos) {
     List<Todo> _getTodosForDay(DateTime day) {
-      return todos?.where((todo) => isSameDay(todo.date, day)).toList() ??
+      return todos
+              ?.where((todo) => isSameDay(DateTime.parse(todo.date!), day))
+              .toList() ??
           [];
     }
 
+
+
     return TableCalendar(
-      // calendarBuilders: CalendarBuilders(
-      //   markerBuilder: (context, date, dynamicevent){
-      //
-      //   }
-      // ),
       firstDay: DateTime.utc(2010, 10, 16),
       lastDay: DateTime.utc(2030, 3, 14),
       focusedDay: _focusedDay,
@@ -179,6 +185,10 @@ class _todoListWidget extends State<todoListWidget> {
         setState(() {
           _selectedDay = selectedDay;
           _focusedDay = focusedDay;
+
+          List<Todo> dayList = _getTodosForDay(_selectedDay!);
+          BlocProvider.of<TodoPageBloc>(context).add();
+
         });
       },
       eventLoader: _getTodosForDay,
@@ -301,12 +311,6 @@ class _todoListWidget extends State<todoListWidget> {
                                               .onCloseCallback = () {
                                             Navigator.of(context).pop();
                                           };
-
-                                          print(
-                                              "task.description : ${task.description}, task.category : ${task.category}");
-                                          print(
-                                              "task type : ${task.runtimeType}");
-                                          print("task : ${task.toString()}");
                                           context.read<TodoPageBloc>().add(
                                               TodoPageTaskUpdateEvent(
                                                   task: task,
@@ -342,7 +346,7 @@ class _todoListWidget extends State<todoListWidget> {
         dismissible: DismissiblePane(onDismissed: () {}),
         children: [
           SlidableAction(
-            label: 'Delete',
+            label: todo.id,
             backgroundColor: Colors.red,
             icon: Icons.delete,
             onPressed: (context) async {
@@ -385,22 +389,20 @@ class _todoListWidget extends State<todoListWidget> {
       child: BlocBuilder<TodoPageBloc, TodoState>(
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
-            return  Container(
+            return Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                  SpinKitThreeInOut(
-                        color: Color(0xffd86a04),
-                        size: 50.0,
-                        duration: Duration(seconds: 2),
-                      )
+                    SpinKitThreeInOut(
+                      color: Color(0xffd86a04),
+                      size: 50.0,
+                      duration: Duration(seconds: 2),
+                    )
                   ],
-                )
-            );
-
+                ));
           } else if (state is TodoLoadedState) {
             return Column(
               mainAxisSize: MainAxisSize.max,
@@ -413,14 +415,14 @@ class _todoListWidget extends State<todoListWidget> {
                   },
                   icon: Icon(Icons.add, color: Color(0xffd86a04)),
                   label: Text(
-                    "Todo Add",
+                    'Todo Add',
                     style: TextStyle(color: Color(0xffd86a04)),
                   ),
                   style: ElevatedButton.styleFrom(
                       foregroundColor: const Color(0xffffecda),
                       backgroundColor: const Color(0xffffecda)),
                 ),
-                _todoList(state.todos),
+                _todoList(state.todos, state.todo),
               ],
             );
           } else if (state is TodoDeletedState) {
@@ -443,7 +445,7 @@ class _todoListWidget extends State<todoListWidget> {
                       foregroundColor: const Color(0xffffecda),
                       backgroundColor: const Color(0xffffecda)),
                 ),
-                _todoList(state.todos),
+                _todoList(state.todos, state.todo),
               ],
             );
           } else {

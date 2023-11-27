@@ -2,7 +2,7 @@ import 'package:beautyminder/dto/login_request_model.dart';
 import 'package:beautyminder/dto/login_response_model.dart';
 import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:beautyminder/dto/register_response_model.dart';
-import 'package:dio/dio.dart';  // DIO 패키지를 이용해 HTTP 통신
+import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
 
 import '../../config.dart';
 import '../dto/user_model.dart';
@@ -36,8 +36,8 @@ class APIService {
   }
 
   // POST 방식으로 FormData 데이터 전송하는 일반 함수
-  static Future<Response> _postForm(
-      String url, FormData body, {Map<String, String>? headers}) {
+  static Future<Response> _postForm(String url, FormData body,
+      {Map<String, String>? headers}) {
     return client.post(
       url,
       options: _httpOptions('POST', headers),
@@ -69,7 +69,8 @@ class APIService {
   }
 
   // 회원가입 함수
-  static Future<Result<RegisterResponseModel>> register(RegisterRequestModel model) async {
+  static Future<Result<RegisterResponseModel>> register(
+      RegisterRequestModel model) async {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.registerAPI).toString();
 
@@ -92,12 +93,13 @@ class APIService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.userProfileAPI + userId).toString();
+    final url =
+        Uri.http(Config.apiURL, Config.userProfileAPI + userId).toString();
 
     // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',  // 리프레시 토큰 적용
+      'Cookie': 'XRT=$refreshToken', // 리프레시 토큰 적용
     };
 
     try {
@@ -117,6 +119,35 @@ class APIService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+  // 모든 http 요청 하나의 함수로
+  static Future<Response> sendRequest(
+    String method,
+    String url, {
+    dynamic body, // Map<String, dynamic> or FormData 다 accept
+    Map<String, String>? headers,
+  }) async {
+    Options options = _httpOptions(method, headers);
+
+    try {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          return client.get(url, options: options);
+        case 'POST':
+          return client.post(url, data: body, options: options);
+        case 'PUT':
+          return client.put(url, data: body, options: options);
+        case 'DELETE':
+          return client.delete(url, data: body, options: options);
+        case 'PATCH':
+          return client.patch(url, data: body, options: options);
+        default:
+          throw Exception('HTTP method not supported');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 // 결과 클래스
@@ -124,6 +155,6 @@ class Result<T> {
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error = null;  // 성공
-  Result.failure(this.error) : value = null;  // 실패
+  Result.success(this.value) : error = null; // 성공
+  Result.failure(this.error) : value = null; // 실패
 }

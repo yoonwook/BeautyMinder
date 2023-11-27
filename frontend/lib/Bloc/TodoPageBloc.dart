@@ -18,6 +18,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     on<TodoPageTaskUpdateEvent>(_TaskUpdateEvent);
     on<TodoPageDeleteEvent>(_deleteEvent);
     on<TodoPageErrorEvent>(_errorEvent);
+    on<TodoDayChangeEvent>(_dayChangeEvent);
   }
 
   // Todo를 불러오는 Event
@@ -28,24 +29,45 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
 
     // userId를 통해서 todo받아오기
     // 없으면 아무것도 노출 안됨
+    // 오늘 루틴을 받아오기
     final result = (await TodoService.getAllTodos());
 
     if(result == null){
-      emit(TodoLoadedState(todos: [], isError: state.isError));
+      // 등록된 todo가 없으면 []을 반환
+      emit(TodoLoadedState(todos: const [], isError: state.isError));
+      print(" result == null ==> result.value in _initEvent : ${result.value}");
       return ;
     }
-    print("result.value in _initEvent : ${result.value}");
+
 
     try {
       List<Todo>? todos = result.value;
       if (todos != null) {
         print("TodoLoadedState");
+
+        DateTime today = DateTime.now();
+
+        //Todo? todayTodo=null;
+
+        // for(Todo todo in todos){
+        // DateTime todoDate =  DateTime.parse(todo.date!);
+        //
+        //   if(todoDate.year == today.year && todoDate.month == today.month && todoDate.day == today.day) {
+        //     todayTodo = todo;
+        //   }
+        // }
+         final resultToday = await TodoService.getTodo();
+
+         print("todayTodo : ${resultToday.value}");
+
+
+
         //정상적으로 데이터를 받아옴
-        emit(TodoLoadedState(todos: todos, isError: state.isError));
-        print("emit complete");
+        emit(TodoLoadedState(todos: todos, isError: state.isError, todo: resultToday.value));
+
       } else {
         print("TodoErrorState");
-        emit(TodoErrorState(isError: state.isError));
+        emit(TodoErrorState(isError: true));
       }
     } catch (e) {
       print("Error : ${e}");
@@ -178,6 +200,14 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     }
   }
 
+  Future<void> _dayChangeEvent(TodoDayChangeEvent event, Emitter<TodoState> emit)async{
+
+    if(state is TodoLoadedState){
+      emit(TodoDayChangeEvent());
+    }
+  }
+
+
   Future<void> _errorEvent(
       TodoPageErrorEvent event, Emitter<TodoState> emit) async {
     if (state is TodoLoadedState) {
@@ -185,4 +215,8 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
       emit(TodoErrorState(isError: true));
     }
   }
+
+
 }
+
+

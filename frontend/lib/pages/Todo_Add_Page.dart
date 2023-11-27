@@ -119,8 +119,10 @@ class _TodoAddPage extends State<TodoAddPage> {
 
   Todo? createRoutine() {
     createTasks();
+    print(_dateController.text.runtimeType);
+    print("_dateController.text : ${_dateController.text}");
     print("picekd : $picked");
-    todo = Todo(date: picked, tasks: tasks);
+    todo = Todo(date: _dateController.text , tasks: tasks);
     print("todo :${todo.toString()}" );
     return todo;
   }
@@ -153,8 +155,9 @@ class _TodoAddPage extends State<TodoAddPage> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const CalendarPage()));
                     } else {
+                      print("addtodo 실행");
+                      print("todo : ${todo}");
                       await TodoService.addTodo(todo!);
-
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const CalendarPage()));
                     }

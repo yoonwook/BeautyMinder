@@ -69,3 +69,17 @@ class TodoPageErrorEvent extends TodoPageEvent{
   @override
   List<Object?> get props => [];
 }
+
+class TodoDayChangeEvent extends TodoPageEvent{
+  const TodoDayChangeEvent({super.task, super.todos, super.todo});
+
+  @override
+  List<Object?> get props =>[task, todo, todos];
+}
+
+class TodoDayChangedEvent extends TodoPageEvent{
+  const TodoDayChangedEvent({super.task, super.todos, super.todo});
+
+  @override
+  List<Object?> get props =>[task, todo, todos];
+}

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:beautyminder/pages/calendar_page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/todo_page.dart';
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
           }
           else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TodoPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
           }
           else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyPage()));

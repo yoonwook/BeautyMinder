@@ -110,12 +110,12 @@ void main() async {
     phoneNumber: '0100101',
   );
 
-  Todo todo = Todo(
-      id: 'ddaa11',
-      user: user,
-      date: DateTime.parse('2023-08-26 00:00:00.000'),
-      tasks: tasks,
-      createdAt: DateTime.parse('2023-08-24 00:00:00.000'));
+  // Todo todo = Todo(
+  //     id: 'ddaa11',
+  //     user: user,
+  //     date: DateTime.parse('2023-08-26 00:00:00.000'),
+  //     tasks: tasks,
+  //     createdAt: DateTime.parse('2023-08-24 00:00:00.000'));
 
   // TodoPageBloc을 생성하고 초기화 이벤트를 추가합니다.
   final TodoPageBloc todoBloc = TodoPageBloc();
@@ -151,8 +151,10 @@ void main() async {
   //final result = await TodoService.deleteTodo("sss");
   //final result = await TodoService.taskUpdateTodo(k);
   //final result = await TodoService.taskUpdateTodo();
+  final result = await TodoService.getTodo();
 
-  //print("result.value : ${result.value}");
+
+  print("result.value : ${result.value}");
 
   // runApp(MultiBlocProvider(
   //     providers: [
