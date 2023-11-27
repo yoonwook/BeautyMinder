@@ -47,10 +47,13 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       for (var expiry in expiryData) {
         try {
           // productName을 이용하여 관련 Cosmetic 검색
-          List<Cosmetic> cosmetics = await SearchService.searchCosmeticsByName(expiry.productName);
+          List<Cosmetic> cosmetics =
+              await SearchService.searchCosmeticsByName(expiry.productName);
           if (cosmetics.isNotEmpty) {
             // 첫 번째 일치하는 Cosmetic의 이미지 URL 사용
-            expiry.imageUrl = cosmetics.first.images.isNotEmpty ? cosmetics.first.images.first : null;
+            expiry.imageUrl = cosmetics.first.images.isNotEmpty
+                ? cosmetics.first.images.first
+                : null;
           }
         } catch (e) {
           print("Error loading cosmetic data for ${expiry.productName}: $e");
@@ -157,100 +160,100 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       ),
       body: isLoading
           ? Center(
-        child: SpinKitThreeInOut(
-          color: Color(0xffd86a04),
-          size: 50.0,
-          duration: Duration(seconds: 2),
-        ),
-      ) // 로딩 인디케이터 표시
+              child: SpinKitThreeInOut(
+                color: Color(0xffd86a04),
+                size: 50.0,
+                duration: Duration(seconds: 2),
+              ),
+            ) // 로딩 인디케이터 표시
           : GridView.builder(
-        padding: EdgeInsets.all(8),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 0.8,
-        ),
-        itemCount: expiries.length,
-        itemBuilder: (context, index) {
-          final cosmetic = expiries[index];
-          final daysLeft = cosmetic.expiryDate.difference(DateTime.now()).inDays;
+              padding: EdgeInsets.all(8),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: expiries.length,
+              itemBuilder: (context, index) {
+                final cosmetic = expiries[index];
+                final daysLeft =
+                    cosmetic.expiryDate.difference(DateTime.now()).inDays;
 
-          DateTime now = DateTime.now();
-          DateTime expiryDate = cosmetic.expiryDate ?? DateTime.now();
-          Duration difference = expiryDate.difference(now);
-          bool isDatePassed = difference.isNegative;
+                DateTime now = DateTime.now();
+                DateTime expiryDate = cosmetic.expiryDate ?? DateTime.now();
+                Duration difference = expiryDate.difference(now);
+                bool isDatePassed = difference.isNegative;
 
-          return Card(
-            clipBehavior: Clip.antiAlias,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // 이미지 표시
-                    cosmetic.imageUrl != null
-                        ? Image.network(cosmetic.imageUrl!,
-                            width: 128, height: 128, fit: BoxFit.cover)
-                        : Image.asset('assets/images/noImg.jpg',
-                            width: 128, height: 128,
-                            fit: BoxFit.cover),
-                    // 제품 이름
-                    Text(
-                      cosmetic.productName,
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                    // 브랜드 이름
-                    Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
-                        style: TextStyle(fontSize: 14)),
-                    // D-Day
-                    Text(
-                      isDatePassed
-                          ? 'D+${difference.inDays.abs() + 1}'
-                          : 'D-${difference.inDays}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                return Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // 이미지 표시
+                          cosmetic.imageUrl != null
+                              ? Image.network(cosmetic.imageUrl!,
+                                  width: 128, height: 128, fit: BoxFit.cover)
+                              : Image.asset('assets/images/noImg.jpg',
+                                  width: 128, height: 128, fit: BoxFit.cover),
+                          // 제품 이름
+                          Text(
+                            cosmetic.productName,
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                          // 브랜드 이름
+                          Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
+                              style: TextStyle(fontSize: 14)),
+                          // D-Day
+                          Text(
+                            isDatePassed
+                                ? 'D+${difference.inDays.abs() + 1}'
+                                : 'D-${difference.inDays}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          // Text('D-${daysLeft}',
+                          //     style: TextStyle(
+                          //         fontSize: 20, fontWeight: FontWeight.bold)),
+                          // 만료일
+                          Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
+                              style: TextStyle(fontSize: 14)),
+                          // 개봉 여부
+                          Text(
+                              '개봉여부: ${cosmetic.isOpened ? 'Yes' : 'No'}' +
+                                  (cosmetic.isOpened
+                                      ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
+                                      : ''),
+                              style: TextStyle(fontSize: 14)),
+                          // 삭제 버튼
+                          IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                if (cosmetic.id != null) {
+                                  _deleteExpiry(cosmetic.id!, index);
+                                } else {
+                                  print("Invalid data");
+                                }
+                              }),
+                          // 수정 버튼
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => _editExpiry(cosmetic, index),
+                          ),
+                        ],
                       ),
                     ),
-                    // Text('D-${daysLeft}',
-                    //     style: TextStyle(
-                    //         fontSize: 20, fontWeight: FontWeight.bold)),
-                    // 만료일
-                    Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
-                        style: TextStyle(fontSize: 14)),
-                    // 개봉 여부
-                    Text(
-                        '개봉여부: ${cosmetic.isOpened ? 'Yes' : 'No'}' +
-                            (cosmetic.isOpened
-                                ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
-                                : ''),
-                        style: TextStyle(fontSize: 14)),
-                    // 삭제 버튼
-                    IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          if (cosmetic.id != null) {
-                            _deleteExpiry(cosmetic.id!, index);
-                          } else {
-                            print("Invalid data");
-                          }
-                        }),
-                    // 수정 버튼
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () => _editExpiry(cosmetic, index),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
       bottomNavigationBar: CommonBottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (int index) async {

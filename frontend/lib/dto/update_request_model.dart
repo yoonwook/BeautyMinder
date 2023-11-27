@@ -1,4 +1,4 @@
-import 'package:cross_file/src/types/interface.dart';
+
 
 class UpdateRequestModel {
   UpdateRequestModel(

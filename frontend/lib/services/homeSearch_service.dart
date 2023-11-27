@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 

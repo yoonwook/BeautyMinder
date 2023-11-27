@@ -34,8 +34,8 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isExpiryDate ? expiryDate : openedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2040),
     );
     if (picked != null) {
       setState(() {

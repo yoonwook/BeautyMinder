@@ -1,10 +1,5 @@
-import 'dart:convert';
-
-import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/dto/baumann_result_model.dart';
 import 'package:beautyminder/pages/home/home_page.dart';
-import 'package:dio/src/response.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kg_charts/kg_charts.dart';
 

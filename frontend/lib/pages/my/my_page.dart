@@ -6,7 +6,6 @@ import 'package:beautyminder/pages/my/widgets/my_divider.dart';
 import 'package:beautyminder/pages/my/widgets/my_page_header.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

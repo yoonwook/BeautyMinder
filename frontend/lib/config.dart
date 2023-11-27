@@ -5,6 +5,7 @@ class Config {
   static const String appName = "BeautyMinder";
 
   //Config
+  static const apiURL = "ec2-43-202-92-163.ap-northeast-2.compute.amazonaws.com:8080";
 
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
@@ -59,6 +60,10 @@ class Config {
   static const getAllExpiryByUserIdAPI = "/expiry/user/";
   static const getExpiryByUserIdandExpiryIdAPI = "/expiry/";
   static const getAllExpiriesAPI = "/expiry";
+
+  //chat
+  static const chatAPI = '/chat/list';
+  static const chatLoginAPI = '/chat/login';
 
   //OCR
   static const ocrAPI = "/vision/ocr";

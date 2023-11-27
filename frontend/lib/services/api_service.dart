@@ -1,14 +1,10 @@
 import 'package:beautyminder/dto/delete_request_model.dart';
-import 'package:beautyminder/dto/favorite_model.dart';
 import 'package:beautyminder/dto/login_request_model.dart';
 import 'package:beautyminder/dto/login_response_model.dart';
 import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:beautyminder/dto/register_response_model.dart';
-import 'package:beautyminder/dto/review_model.dart';
 import 'package:beautyminder/dto/update_request_model.dart';
 import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
-
-import 'package:file_picker/src/platform_file.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:mime/src/mime_type.dart';
 
@@ -155,7 +151,8 @@ class APIService {
 
     try {
       // GET 요청
-      final response = await DioClient.sendRequest('GET',
+      final response = await DioClient.sendRequest(
+        'GET',
         url,
         headers: headers,
       );
@@ -200,7 +197,8 @@ class APIService {
 
     try {
       // GET 요청
-      final response = await DioClient.sendRequest('GET',
+      final response = await DioClient.sendRequest(
+        'GET',
         url,
         headers: headers,
       );
@@ -238,7 +236,8 @@ class APIService {
     };
 
     try {
-      final response = await DioClient.sendRequest('PATCH', url, body: model.toJson(), headers: headers);
+      final response = await DioClient.sendRequest('PATCH', url,
+          body: model.toJson(), headers: headers);
       if (response.statusCode == 200) {
         return Result.success(true);
       }
@@ -280,7 +279,8 @@ class APIService {
     });
 
     // Use Dio's post method for multipart data
-    final response = await DioClient.sendRequest('POST',
+    final response = await DioClient.sendRequest(
+      'POST',
       url,
       body: formData,
       headers: headers,
@@ -292,7 +292,6 @@ class APIService {
       throw Exception('Failed to update review: ${response.statusMessage}');
     }
   }
-
 
   // 리뷰 수정 함수
   static Future<Result<List<dynamic>>> updateReview(id) async {
@@ -307,7 +306,7 @@ class APIService {
     final userId = user?.id ?? '-1';
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.getReviewAPI+id).toString();
+    final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
     // final headers = {
     //   'Authorization': 'Bearer $accessToken',
@@ -322,7 +321,8 @@ class APIService {
 
     try {
       // put 요청
-      final response = await DioClient.sendRequest('PUT', url, headers: headers);
+      final response =
+          await DioClient.sendRequest('PUT', url, headers: headers);
       return Result.success(response.data);
     } catch (e) {
       print(e);
@@ -338,7 +338,7 @@ class APIService {
     final refreshToken = await SharedService.getRefreshToken();
 
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.getReviewAPI+id).toString();
+    final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
     // final headers = {
     //   'Authorization': 'Bearer $accessToken',
@@ -353,17 +353,15 @@ class APIService {
 
     try {
       // del 요청
-      final response = await DioClient.sendRequest('DELETE', url, headers: headers);
+      final response =
+          await DioClient.sendRequest('DELETE', url, headers: headers);
       print('res is ${response.data}');
       return Result.success(response.data);
-
     } catch (e) {
       print(e);
       return Result.failure("An error occurred: $e");
     }
   }
-
-
 }
 
 // 결과 클래스

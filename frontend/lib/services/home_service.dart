@@ -1,4 +1,3 @@
-import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/dto/user_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';

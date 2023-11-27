@@ -3,12 +3,13 @@ import 'package:beautyminder/pages/my/my_page.dart';
 import 'package:beautyminder/pages/pouch/expiry_page.dart';
 import 'package:beautyminder/pages/recommend/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/todo/todo_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'Bloc/RecommendPageBloc.dart';
 import 'Bloc/TodoPageBloc.dart';
-import 'pages/home/home_page.dart';
 import 'pages/start/login_page.dart';
 import 'pages/start/register_page.dart';
 
@@ -16,6 +17,10 @@ import 'pages/start/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  }
 
   runApp(MultiBlocProvider(
       providers: [

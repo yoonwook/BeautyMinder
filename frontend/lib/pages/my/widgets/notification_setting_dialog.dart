@@ -1,5 +1,4 @@
 import 'package:beautyminder/services/shared_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NotificationSettingDialog extends StatefulWidget {

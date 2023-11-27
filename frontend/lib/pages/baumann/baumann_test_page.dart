@@ -1,7 +1,7 @@
+import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/pages/baumann/baumann_result_page.dart';
 import 'package:beautyminder/widget/baumannTestAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../config.dart';

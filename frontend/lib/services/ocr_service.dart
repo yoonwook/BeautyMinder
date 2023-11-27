@@ -1,6 +1,6 @@
-import 'package:beautyminder/dto/vision_response_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+
 import '../config.dart';
 
 class OCRService {

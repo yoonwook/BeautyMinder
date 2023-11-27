@@ -2,7 +2,6 @@ import 'package:beautyminder/dto/keywordRank_model.dart';
 import 'package:beautyminder/pages/product/product_detail_page.dart';
 import 'package:beautyminder/pages/search/search_result_page.dart';
 import 'package:beautyminder/widget/searchAppBar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

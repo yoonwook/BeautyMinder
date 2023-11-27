@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:beautyminder/config.dart';
 import 'package:beautyminder/dto/cosmetic_model.dart';
-import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
@@ -37,8 +34,8 @@ class SearchService {
     };
 
     final url =
-    Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters)
-        .toString();
+        Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters)
+            .toString();
 // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -48,7 +45,7 @@ class SearchService {
     };
 
     final response =
-    await client.get(url, options: _httpOptions('GET', headers));
+        await client.get(url, options: _httpOptions('GET', headers));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
@@ -86,8 +83,8 @@ class SearchService {
     };
 
     final url =
-    Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters)
-        .toString();
+        Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters)
+            .toString();
 
     // 헤더 설정
     final headers = {
@@ -125,8 +122,8 @@ class SearchService {
     };
 
     final url =
-    Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters)
-        .toString();
+        Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters)
+            .toString();
 
     // 헤더 설정
     final headers = {
@@ -175,7 +172,7 @@ class SearchService {
 
     try {
       final response =
-      await client.get(url, options: _httpOptions("GET", headers));
+          await client.get(url, options: _httpOptions("GET", headers));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data;

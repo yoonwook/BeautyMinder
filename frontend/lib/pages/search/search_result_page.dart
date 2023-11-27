@@ -1,11 +1,8 @@
 import 'package:beautyminder/pages/product/product_detail_page.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../dto/cosmetic_model.dart';
 import '../../services/homeSearch_service.dart';
-import '../../widget/commonAppBar.dart';
 import '../../widget/searchAppBar.dart';
 
 class SearchResultPage extends StatefulWidget {

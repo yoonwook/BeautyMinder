@@ -1,18 +1,9 @@
-import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/pages/baumann/baumann_test_start_page.dart';
 import 'package:beautyminder/pages/baumann/watch_result_page.dart';
-import 'package:beautyminder/pages/home/home_page.dart';
-import 'package:dio/dio.dart';
-import 'package:dio/src/response.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kg_charts/kg_charts.dart';
 
 import '../../dto/baumann_result_model.dart';
-import '../../services/api_service.dart';
-import '../../services/baumann_service.dart';
 import '../../widget/commonAppBar.dart';
-import 'baumann_result_page.dart';
 
 class BaumannHistoryPage extends StatelessWidget {
   final List<BaumannResult>? resultData;
@@ -88,7 +79,7 @@ class BaumannHistoryPage extends StatelessWidget {
     Color textColor = isEven ? Colors.black : Colors.white;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
         child: ElevatedButton(

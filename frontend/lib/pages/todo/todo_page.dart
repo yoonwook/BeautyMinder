@@ -1,5 +1,4 @@
 import 'package:beautyminder/pages/recommend/recommend_bloc_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -17,7 +16,7 @@ import '../../widget/commonBottomNavigationBar.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
-import 'Todo_Add_Page.dart';
+import 'Todo_add_page.dart';
 
 class _CalendarPageState extends State<CalendarPage> {
   int _currentIndex = 3;
@@ -34,6 +33,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // String todayFormatted = DateFormat('yyyy-MM-dd').format(_focusedDay); 하면 될 듯?
+
     return BlocProvider(
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
         lazy: false,
@@ -105,7 +106,7 @@ class _todoListWidget extends State<todoListWidget> {
 
   Widget _todoList(List<Todo>? todos) {
     return Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(10),
         child: Column(
           children: _buildChildren(todos),
         ));
@@ -190,7 +191,7 @@ class _todoListWidget extends State<todoListWidget> {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: EdgeInsets.zero,
           child: Container(
             width: 100,
             height: 35,
@@ -377,7 +378,7 @@ class _todoListWidget extends State<todoListWidget> {
       child: BlocBuilder<TodoPageBloc, TodoState>(
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
-            return Container(
+            return SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: const Column(
@@ -392,8 +393,9 @@ class _todoListWidget extends State<todoListWidget> {
                   ],
                 ));
           } else if (state is TodoLoadedState) {
-            return Column(
-              mainAxisSize: MainAxisSize.max,
+            return SingleChildScrollView(
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _calendar(state.todos),
                 ElevatedButton.icon(
@@ -412,7 +414,7 @@ class _todoListWidget extends State<todoListWidget> {
                 ),
                 _todoList(state.todos),
               ],
-            );
+            ));
           } else if (state is TodoDeletedState) {
             return Column(
               mainAxisSize: MainAxisSize.max,

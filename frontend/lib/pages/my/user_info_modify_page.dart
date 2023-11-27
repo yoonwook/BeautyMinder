@@ -7,9 +7,7 @@ import 'package:beautyminder/services/api_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/painting.dart';
 
 import '../../dto/user_model.dart';
 import '../../widget/commonAppBar.dart';

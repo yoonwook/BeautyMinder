@@ -1,0 +1,4 @@
+frontend/lib/config.dart
+frontend/linux/flutter/generated_*
+frontend/windows/flutter/generated_*
+frontend/macos/Flutter/Generated*

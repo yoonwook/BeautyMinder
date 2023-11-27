@@ -27,7 +27,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     final result = (await TodoService.getAllTodos());
 
     if (result == null) {
-      emit(TodoLoadedState(todos: [], isError: state.isError));
+      emit(TodoLoadedState(todos: const [], isError: state.isError));
       return;
     }
     print("result.value in _initEvent : ${result.value}");

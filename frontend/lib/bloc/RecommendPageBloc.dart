@@ -1,7 +1,7 @@
 import 'package:beautyminder/State/RecommendState.dart';
 import 'package:beautyminder/event/RecommendPageEvent.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beautyminder/services/Cosmetic_Recommend_Service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../dto/cosmetic_model.dart';
 
