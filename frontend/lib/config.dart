@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Config {
   static const String appName = "BeautyMinder";
-  
+
+  //Config
 
   static const loginAPI = "/login";
   static const registerAPI = "/user/signup";
