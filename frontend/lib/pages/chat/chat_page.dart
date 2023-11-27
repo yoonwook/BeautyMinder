@@ -18,7 +18,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late InAppWebViewController webViewController;
 
-  String api = "http://${Config.apiURL}${Config.chatLoginAPI}";
+  String api = "http://${Config.apiURL}${Config.chatAPI}";
 
   @override
   void initState() {
@@ -29,7 +29,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     CookieManager cookieManager = CookieManager.instance();
     if(kIsWeb){
-      Uri url = Uri.parse(api);
+      String webUrl = "http://${Config.apiURL}${Config.chatLoginAPI}";
+      Uri url = Uri.parse(webUrl);
       launchUrl(
           Uri.parse(api));
       return Text("goback");

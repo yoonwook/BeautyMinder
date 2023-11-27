@@ -7,6 +7,7 @@ import 'package:beautyminder/widget/homepageAppBar.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import '../../dto/baumann_result_model.dart';
 import '../../dto/cosmetic_expiry_model.dart';
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> {
 
 
   Future<void> _getExpiries() async {
+
     setState(() {
       isLoading = true;
     });
@@ -82,7 +84,6 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         expiries = loadedExpiries;
-        isLoading = false;
       });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
@@ -93,35 +94,46 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getRecommends() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final info = await CosmeticSearchService.getAllCosmetics();
       setState(() {
         recommends = info.value!;
-        isLoading = false;
+        // isLoading = false;
       });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   Future<void> _getTodayTodos() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       final info = await TodoService.getTodoOf(todayFormatted);
       setState(() {
         todayTodos = info.value!;
-        isLoading = false;
+        // isLoading = false;
       });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Here is Home Page : ${widget.user?.id}");
-    print("Here is Home Page : ${widget.user}");
+    // print("Here is Home Page : ${widget.user}");
 
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget>[
@@ -139,9 +151,6 @@ class _HomePageState extends State<HomePage> {
             try {
               final result = await KeywordRankService.getKeywordRank();
               final result2 = await KeywordRankService.getProductRank();
-
-              print('fdsfd keyword rank : ${result.value}');
-              print('dkdkd product rank : ${result2.value}');
 
               if (result.isSuccess) {
                 // SearchPage로 이동하고 가져온 데이터를 전달합니다.
@@ -231,8 +240,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _handleDataLoading() {
+    if (isLoading) {
+      return SpinKitCircle(color: Colors.white);
+    } else if (expiries.isEmpty) {
+      return _buildDefaultText();
+    } else {
+      return _buildExpiryInfo();
+    }
+  }
+
   Widget _invalidProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
+    final content = _handleDataLoading();
 
     return ElevatedButton(
       onPressed: () async {
@@ -315,7 +335,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      _buildDefaultText(),
+                      isLoading == true
+                          ? SpinKitCircle(color: Colors.white)
+                          : _buildDefaultText(),
                     ],
                   ),
                 )),
@@ -463,7 +485,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      _buildRecommendDefaultText(),
+                      isLoading == true
+                          ? SpinKitCircle(color: Colors.white)
+                          : _buildRecommendDefaultText(),
                     ],
                   ),
                 )),
@@ -716,7 +740,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      _buildTodoDefaultText(),
+                      isLoading == true
+                          ? SpinKitCircle(color: Colors.white, duration: Duration(seconds: 2),)
+                          : _buildTodoDefaultText(),
                     ],
                   ),
                 )),
@@ -746,10 +772,7 @@ class _HomePageState extends State<HomePage> {
                                 ))
                             .toList(),
                       )
-                    : Text(
-                        '등록된 루틴이 없습니다',
-                        style: TextStyle(fontSize: 15),
-                      ),
+                    : _buildTodoDefaultText(),
               ),
             ],
           ),
@@ -766,7 +789,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 5),
           Text(
             "등록된 루틴이 없습니다.\n화장품 사용 루틴 등록하기",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ],
       ),
