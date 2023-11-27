@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../dto/cosmetic_model.dart';
@@ -31,7 +32,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: (isExpiryDate ? expiryDate : openedDate) ?? DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
       builder: (BuildContext context, Widget? child) {
         return Theme(
@@ -56,16 +57,21 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
   }
 
   // OCR 페이지로 이동하고 결과를 받아오는 함수
-  Future<void> _navigateAndProcessOCR() async {
-    final PlatformFile? pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['png', 'jpg', 'jpeg'],
-    ).then((result) => result?.files.first);
+  Future<void> _navigateAndProcessOCR(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
+      final file = await pickedFile.readAsBytes();
+      final fileName = pickedFile.name;
+
       // OCR 처리를 요청하고 결과를 받습니다.
       try {
-        final response = await OCRService.selectAndUploadImage(pickedFile);
+        final response = await OCRService.selectAndUploadImage(PlatformFile(
+            name: fileName,
+            bytes: file,
+            size: file.length,
+            path: pickedFile.path));
+
         if (response != null) {
           final VisionResponseDTO result = VisionResponseDTO.fromJson(response);
           final expiryDateFromOCR = DateFormat('yyyy-MM-dd').parse(result.data);
@@ -120,10 +126,18 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             ),
             ListTile(
               leading: Icon(Icons.camera_alt),
-              title: Text('OCR 입력'),
+              title: Text('카메라로 촬영'),
               onTap: () {
                 Navigator.of(context).pop();
-                _navigateAndProcessOCR();
+                _navigateAndProcessOCR(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_album),
+              title: Text('이미지 앨범에서 선택'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _navigateAndProcessOCR(ImageSource.gallery);
               },
             ),
           ],

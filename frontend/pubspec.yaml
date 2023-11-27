@@ -63,6 +63,7 @@ dependencies:
   webview_flutter_wkwebview: ^3.9.4
   table_calendar: ^3.0.9
   marquee: ^2.0.0
+  url_launcher: ^6.2.1
 
 
 dev_dependencies:

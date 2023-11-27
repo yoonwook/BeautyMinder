@@ -121,14 +121,12 @@ class TodoService {
     }
   }
 
-  // test성공
+
   static Future<Result<Todo>> getTodoOf(String date) async {
     final url = Uri.http(Config.apiURL, Config.Todo + date).toString();
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -144,8 +142,7 @@ class TodoService {
         } else {
           return Result.failure("Unexpected response date Type");
         }
-        print(
-            "response : ${response.data}, statuscode : ${response.statusCode}");
+        print("response : ${response.data}, statuscode : ${response.statusCode}");
         if (decodedResponse.containsKey('todos') &&
             decodedResponse['todos'] != []) {
           List<dynamic> todos = decodedResponse['todos'];
@@ -159,10 +156,8 @@ class TodoService {
             return Result.success(todo);
           }
         }
-
         return Result.failure("Failed to get todos: No todos key in response");
       }
-
       return Result.success(response.data);
     } catch (e) {
       print("Todoservice : ${e}");

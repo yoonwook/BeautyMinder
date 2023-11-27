@@ -20,7 +20,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late InAppWebViewController webViewController;
 
-  String api = "http://${Config.apiURL}${Config.chatAPI}";
+  String api = "http://${Config.apiServer}${Config.chatAPI}";
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,6 @@ class _ChatPageState extends State<ChatPage> {
     if (await webViewController.canGoBack()) {
       var result =
       await webViewController.evaluateJavascript(source: "quit()") as bool;
-      print("HEY: $result");
       return Future.value(!result);
     }
     return Future.value(false);
