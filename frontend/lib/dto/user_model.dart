@@ -20,7 +20,8 @@ class User {
   late final String? nickname;
   late final String? profileImage;
   late final DateTime createdAt;
-  late final String authorities; // authorities: [ { authority: ROLE_USER } ] -> ".."
+  late final String
+      authorities; // authorities: [ { authority: ROLE_USER } ] -> ".."
   late final String? phoneNumber;
 
   //add
@@ -52,9 +53,9 @@ User {
       nickname: json['nickname'],
       profileImage: json['profileImage'],
       createdAt: DateTime.parse(json['createdAt']),
-      phoneNumber : json['phoneNumber'],
-      baumann : json['baumann'],
-      baumannScores : json['baumannScores'],
+      phoneNumber: json['phoneNumber'],
+      baumann: json['baumann'],
+      baumannScores: json['baumannScores'],
       authorities: (json['authorities'] as List<dynamic>)
           .map((obj) => obj['authority'] as String)
           .join(','), // Convert List of maps to comma-separated string
@@ -69,7 +70,7 @@ User {
       'nickname': nickname,
       'profileImage': profileImage,
       'createdAt': createdAt.toIso8601String(),
-      'phoneNumber' : phoneNumber,
+      'phoneNumber': phoneNumber,
       'baumann': baumann,
       'baumannScores': baumannScores,
       'authorities': authorities

@@ -24,9 +24,11 @@ class CosmeticReviewPage extends StatefulWidget {
 
 class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   final TextEditingController _searchController = TextEditingController();
+
   //List<Cosmetic> _searchResults = [];
   List<ReviewResponse> _cosmeticReviews = []; // ReviewResponse 리스트로 변경
   bool _isLoading = false;
+
   //String _selectedCosmeticId = '';
   List<PlatformFile>? _imageFiles;
 
@@ -81,7 +83,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       ))
           ?.files;
     } on PlatformException catch (e) {
-      log('Unsupported operation' + e.toString());
+      log('Unsupported operation : ' + e.toString());
     } catch (e) {
       log(e.toString());
     }
@@ -97,7 +99,8 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     }
   }
 
-  void _showReviewDialog({ReviewResponse? reviewToUpdate, required String userId}) async {
+  void _showReviewDialog(
+      {ReviewResponse? reviewToUpdate, required String userId}) async {
     final _contentController = TextEditingController();
     int _localRating = reviewToUpdate?.rating ?? 1; // 로컬 변수로 변경
     if (reviewToUpdate != null) {
@@ -107,10 +110,12 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder( // StatefulBuilder 추가
+        return StatefulBuilder(
+          // StatefulBuilder 추가
           builder: (BuildContext context, StateSetter setDialogState) {
             return AlertDialog(
-              title: Text(reviewToUpdate == null ? 'Write a Review' : 'Edit Review'),
+              title: Text(
+                  reviewToUpdate == null ? 'Write a Review' : 'Edit Review'),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -127,7 +132,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                       value: _localRating,
                       items: List.generate(
                         5,
-                            (index) => DropdownMenuItem(
+                        (index) => DropdownMenuItem(
                           value: index + 1,
                           child: Text('${index + 1} Stars'),
                         ),
@@ -161,20 +166,22 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                         content: content,
                         rating: _localRating, // 여기에서 _localRating 사용
                         cosmeticId: widget.cosmeticId,
-
                       );
 
                       try {
                         ReviewResponse responseReview;
                         if (reviewToUpdate == null) {
-                          responseReview = await ReviewService.addReview(newReviewRequest, _imageFiles!);
+                          responseReview = await ReviewService.addReview(
+                              newReviewRequest, _imageFiles!);
                         } else {
                           // 기존 리뷰 수정 로직
                           responseReview = await ReviewService.updateReview(
-                              reviewToUpdate.id, newReviewRequest, _imageFiles!
-                          );
+                              reviewToUpdate.id,
+                              newReviewRequest,
+                              _imageFiles!);
                           // UI 업데이트
-                          int index = _cosmeticReviews.indexWhere((review) => review.id == responseReview.id);
+                          int index = _cosmeticReviews.indexWhere(
+                              (review) => review.id == responseReview.id);
                           if (index != -1) {
                             _cosmeticReviews[index] = responseReview;
                           }
@@ -184,7 +191,8 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                           if (reviewToUpdate == null) {
                             _cosmeticReviews.add(responseReview);
                           } else {
-                            int index = _cosmeticReviews.indexWhere((review) => review.id == responseReview.id);
+                            int index = _cosmeticReviews.indexWhere(
+                                (review) => review.id == responseReview.id);
                             if (index != -1) {
                               _cosmeticReviews[index] = responseReview;
                             }
@@ -193,7 +201,9 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                           //_searchController.clear();
                         });
                         Navigator.of(context).pop();
-                        _showSnackBar(reviewToUpdate == null ? 'Review added successfully' : 'Review updated successfully');
+                        _showSnackBar(reviewToUpdate == null
+                            ? 'Review added successfully'
+                            : 'Review updated successfully');
                       } catch (e) {
                         Navigator.of(context).pop();
                         _showSnackBar('Failed to add/update review: $e');
@@ -221,19 +231,23 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     return Expanded(
       child: ListView.separated(
         itemCount: _cosmeticReviews.length,
-        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey),
+        separatorBuilder: (context, index) =>
+            Divider(height: 1, color: Colors.grey),
         itemBuilder: (context, index) {
           var review = _cosmeticReviews[index];
           return Card(
             elevation: 2,
             margin: EdgeInsets.all(8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: ListTile(
               title: Row(
                 children: [
                   ...List.generate(5, (starIndex) {
                     return Icon(
-                      starIndex < review.rating ? Icons.star : Icons.star_border,
+                      starIndex < review.rating
+                          ? Icons.star
+                          : Icons.star_border,
                       color: Colors.amber,
                       size: 20,
                     );
@@ -247,9 +261,24 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  review.content,
-                  style: TextStyle(fontSize: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (review.isFiltered)
+                      Text(
+                        '누가 욕쓰라고 했냐?', // 필터링된 메시지 표시
+                        style: TextStyle(fontSize: 16, color: Colors.red),
+                      )
+                    else
+                      Text(
+                        review.content, // 리뷰 내용 표시
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    SizedBox(height: 10),
+                    if (review.nlpAnalysis.isNotEmpty)
+                      Text('NLP Analysis: ${review.nlpAnalysis}')
+                    // NLP 분석 결과 표시
+                  ],
                 ),
               ),
               /***trailing: Row(
@@ -276,7 +305,6 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     );
   }
 
-
   Future<void> _deleteReview(String reviewId) async {
     setState(() => _isLoading = true);
     try {
@@ -293,7 +321,6 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       _showSnackBar('Failed to delete review: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -332,4 +359,3 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     );
   }
 }
-

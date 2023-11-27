@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 
 import '../dto/cosmetic_model.dart';
 
-class CosmeticSearchService{
+class CosmeticSearchService {
   static final Dio client = Dio();
 
   // JSON 헤더 설정
@@ -22,6 +22,7 @@ class CosmeticSearchService{
       headers: headers,
     );
   }
+
   // POST 방식으로 JSON 데이터 전송하는 일반 함수
   static Future<Response> _postJson(String url, Map<String, dynamic> body,
       {Map<String, String>? headers}) {
@@ -53,11 +54,10 @@ class CosmeticSearchService{
       // 'Cookie': 'XRT=$refreshToken',
     };
 
-
-    try{
+    try {
       final response = await authClient.get(
         url,
-        options : _httpOptions('GET', headers),
+        options: _httpOptions('GET', headers),
       );
 
       print("response : ${response.data}, statuscode : ${response.statusCode}");
@@ -65,53 +65,46 @@ class CosmeticSearchService{
       //print("token : $accessToken | $refreshToken");
       print("statuscode : ${response.statusCode}");
 
-      if(response.statusCode == 200){
-
+      if (response.statusCode == 200) {
         Map<String, dynamic> decodedResponse;
 
-        if(response.data is List){
+        if (response.data is List) {
           List<dynamic> dataList = response.data;
           //print("dataList : ${dataList}");
           List<Cosmetic> cosmetics = dataList.map<Cosmetic>((data) {
-            if(data is Map<String, dynamic>){
+            if (data is Map<String, dynamic>) {
               return Cosmetic.fromJson(data);
-            }else{
+            } else {
               throw Exception("Invalid data type");
             }
           }).toList();
 
-
           return Result.success(cosmetics);
-
-        }else if(response.data is Map){
+        } else if (response.data is Map) {
           print("data is Map");
           decodedResponse = response.data;
-        }else {
+        } else {
           print("failure");
           return Result.failure("Unexpected response data type");
         }
 
-        return Result.failure("Failed to serach Cosmetics : No cosmetics key in response");
+        return Result.failure(
+            "Failed to serach Cosmetics : No cosmetics key in response");
       }
       return Result.failure("Failed to ge cosmeics");
-    }catch(e){
+    } catch (e) {
       print("CosmeticSearch_Service : ${e}");
       return Result.failure("An error Occured : $e");
-
-
     }
   }
-
-
 }
 
-
-
-class Result<T>{
+class Result<T> {
   //T는 제네릭타입 반환 타입에 가변적으로 타입을 맞춰줌
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error =null;
+  Result.success(this.value) : error = null;
+
   Result.failure(this.error) : value = null;
 }

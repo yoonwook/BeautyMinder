@@ -18,11 +18,9 @@ class BaumannTestPage extends StatefulWidget {
 }
 
 class _BaumannTestPageState extends State<BaumannTestPage> {
-
   int currentPage = 0; // 현재 페이지 인덱스
   List<QuestionPage> pages = [];
   Map<String, int?> selectedOptionIndices = {};
-
 
   @override
   void initState() {
@@ -36,10 +34,8 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     if (pages.isEmpty) {
       return Scaffold(
         appBar: BaumannTestAppBar(),
@@ -53,12 +49,9 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       appBar: BaumannTestAppBar(),
       body: baumannTestUI(),
     );
-
   }
 
-
   Widget baumannTestUI() {
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10), // 좌우 여백 10
       child: Column(
@@ -82,7 +75,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     //   ],
     // );
   }
-
 
   Widget _textUIs() {
     QuestionPage currentPageData = pages[currentPage];
@@ -112,7 +104,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
           SizedBox(height: 80), // 여백 추가
           Column(
             children: currentPageData.options.asMap().entries.map((entry) {
-              int index = entry.key+1;
+              int index = entry.key + 1;
               Option option = entry.value;
               return RadioListTile(
                 value: index,
@@ -137,7 +129,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     );
   }
 
-
   Widget _btnType() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -148,7 +139,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       ],
     );
   }
-
 
   Widget _prevBtn() {
     return ElevatedButton(
@@ -167,7 +157,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     );
   }
 
-
   Widget _nextBtn() {
     return ElevatedButton(
       onPressed: nextPage,
@@ -185,11 +174,9 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     );
   }
 
-
   Widget _resultBtn() {
     return ElevatedButton(
       onPressed: () async {
-
         print('Selected Option Indices : ');
         selectedOptionIndices.forEach((key, value) {
           print('$key: ${value != null ? value + 1 : null}');
@@ -213,23 +200,22 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     );
   }
 
-
   // 새로운 함수: 데이터를 백엔드로 전송
   Future<void> sendSurveyToBackend(Map<String, int?> surveyData) async {
-
     // 유저 정보 가지고 오기
     final user = await SharedService.getUser();
 
     // AccessToken가지고오기
-    final accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    final accessToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
     //refreshToken 가지고오기
-    final refreshToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    final refreshToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
 
     // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
     final userId = user?.id ?? '-1';
 
     final url = Uri.http(Config.apiURL, Config.baumannTestAPI).toString();
-
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -243,15 +229,16 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       };
 
       // 백엔드로 JSON 데이터 전송
-      final response = await BaumannService.postJson(url, jsonData, headers: headers);
+      final response =
+          await BaumannService.postJson(url, jsonData, headers: headers);
 
       // 응답 처리
       if (response.statusCode == 200) {
         // 성공적으로 전송됨
         // 이후 결과 페이지로 이동하거나 다른 작업을 수행
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BaumannResultPage(resultData: response)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => BaumannResultPage(resultData: response)));
         print(response);
-
       } else {
         // 전송 실패 또는 오류 발생
         // 오류 메시지를 사용자에게 표시
@@ -268,9 +255,9 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     }
   }
 
-
   void nextPage() {
-    int? selectedOptionIndex = selectedOptionIndices[pages[currentPage].surveyKey];
+    int? selectedOptionIndex =
+        selectedOptionIndices[pages[currentPage].surveyKey];
 
     if (selectedOptionIndex == null) {
       // 옵션이 선택되지 않았을 때 Toast 메시지 표시
@@ -281,8 +268,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
         textColor: Colors.white,
       );
       return;
-    }
-    else {
+    } else {
       setState(() {
         if (currentPage < pages.length - 1) {
           currentPage++;
@@ -290,7 +276,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       });
     }
   }
-
 
   void previousPage() {
     setState(() {
@@ -300,7 +285,6 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
     });
   }
 }
-
 
 class QuestionPage {
   final String surveyKey;

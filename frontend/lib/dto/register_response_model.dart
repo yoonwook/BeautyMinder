@@ -8,7 +8,6 @@ import 'user_model.dart';
 RegisterResponseModel registerResponseJson(Map<String, dynamic> json) =>
     RegisterResponseModel.fromJson(json);
 
-
 class RegisterResponseModel {
   RegisterResponseModel({
     required this.message,

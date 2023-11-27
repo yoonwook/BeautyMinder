@@ -1,12 +1,14 @@
 import 'dart:async';
 
-import 'package:beautyminder/pages/my/widgets/default_dialog.dart';
-import 'package:beautyminder/pages/my/widgets/review/update_dialog.dart';
+import 'package:beautyminder/pages/my/widgets/delete_dialog.dart';
+import 'package:beautyminder/services/api_service.dart';
 import 'package:flutter/material.dart';
 
-Future<bool> updatePopUp({
+Future<bool> deletePopUp({
   required String title,
   required BuildContext context,
+  required String id,
+  required Function callback,
   String? subTitle,
   String? okBtnText,
   String? noBtnText,
@@ -14,7 +16,7 @@ Future<bool> updatePopUp({
   Completer<bool> completer = Completer();
   showDialog(
     context: context,
-    builder: (context) => UpdateDialog(
+    builder: (context) => DeleteDialog(
       onBarrierTap: () {
         completer.complete(false);
         Navigator.of(context).pop();
@@ -22,7 +24,7 @@ Future<bool> updatePopUp({
       title: title,
       body: subTitle,
       buttons: [
-        UpdateDialogButton(
+        DeleteDialogButton(
           onTap: () {
             completer.complete(false);
             Navigator.of(context).pop();
@@ -31,12 +33,15 @@ Future<bool> updatePopUp({
           backgroundColor: const Color(0xFFF5F5F5),
           textColor: Colors.black,
         ),
-        UpdateDialogButton(
-          onTap: () {
+        DeleteDialogButton(
+          onTap: () async {
             completer.complete(true);
+
+            await APIService.deleteReview(id);
+            callback();
             Navigator.of(context).pop();
           },
-          text: okBtnText ?? "수정",
+          text: okBtnText ?? "삭제",
           backgroundColor: Colors.orange,
           textColor: Colors.white,
         ),

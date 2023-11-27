@@ -1,6 +1,3 @@
-
-
-
 import 'package:beautyminder/pages/todo/todo_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +27,7 @@ class _TodoAddPage extends State<TodoAddPage> {
   List<String> categorys = [];
   Todo? todo;
   DateTime? picked;
+  bool isEmptyTextField = false;
 
   late List<Task> tasks;
 
@@ -84,8 +82,8 @@ class _TodoAddPage extends State<TodoAddPage> {
                     primary: Color(0xffffecda),
                     onPrimary: Colors.black87,
                     onSurface: Colors.black
-                  // onSurface: Colors.black87
-                ),
+                    // onSurface: Colors.black87
+                    ),
                 textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
                         backgroundColor: const Color(0xffffecda),
@@ -109,7 +107,13 @@ class _TodoAddPage extends State<TodoAddPage> {
       return Task(category: category, description: description, done: false);
     });
 
-    return tasks;
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].description.isEmpty) {
+        tasks.removeAt(i);
+      }
+    }
+
+    return tasks.length < 1 ? [] : tasks;
   }
 
   Todo? createRoutine() {
@@ -139,12 +143,18 @@ class _TodoAddPage extends State<TodoAddPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
                     createRoutine();
-                    TodoService.addTodo(todo!);
 
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CalendarPage()));
+                    if (tasks.length == 0) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CalendarPage()));
+                    } else {
+                      await TodoService.addTodo(todo!);
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CalendarPage()));
+                    }
                   },
                   icon: const Icon(Icons.add_box_rounded,
                       size: 50, color: Color(0xffd86a04)),
@@ -162,16 +172,18 @@ class _TodoAddPage extends State<TodoAddPage> {
                   child: AbsorbPointer(
                     child: TextField(
                       controller: _dateController,
-                      decoration:  InputDecoration(
-                          prefixStyle: TextStyle(
-                              color: Color(0xffd86a04)
-                          ),
+                      decoration: InputDecoration(
+                          prefixStyle: TextStyle(color: Color(0xffd86a04)),
                           labelText: 'Date',
                           hintText: 'Date',
-                          icon: const Icon(Icons.calendar_month, color: Color(0xffd86a04),),
+                          icon: const Icon(
+                            Icons.calendar_month,
+                            color: Color(0xffd86a04),
+                          ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.black, width: 1.0)),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 1.0)),
                           contentPadding: EdgeInsets.all(3)),
                     ),
                   ),
@@ -181,7 +193,7 @@ class _TodoAddPage extends State<TodoAddPage> {
               TextEditingController controller = entry.value;
               return Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Row(
                     children: [
                       Expanded(
@@ -190,14 +202,14 @@ class _TodoAddPage extends State<TodoAddPage> {
                           decoration: InputDecoration(
                               labelText: 'Todo $index',
                               hintText: 'Enter Todo $index',
-                              icon: const Icon(Icons.add_task_sharp,  color: Color(0xffd86a04)),
-                              border:  OutlineInputBorder(
+                              icon: const Icon(Icons.add_task_sharp,
+                                  color: Color(0xffd86a04)),
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.amber, width: 2.0)
-                              )
-                          ),
+                                  borderSide: BorderSide(
+                                      color: Colors.amber, width: 2.0))),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -207,8 +219,8 @@ class _TodoAddPage extends State<TodoAddPage> {
                           setState(() {
                             if (!_toggleSelections[index][buttonIndex]) {
                               for (int i = 0;
-                              i < _toggleSelections[index].length;
-                              i++) {
+                                  i < _toggleSelections[index].length;
+                                  i++) {
                                 _toggleSelections[index][i] = i == buttonIndex;
                               }
                             }
@@ -252,7 +264,7 @@ class _TodoAddPage extends State<TodoAddPage> {
               children: [
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: ElevatedButton(
                     style: FilledButton.styleFrom(
                         backgroundColor: const Color(0xffffecda)),
@@ -267,8 +279,8 @@ class _TodoAddPage extends State<TodoAddPage> {
                     child: ElevatedButton(
                       style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xffffecda)
-                        //Color(0xffffecda),
-                      ),
+                          //Color(0xffffecda),
+                          ),
                       onPressed: _removeTextField,
                       child: const Icon(
                         Icons.remove,
@@ -286,18 +298,18 @@ class _TodoAddPage extends State<TodoAddPage> {
         onTap: (int index) async {
           // 페이지 전환 로직 추가
           if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-          }
-          else if (index == 2) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
+          } else if (index == 2) {
             final userProfileResult = await APIService.getUserProfile();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
-          }
-          else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
-          }
-          else if (index == 4) {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const MyPage()));
+                builder: (context) => HomePage(user: userProfileResult.value)));
+          } else if (index == 3) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const CalendarPage()));
+          } else if (index == 4) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const MyPage()));
           }
         },
       ),

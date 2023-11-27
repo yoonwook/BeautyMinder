@@ -97,7 +97,7 @@
         <entry key="cross_file">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+6/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+7/lib" />
             </list>
           </value>
         </entry>
@@ -125,7 +125,7 @@
         <entry key="dio">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.3.3/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.3.4/lib" />
             </list>
           </value>
         </entry>
@@ -921,11 +921,11 @@
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.18.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/convert-3.1.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/coverage-1.7.1/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+6/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+7/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.3/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cupertino_icons-1.0.6/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/diff_match_patch-0.4.1/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.3.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.3.4/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/equatable-2.0.5/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/ffi-2.1.0/lib" />

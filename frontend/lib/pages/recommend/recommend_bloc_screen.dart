@@ -104,59 +104,66 @@ class _RecPage extends State<RecPage> {
               Container(height: 30),
               BlocBuilder<RecommendPageBloc, RecommendState>(
                   builder: (context, state) {
-                    return Theme(
-                      data: Theme.of(context).copyWith(
-                        toggleButtonsTheme: ToggleButtonsThemeData(
-                          selectedColor: Color(0xffd86a04),
-                          selectedBorderColor: Color(0xffd86a04)
-                        ),
-                      ),
-                      child: Container(
-                        height: 30,
-                        child: ToggleButtons(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                              child: Text('전체', style: TextStyle(fontSize: 15)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                              child: Text('스킨케어', style: TextStyle(fontSize: 15)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                              child: Text('클렌징', style: TextStyle(fontSize: 15)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                              child: Text('선케어', style: TextStyle(fontSize: 15)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                              child: Text('베이스', style: TextStyle(fontSize: 15)),
-                            ),
-                          ],
-                          isSelected: [
-                            isAll,
-                            isSkincare,
-                            isCleansing,
-                            isSuncare,
-                            isBase
-                          ],
-                          onPressed: (int index) {
-                            print({"index : $index"});
-                            toggleSelect(index);
-                            context.read<RecommendPageBloc>().add(
-                              RecommendPageCategoryChangeEvent(category: toggleSelect(index)),
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    toggleButtonsTheme: ToggleButtonsThemeData(
+                        selectedColor: Color(0xffd86a04),
+                        selectedBorderColor: Color(0xffd86a04)),
+                  ),
+                  child: Container(
+                    height: 30,
+                    child: ToggleButtons(
+                      isSelected: [
+                        isAll,
+                        isSkincare,
+                        isCleansing,
+                        isSuncare,
+                        isBase
+                      ],
+                      onPressed: (int index) {
+                        print({"index : $index"});
+                        toggleSelect(index);
+                        context.read<RecommendPageBloc>().add(
+                              RecommendPageCategoryChangeEvent(
+                                  category: toggleSelect(index)),
                             );
-                          },
-                          // fillColor: Color(0xffffecda),
-                          fillColor: Colors.white,
+                      },
+                      // fillColor: Color(0xffffecda),
+                      fillColor: Colors.white,
+                      children: const [
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          child: Text('전체', style: TextStyle(fontSize: 15)),
                         ),
-                      ),
-                    );
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          child: Text('스킨케어', style: TextStyle(fontSize: 15)),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          child: Text('클렌징', style: TextStyle(fontSize: 15)),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          child: Text('선케어', style: TextStyle(fontSize: 15)),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          child: Text('베이스', style: TextStyle(fontSize: 15)),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               }),
-              Container(height: 20,),
+              Container(
+                height: 20,
+              ),
               Expanded(child: RecPageImageWidget())
             ],
           ),
@@ -166,18 +173,19 @@ class _RecPage extends State<RecPage> {
               onTap: (int index) async {
                 // 페이지 전환 로직 추가
                 if (index == 1) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-                }
-                else if (index == 2) {
-                  final userProfileResult = await APIService.getUserProfile();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
-                }
-                else if (index == 3) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
-                }
-                else if (index == 4) {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MyPage()));
+                      builder: (context) => CosmeticExpiryPage()));
+                } else if (index == 2) {
+                  final userProfileResult = await APIService.getUserProfile();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          HomePage(user: userProfileResult.value)));
+                } else if (index == 3) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const CalendarPage()));
+                } else if (index == 4) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const MyPage()));
                 }
               },
             ),
@@ -288,73 +296,74 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
         // print("Container");
 
         return ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                {
-                  return GestureDetector(
-                      onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => ProductDetailPage(
-                        //         name: state.recCosmetics![index].name)));
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProductDetailPage(
-                            searchResults: state.recCosmetics![index],
-                          ),
-                        ));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: const Color.fromRGBO(71, 71, 71, 1),
-                                  child: state.recCosmetics != null &&
-                                          state.recCosmetics![index].images !=
-                                              null &&
-                                          state.recCosmetics![index].images!
-                                              .isNotEmpty
-                                      ? Image.network(
-                                          state.recCosmetics![index].images![0],
-                                          fit: BoxFit.cover,
-                                        )
-                                      : Container(),
-                                ),
-                                Expanded(
-                                    child: Container(
-                                  height: 100,
-                                  color: const Color.fromRGBO(0, 0, 0, 0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _textForm(
-                                          state.recCosmetics![index].name),
-                                      _textForm(keywordsToString(state
-                                          .recCosmetics![index].keywords!)),
-                                    ],
-                                  ),
-                                ))
-                              ],
-                            ),
-                            if (index + 1 == state.recCosmetics!.length) ...[]
-                          ],
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              {
+                return GestureDetector(
+                    onTap: () {
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => ProductDetailPage(
+                      //         name: state.recCosmetics![index].name)));
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProductDetailPage(
+                          searchResults: state.recCosmetics![index],
                         ),
                       ));
-                }
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  thickness: 1,
-                  color: Colors.grey,
-                );
-              },
-              itemCount: state.recCosmetics!.length);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 100,
+                                color: const Color.fromRGBO(71, 71, 71, 1),
+                                child: state.recCosmetics != null &&
+                                        state.recCosmetics![index].images !=
+                                            null &&
+                                        state.recCosmetics![index].images!
+                                            .isNotEmpty
+                                    ? Image.network(
+                                        state.recCosmetics![index].images![0],
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Container(),
+                              ),
+                              Expanded(
+                                  child: Container(
+                                height: 100,
+                                color: const Color.fromRGBO(0, 0, 0, 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _textForm(state.recCosmetics![index].name),
+                                    _textForm(keywordsToString(
+                                        state.recCosmetics![index].keywords!)),
+                                  ],
+                                ),
+                              ))
+                            ],
+                          ),
+                          if (index + 1 == state.recCosmetics!.length) ...[]
+                        ],
+                      ),
+                    ));
+              }
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 20,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+                color: Colors.grey,
+              );
+            },
+            itemCount: state.recCosmetics!.length);
       }
     }));
   }

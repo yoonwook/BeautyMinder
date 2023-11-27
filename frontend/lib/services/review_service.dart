@@ -1,18 +1,15 @@
 import 'dart:developer';
 import 'dart:convert';
 
+import 'package:beautyminder/config.dart';
+import 'package:beautyminder/dto/review_request_model.dart';
+import 'package:beautyminder/dto/review_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 
-import '../config.dart';
-
-import '../dto/review_request_model.dart';
-import '../dto/review_response_model.dart';
-
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-
 
 class ReviewService {
   static final Dio client = Dio();
@@ -31,8 +28,8 @@ class ReviewService {
         type: FileType.custom,
         allowMultiple: false,
         allowedExtensions: ['png', 'jpg', 'jpeg', 'heic'],
-      ))
-          !.files;
+      ))!
+          .files;
     } on PlatformException catch (e) {
       log('Unsupported operation' + e.toString());
     } catch (e) {
@@ -40,7 +37,6 @@ class ReviewService {
     }
     return paths;
   }
-
 
   // 리뷰 추가 함수
   static Future<ReviewResponse> addReview(
@@ -50,7 +46,8 @@ class ReviewService {
 
     // Convert the PlatformFile objects to MultipartFile objects
     List<MultipartFile> multipartImageList = imageFiles.map((file) {
-      final MediaType contentType = MediaType.parse(lookupMimeType(file.name) ?? 'application/octet-stream');
+      final MediaType contentType = MediaType.parse(
+          lookupMimeType(file.name) ?? 'application/octet-stream');
       return MultipartFile.fromBytes(
         file.bytes!,
         filename: file.name,
@@ -96,7 +93,8 @@ class ReviewService {
       String cosmeticId) async {
     setAccessToken();
 
-    final url = Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
+    final url =
+    Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
 
     var response = await client.get(url);
     if (response.statusCode == 200) {
@@ -111,7 +109,8 @@ class ReviewService {
   // 리뷰 삭제 함수
   static Future<void> deleteReview(String reviewId) async {
     setAccessToken();
-    final url = Uri.http(Config.apiURL, Config.AllReviewAPI+reviewId).toString();
+    final url =
+    Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
 
     var response = await client.delete(url);
     if (response.statusCode != 200) {
@@ -123,7 +122,10 @@ class ReviewService {
   static Future<ReviewResponse> updateReview(String reviewId,
       ReviewRequest reviewRequest, List<PlatformFile> imageFiles) async {
     setAccessToken();
-    final url = Uri.http(Config.apiURL, Config.AllReviewAPI+reviewId).toString();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI + '/' + reviewId)
+        .toString();
+
+    print(url);
 
     var formData = FormData();
 
@@ -132,7 +134,8 @@ class ReviewService {
 
     // 이미지 파일을 MultipartFile 객체로 변환하고 FormData에 추가
     List<MultipartFile> multipartImageList = imageFiles.map((file) {
-      final MediaType contentType = MediaType.parse(lookupMimeType(file.name) ?? 'application/octet-stream');
+      final MediaType contentType = MediaType.parse(
+          lookupMimeType(file.name) ?? 'application/octet-stream');
       return MultipartFile.fromBytes(
         file.bytes!,
         filename: file.name,
@@ -149,7 +152,9 @@ class ReviewService {
         contentType: MediaType('application', 'json'),
       ),
     ));
-    formData.files.addAll(multipartImageList.map((file) => MapEntry('images', file)));
+    if (multipartImageList != [])
+      formData.files
+          .addAll(multipartImageList.map((file) => MapEntry('images', file)));
 
     // Dio 클라이언트를 사용하여 서버로 요청을 보내고 응답을 받습니다.
     var response = await client.put(url, data: formData);
@@ -163,11 +168,12 @@ class ReviewService {
   // 이미지 로드 함수
   static Future<String> loadImage(String filename) async {
     setAccessToken();
-    final parameters={
-      'filename' : '$filename',
+    final parameters = {
+      'filename': '$filename',
     };
 
-    final url = Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
+    final url =
+    Uri.http(Config.apiURL, Config.ReviewImageAPI, parameters).toString();
 
     try {
       var response = await client.get(url);
@@ -181,5 +187,4 @@ class ReviewService {
       throw Exception('Error loading image: $e');
     }
   }
-
 }

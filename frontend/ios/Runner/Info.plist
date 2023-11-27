@@ -13,6 +13,9 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	    <!-- Permission options for the `camera` group -->
+        <key>NSCameraUsageDescription</key>
+        <string>camera</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

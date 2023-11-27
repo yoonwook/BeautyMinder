@@ -71,10 +71,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         UserInfoItem(
                             title: '전화번호', content: user!.phoneNumber ?? ''),
                         MyDivider(),
-                        SizedBox(height: 150),
+                        SizedBox(height: 200),
                       ])),
                   Positioned(
-                    bottom: 10, // 원하는 위치에 배치
+                    bottom: 70, // 원하는 위치에 배치
                     left: 10, // 원하는 위치에 배치
                     right: 10, // 원하는 위치에 배치
                     child: Padding(
@@ -139,6 +139,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
 class UserInfoProfile extends StatelessWidget {
   final String nickname;
   final String profileImage;
+
   const UserInfoProfile(
       {super.key, required this.nickname, required this.profileImage});
 

@@ -1,11 +1,10 @@
 import 'dart:convert';
 
+import 'package:beautyminder/config.dart';
+import 'package:beautyminder/dto/cosmetic_model.dart';
 import 'package:beautyminder/pages/search/search_page.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
-
-import '../config.dart';
-import '../dto/cosmetic_model.dart';
 
 class SearchService {
   static final Dio client = Dio();
@@ -38,18 +37,18 @@ class SearchService {
     };
 
     final url =
-        Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters)
-            .toString();
+    Uri.http(Config.apiURL, Config.searchCosmeticsbyName, parameters)
+        .toString();
 // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
 
     final response =
-        await client.get(url, options: _httpOptions('GET', headers));
+    await client.get(url, options: _httpOptions('GET', headers));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
@@ -87,13 +86,13 @@ class SearchService {
     };
 
     final url =
-        Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters)
-            .toString();
+    Uri.http(Config.apiURL, Config.searchCosmeticsbyCategory, parameters)
+        .toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
@@ -126,13 +125,13 @@ class SearchService {
     };
 
     final url =
-        Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters)
-            .toString();
+    Uri.http(Config.apiURL, Config.searchCosmeticsbyKeyword, parameters)
+        .toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
@@ -168,15 +167,15 @@ class SearchService {
         .toString();
 // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
       final response =
-          await client.get(url, options: _httpOptions("GET", headers));
+      await client.get(url, options: _httpOptions("GET", headers));
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data;

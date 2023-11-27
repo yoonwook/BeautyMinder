@@ -23,8 +23,7 @@ class FavoritesService {
 
   //POST 방식으로 JSON 데이터 전송하는 일반 함수
   static Future<Response> postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}){
-
+      {Map<String, String>? headers}) {
     return client.post(
       url,
       options: _httpOptions('POST', headers),
@@ -41,7 +40,8 @@ class FavoritesService {
 
     final userId = user?.id ?? '-1';
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.uploadFavoritesAPI+cosmeticId).toString();
+    final url = Uri.http(Config.apiURL, Config.uploadFavoritesAPI + cosmeticId)
+        .toString();
 
     // 헤더 설정
     final headers = {
@@ -77,7 +77,8 @@ class FavoritesService {
 
     final userId = user?.id ?? '-1';
     // URL 생성
-    final url = Uri.http(Config.apiURL, Config.uploadFavoritesAPI+cosmeticId).toString();
+    final url = Uri.http(Config.apiURL, Config.uploadFavoritesAPI + cosmeticId)
+        .toString();
 // 헤더 설정
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
@@ -102,5 +103,4 @@ class FavoritesService {
       return "An error occurred: $e";
     }
   }
-
 }

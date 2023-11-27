@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class MyPageHeader extends StatelessWidget {
   final String text;
 
-  const MyPageHeader(this.text, {
+  const MyPageHeader(
+    this.text, {
     super.key,
   });
 

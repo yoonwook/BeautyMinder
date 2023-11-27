@@ -1,5 +1,4 @@
-
-
+import 'package:beautyminder/pages/recommend/recommend_bloc_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,19 +50,20 @@ class _CalendarPageState extends State<CalendarPage> {
               currentIndex: _currentIndex,
               onTap: (int index) async {
                 // 페이지 전환 로직 추가
-                if (index == 1) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-                }
-                else if (index == 2) {
-                  final userProfileResult = await APIService.getUserProfile();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
-                }
-                else if (index == 3) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
-                }
-                else if (index == 4) {
+                if (index == 0) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => RecPage()));
+                } else if (index == 1) {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MyPage()));
+                      builder: (context) => CosmeticExpiryPage()));
+                } else if (index == 2) {
+                  final userProfileResult = await APIService.getUserProfile();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          HomePage(user: userProfileResult.value)));
+                } else if (index == 4) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const MyPage()));
                 }
               },
             )));
@@ -233,7 +233,7 @@ class _todoListWidget extends State<todoListWidget> {
                     return BlocProvider.value(
                         value: BlocProvider.of<TodoPageBloc>(context),
                         child:
-                        StatefulBuilder(builder: (context, setDialogState) {
+                            StatefulBuilder(builder: (context, setDialogState) {
                           return AlertDialog(
                             title: Text('Update Todo'),
                             content: SingleChildScrollView(
@@ -244,8 +244,8 @@ class _todoListWidget extends State<todoListWidget> {
                                     onPressed: (int index) {
                                       setDialogState(() {
                                         for (int buttonIndex = 0;
-                                        buttonIndex < isSelected.length;
-                                        buttonIndex++) {
+                                            buttonIndex < isSelected.length;
+                                            buttonIndex++) {
                                           isSelected[buttonIndex] =
                                               buttonIndex == index;
                                         }
@@ -280,9 +280,9 @@ class _todoListWidget extends State<todoListWidget> {
                                     children: [
                                       Expanded(
                                           child: TextField(
-                                            controller: _controller,
-                                            onChanged: (value) {},
-                                          )),
+                                        controller: _controller,
+                                        onChanged: (value) {},
+                                      )),
                                       IconButton(
                                         icon: Icon(Icons.edit),
                                         onPressed: () {
@@ -310,7 +310,7 @@ class _todoListWidget extends State<todoListWidget> {
                                   ),
                                   const Padding(
                                       padding:
-                                      EdgeInsets.symmetric(vertical: 10)),
+                                          EdgeInsets.symmetric(vertical: 10)),
                                   TextButton.icon(
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -373,21 +373,24 @@ class _todoListWidget extends State<todoListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return SafeArea(
       child: BlocBuilder<TodoPageBloc, TodoState>(
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: GestureDetector(
-                child: SpinKitThreeInOut(
-                  color: Color(0xffd86a04),
-                  size: 50.0,
-                  duration: Duration(seconds: 2),
-                ),
-              ),
-            );
+            return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SpinKitThreeInOut(
+                      color: Color(0xffd86a04),
+                      size: 50.0,
+                      duration: Duration(seconds: 2),
+                    )
+                  ],
+                ));
           } else if (state is TodoLoadedState) {
             return Column(
               mainAxisSize: MainAxisSize.max,
@@ -398,8 +401,8 @@ class _todoListWidget extends State<todoListWidget> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const TodoAddPage()));
                   },
-                  icon: Icon(Icons.add, color: Color(0xffd86a04)),
-                  label: Text(
+                  icon: const Icon(Icons.add, color: Color(0xffd86a04)),
+                  label: const Text(
                     "Todo Add",
                     style: TextStyle(color: Color(0xffd86a04)),
                   ),

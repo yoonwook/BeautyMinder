@@ -12,7 +12,8 @@ import '../../services/favorites_service.dart';
 import '../../widget/commonAppBar.dart';
 
 class ProductDetailPage extends StatefulWidget {
-  const ProductDetailPage({Key? key, required this.searchResults}) : super(key: key);
+  const ProductDetailPage({Key? key, required this.searchResults})
+      : super(key: key);
 
   final Cosmetic searchResults;
 
@@ -102,7 +103,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           height: 500,
           enableInfiniteScroll: false, //무한스크롤 비활성
           viewportFraction: 1.0, //이미지 전체 화면 사용
-          aspectRatio: 16/9, //가로 세로 비율 유지
+          aspectRatio: 16 / 9, //가로 세로 비율 유지
         ),
         items: widget.searchResults.images.map((image) {
           return Padding(
@@ -194,15 +195,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-
   Widget _displayBrand() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:
-        Text(
-          '브랜드: ${widget.searchResults.brand}',
-          style: TextStyle(fontSize: 18),
-         ),
+      child: Text(
+        '브랜드: ${widget.searchResults.brand}',
+        style: TextStyle(fontSize: 18),
+      ),
     );
   }
 
@@ -285,22 +284,30 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: ToggleButtons(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                         child: Text(
                           '높은 평정 요약',
                           style: TextStyle(
-                            color: isPositive ? Color(0xffd86a04) : Colors.black,
-                            fontWeight: isPositive ? FontWeight.bold : FontWeight.normal,
+                            color:
+                                isPositive ? Color(0xffd86a04) : Colors.black,
+                            fontWeight: isPositive
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                         child: Text(
                           '낮은 평점 요약',
                           style: TextStyle(
-                            color: !isPositive ? Color(0xffd86a04) : Colors.black,
-                            fontWeight: !isPositive ? FontWeight.bold : FontWeight.normal,
+                            color:
+                                !isPositive ? Color(0xffd86a04) : Colors.black,
+                            fontWeight: !isPositive
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ),
@@ -312,7 +319,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       });
                     },
                     fillColor: Colors.white,
-                    constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width / 2 - 46),
+                    constraints: BoxConstraints.expand(
+                        width: MediaQuery.of(context).size.width / 2 - 46),
                     // color: Colors.grey,
                   ),
                 ),
@@ -329,7 +337,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             padding: EdgeInsets.all(8.0),
             child: Text(
-              showPositiveReview ? gptReviewInfo.positive : gptReviewInfo.negative,
+              showPositiveReview
+                  ? gptReviewInfo.positive
+                  : gptReviewInfo.negative,
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.justify,
             ),
@@ -352,11 +362,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             size: 25.0,
             duration: Duration(seconds: 2),
           );
-        }
-        else if (snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        }
-        else if (!snapshot.hasData || !snapshot.data!.isSuccess) {
+        } else if (!snapshot.hasData || !snapshot.data!.isSuccess) {
           return Column(
             children: [
               Padding(
@@ -376,22 +384,32 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         child: ToggleButtons(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 0),
                               child: Text(
                                 '높은 평정 요약',
                                 style: TextStyle(
-                                  color: isPositive ? Color(0xffd86a04) : Colors.black,
-                                  fontWeight: isPositive ? FontWeight.bold : FontWeight.normal,
+                                  color: isPositive
+                                      ? Color(0xffd86a04)
+                                      : Colors.black,
+                                  fontWeight: isPositive
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 0),
                               child: Text(
                                 '낮은 평점 요약',
                                 style: TextStyle(
-                                  color: !isPositive ? Color(0xffd86a04) : Colors.black,
-                                  fontWeight: !isPositive ? FontWeight.bold : FontWeight.normal,
+                                  color: !isPositive
+                                      ? Color(0xffd86a04)
+                                      : Colors.black,
+                                  fontWeight: !isPositive
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -403,7 +421,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             });
                           },
                           fillColor: Colors.white,
-                          constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width / 2 - 46),
+                          constraints: BoxConstraints.expand(
+                              width:
+                                  MediaQuery.of(context).size.width / 2 - 46),
                           // color: Colors.grey,
                         ),
                       ),
@@ -412,7 +432,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
                 child: Center(
                   child: Text(
                     '요약된 GPT Review가 없습니다.',
@@ -422,11 +443,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ],
           );
-        }
-        else {
+        } else {
           final gptReviewInfo = snapshot.data!.value!;
           return Container(
-            width: double.infinity,  // Set the width to maximum
+            width: double.infinity, // Set the width to maximum
             child: _displayGPTReview(gptReviewInfo, isPositive),
           );
         }
@@ -443,7 +463,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           // 클릭 시 AllReviewPage로 이동
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CosmeticReviewPage(cosmeticId: widget.searchResults.id,)),
+            MaterialPageRoute(
+                builder: (context) => CosmeticReviewPage(
+                      cosmeticId: widget.searchResults.id,
+                    )),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -451,7 +474,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           elevation: 0, // Remove the button shadow
         ),
         child: Text(
-            '작성된 후기 전체보기  >',
+          '작성된 후기 전체보기  >',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -461,7 +484,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
     );
   }
-
 
   Widget _gptBox() {
     return Container(
@@ -502,8 +524,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Widget _warningBox() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-      child:  Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Container(
         decoration: BoxDecoration(
           color: Color(0xffefefef),
           border: Border.all(color: Color(0xffc6c6c6)),
@@ -538,10 +560,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       color: Colors.grey,
     );
   }
-
 }
-
-
 
 class FavoriteManager {
   static final FavoriteManager _instance = FavoriteManager._internal();

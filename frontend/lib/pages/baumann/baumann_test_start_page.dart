@@ -16,10 +16,7 @@ class BaumannStartPage extends StatefulWidget {
   _BaumannStartPageState createState() => _BaumannStartPageState();
 }
 
-
-
 class _BaumannStartPageState extends State<BaumannStartPage> {
-
   bool isApiCallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
 
@@ -33,10 +30,9 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffb876),
-      body:_baumannStartUI(),
+      body: _baumannStartUI(),
     );
   }
-
 
   //바우만 시작페이지 UI
   Widget _baumannStartUI() {
@@ -47,11 +43,17 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _title(),
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
           _baumannStartContent(),
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
           _testStartButton(),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           _testLaterButton(),
           SizedBox(
             height: 20,
@@ -61,8 +63,6 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
       ),
     );
   }
-
-
 
   //타이틀 UI
   Widget _title() {
@@ -82,8 +82,6 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
     );
   }
 
-
-
   //안내사항 UI
   Widget _baumannStartContent() {
     return Column(
@@ -97,7 +95,6 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
             fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
-
         ),
         Text(
           "* 소요시간은 10-15분 입니다. *",
@@ -113,8 +110,6 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
       ],
     );
   }
-
-
 
   //테스트 시작 버튼 UI
   Widget _testStartButton() {
@@ -135,9 +130,13 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
           print('survey : ${result.value}');
           if (result.isSuccess) {
             // BaumannTestPage로 이동하고 가져온 데이터를 전달합니다.
-            Navigator.push(context, MaterialPageRoute(builder: (context) => BaumannTestPage(data: result.value!),),);
-          }
-          else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BaumannTestPage(data: result.value!),
+              ),
+            );
+          } else {
             // API 호출 실패를 처리합니다.
             Fluttertoast.showToast(
               msg: result.error ?? '바우만 데이터 가져오기 실패',
@@ -145,8 +144,7 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
               gravity: ToastGravity.CENTER,
             );
           }
-        }
-        finally {
+        } finally {
           // API 호출 상태를 초기화합니다.
           setState(() {
             isApiCallProcess = false;
@@ -173,10 +171,7 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
         ),
       ),
     );
-
   }
-
-
 
   //건너뛰기 버튼 UI
   Widget _testLaterButton() {
@@ -187,14 +182,20 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('알림'),
-              content: Text('테스트를 보지 않으시면 정확한 추천 결과를 얻기 어렵습니다. 추후 마이페이지에서 테스트를 할 수 있습니다.'),
+              content: Text(
+                  '테스트를 보지 않으시면 정확한 추천 결과를 얻기 어렵습니다. 추후 마이페이지에서 테스트를 할 수 있습니다.'),
               actions: <Widget>[
                 TextButton(
                   child: Text('확인'),
                   onPressed: () async {
                     final userProfileResult = await APIService.getUserProfile();
                     Navigator.pop(context); // 팝업 닫기
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value,)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomePage(
+                                  user: userProfileResult.value,
+                                )));
                   },
                 ),
                 TextButton(
@@ -233,5 +234,4 @@ class _BaumannStartPageState extends State<BaumannStartPage> {
     }
     return false;
   }
-
 }

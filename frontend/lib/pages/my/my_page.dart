@@ -76,7 +76,7 @@ class _MyPageState extends State<MyPage> {
                       const MyDivider(),
                       const SizedBox(height: 20),
                       MyPageMenu(
-                        title: '즐겨찾기 해둔 제품',
+                        title: '즐겨찾기 제품',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -92,6 +92,16 @@ class _MyPageState extends State<MyPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const MyReviewPage()),
+                          );
+                        },
+                      ),
+                      MyPageMenu(
+                        title: '나의 파우치',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CosmeticExpiryPage()),
                           );
                         },
                       ),
@@ -124,7 +134,8 @@ class _MyPageState extends State<MyPage> {
                 MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
           } else if (index == 2) {
             final userProfileResult = await APIService.getUserProfile();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: userProfileResult.value)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HomePage(user: userProfileResult.value)));
           } else if (index == 3) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const CalendarPage()));

@@ -11,7 +11,6 @@ class RegisterRequestModel {
   late final String? nickname;
   late final String? password;
 
-
   RegisterRequestModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     phoneNumber = json['phoneNumber'];
