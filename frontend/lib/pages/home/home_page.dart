@@ -545,10 +545,6 @@ class _HomePageState extends State<HomePage> {
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
     BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
-    print("This is HiHiHi : ${result.value}");
-    print("This is HiHiHi2 : ${result.value?.isEmpty}");
-    print("This is HiHiHi3 : ${widget.user?.baumann?.isEmpty}");
-    print("This is HiHiHi4 : ${widget.user?.baumann}");
 
     return ElevatedButton(
       onPressed: () async {
@@ -564,17 +560,17 @@ class _HomePageState extends State<HomePage> {
         try {
           result = await BaumannService.getBaumannHistory();
 
-          print("This is Baumann Button in Home Page : ${result.value}");
+          // print("This is Baumann Button in Home Page : ${result.value}");
 
           if (result.isSuccess && result.value!.isNotEmpty) {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
                     BaumannHistoryPage(resultData: result.value)));
-            print("This is BaumannButton in HomePage2 : ${result.value}");
+            print("This is BaumannList Result***** : ${result.value}");
           } else {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => BaumannStartPage()));
-            print("This is Baumann Button in Home Page2 : ${result.isSuccess}");
+            // print("This is Baumann Button in Home Page2 : ${result.isSuccess}");
           }
         } catch (e) {
           // Handle the error case

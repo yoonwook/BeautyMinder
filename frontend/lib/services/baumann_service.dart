@@ -49,6 +49,21 @@ class BaumannService {
   }
 
   static Future<BaumResult<SurveyWrapper>> getBaumannSurveys() async {
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
 
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
@@ -58,7 +73,7 @@ class BaumannService {
       // GET 요청
       final response = await client.get(
         url,
-        // options: _httpOptions('GET', headers),
+        options: _httpOptions('GET', headers),
       );
 
       if (response.statusCode == 200) {
@@ -122,6 +137,60 @@ class BaumannService {
       }
       return BaumResult<List<BaumannResult>>.failure(
           "Failed to get baumann history");
+    } catch (e) {
+      print("An error occurred: $e");
+      return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
+    }
+  }
+
+  //히스토리 삭제
+  static Future<BaumResult<List<BaumannResult>>> deleteBaumannHistory(String testId) async {
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
+    // URL 생성
+    final url = Uri.http(Config.apiURL, Config.baumannDeleteAPI+testId).toString();
+    print("This is BaumannDeletedService : $url");
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
+    try {
+      print("1");
+      // GET 요청
+      final response = await client.delete(
+        url,
+        options: _httpOptions('DELETE', headers),
+      );
+      print("2");
+
+      if (response.statusCode == 200) {
+        print("3");
+        print("${response.data}");
+
+        // 사용자 정보 파싱
+        // final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
+        final List<dynamic> jsonData = response.data as List<dynamic>;
+        final List<BaumannResult> result = jsonData
+            .map((dynamic item) =>
+            BaumannResult.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+        print("This is Baumann Service(getHistory) : $result");
+        print("Success Delete");
+        return BaumResult<List<BaumannResult>>.success(result);
+      }
+      return BaumResult<List<BaumannResult>>.failure("Failed to delete baumann history");
     } catch (e) {
       print("An error occurred: $e");
       return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
