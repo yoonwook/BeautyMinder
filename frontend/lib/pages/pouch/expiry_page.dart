@@ -251,21 +251,26 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                             //             ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
                             //             : ''),
                             //     style: TextStyle(fontSize: 14)),
-                            // 삭제 버튼
-                            IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  if (cosmetic.id != null) {
-                                    _deleteExpiry(cosmetic.id!, index);
-                                  } else {
-                                    print("Invalid data");
+                            Row(
+                              children: [
+                                // 수정 버튼
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () => _editExpiry(cosmetic, index),
+                                ),
+                                // 삭제 버튼
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    if (cosmetic.id != null) {
+                                      _deleteExpiry(cosmetic.id!, index);
+                                    } else {
+                                      print("Invalid data");
+                                    }
                                   }
-                                }),
-                            // 수정 버튼
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () => _editExpiry(cosmetic, index),
-                            ),
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),

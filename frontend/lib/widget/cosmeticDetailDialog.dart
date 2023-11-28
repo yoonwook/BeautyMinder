@@ -17,7 +17,15 @@ class CosmeticDetailsDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Expiry Date: ${formatDate(cosmetic.expiryDate)}'),
+          Text('유통기한: ${formatDate(cosmetic.expiryDate)}까지'),
+          Text(
+              (cosmetic.isOpened == true) ?
+              '개봉여부: 개봉' : '개봉여부: 미개봉'
+          ),
+          Text(
+              (cosmetic.isOpened == true) ?
+              '개봉일: ${formatDate(cosmetic.openedDate)}' : '개봉일: N/A'
+          ),
           // Add other details as needed
         ],
       ),
@@ -26,7 +34,7 @@ class CosmeticDetailsDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Close'),
+          child: Text('닫기'),
         ),
       ],
     );
