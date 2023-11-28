@@ -9,6 +9,7 @@ import '../../services/api_service.dart';
 import '../../services/expiry_service.dart';
 import '../../services/homeSearch_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
+import '../../widget/cosmeticDetailDialog.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
@@ -137,6 +138,13 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
     }
   }
 
+  void _showCosmeticDetailsDialog(CosmeticExpiry cosmetic) {
+    showDialog(
+      context: context,
+      builder: (context) => CosmeticDetailsDialog(cosmetic: cosmetic),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,78 +185,89 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
               itemCount: expiries.length,
               itemBuilder: (context, index) {
                 final cosmetic = expiries[index];
-                final daysLeft =
-                    cosmetic.expiryDate.difference(DateTime.now()).inDays;
+                final daysLeft = cosmetic.expiryDate.difference(DateTime.now()).inDays;
 
                 DateTime now = DateTime.now();
                 DateTime expiryDate = cosmetic.expiryDate ?? DateTime.now();
                 Duration difference = expiryDate.difference(now);
                 bool isDatePassed = difference.isNegative;
 
-                return Card(
-                  clipBehavior: Clip.antiAlias,
-                  color: Color(0xffffffff),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // 이미지 표시
-                          cosmetic.imageUrl != null
-                              ? Image.network(cosmetic.imageUrl!,
-                                  width: 128, height: 128, fit: BoxFit.cover)
-                              : Image.asset('assets/images/noImg.jpg',
-                                  width: 128, height: 128, fit: BoxFit.cover),
-                          // 제품 이름
-                          Text(
-                            cosmetic.productName,
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.center,
-                          ),
-                          // 브랜드 이름
-                          Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
-                              style: TextStyle(fontSize: 14)),
-                          // D-Day
-                          Text(
-                            isDatePassed
-                                ? 'D+${difference.inDays.abs() + 1}'
-                                : 'D-${difference.inDays}',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                Color textColor = Colors.black;
+
+                if (difference.inDays < -100) {
+                  textColor = Colors.red; // Change to red if less than 100 days left
+                }
+
+                return GestureDetector(
+                  onTap: () {
+                    _showCosmeticDetailsDialog(cosmetic);
+                  },
+                  child: Card(
+                    clipBehavior: Clip.antiAlias,
+                    color: Color(0xffffffff),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // 이미지 표시
+                            cosmetic.imageUrl != null
+                                ? Image.network(cosmetic.imageUrl!,
+                                width: 128, height: 128, fit: BoxFit.cover)
+                                : Image.asset('assets/images/noImg.jpg',
+                                width: 128, height: 128, fit: BoxFit.cover),
+                            // 제품 이름
+                            Text(
+                              cosmetic.productName,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          // Text('D-${daysLeft}',
-                          //     style: TextStyle(
-                          //         fontSize: 20, fontWeight: FontWeight.bold)),
-                          // 만료일
-                          Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
-                              style: TextStyle(fontSize: 14)),
-                          // 개봉 여부
-                          Text(
-                              '개봉여부: ${cosmetic.isOpened ? 'Yes' : 'No'}' +
-                                  (cosmetic.isOpened
-                                      ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
-                                      : ''),
-                              style: TextStyle(fontSize: 14)),
-                          // 삭제 버튼
-                          IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                if (cosmetic.id != null) {
-                                  _deleteExpiry(cosmetic.id!, index);
-                                } else {
-                                  print("Invalid data");
-                                }
-                              }),
-                          // 수정 버튼
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () => _editExpiry(cosmetic, index),
-                          ),
-                        ],
+                            // 브랜드 이름
+                            // Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
+                            //     style: TextStyle(fontSize: 14)),
+                            // D-Day
+                            Text(
+                              isDatePassed
+                                  ? 'D+${difference.inDays.abs() + 1}'
+                                  : 'D-${difference.inDays}',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            // 만료일
+                            // Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
+                            //     style: TextStyle(fontSize: 14)),
+                            // 개봉 여부
+                            // Text(
+                            //     '개봉여부: ${cosmetic.isOpened ? 'Yes' : 'No'}' +
+                            //         (cosmetic.isOpened
+                            //             ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
+                            //             : ''),
+                            //     style: TextStyle(fontSize: 14)),
+                            // 삭제 버튼
+                            IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  if (cosmetic.id != null) {
+                                    _deleteExpiry(cosmetic.id!, index);
+                                  } else {
+                                    print("Invalid data");
+                                  }
+                                }),
+                            // 수정 버튼
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () => _editExpiry(cosmetic, index),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -278,3 +297,5 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
     );
   }
 }
+
+
