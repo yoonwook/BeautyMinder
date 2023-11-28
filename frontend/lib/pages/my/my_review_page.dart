@@ -67,7 +67,7 @@ class _MyReviewPageState extends State<MyReviewPage> {
             itemCount: reviews?.length ?? 0,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -84,11 +84,11 @@ class _MyReviewPageState extends State<MyReviewPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
                             child: Container(
-                              width: 200,
+                              width: MediaQuery.of(context).size.width/2.2,
                               child: Text(
                                 reviews?[index]['cosmetic']['name'],
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -99,51 +99,45 @@ class _MyReviewPageState extends State<MyReviewPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                FilledButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty.all(
-                                            Colors.orange)),
-                                    onPressed: () async {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            UpdateDialog(
-                                              onBarrierTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              title: reviews?[index]
-                                              ['cosmetic']['name'],
-                                              review: reviews?[index],
-                                              callback: updateParentVariable,
-                                            ),
-                                      );
-                                    },
-                                    child: Text('수정')),
-                                SizedBox(
-                                  width: 5,
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.orange, size: 18),
+                                  onPressed: () async {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => UpdateDialog(
+                                        onBarrierTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        title: reviews?[index]['cosmetic']['name'],
+                                        review: reviews?[index],
+                                        callback: updateParentVariable,
+                                      ),
+                                    );
+                                  },
+                                  color: Colors.orange,
+                                  iconSize: 15, // Adjust size as needed
                                 ),
-                                FilledButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty.all(
-                                            Colors.orange)),
-                                    onPressed: () async {
-                                      final ok = await deletePopUp(
-                                          context: context,
-                                          title: '정말 삭제하시겠습니까?',
-                                          callback: updateParentVariable,
-                                          id: reviews?[index]['id']);
-                                    },
-                                    child: Text('삭제'))
+                                // SizedBox(width: 5),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.orange, size: 18),
+                                  onPressed: () async {
+                                    final ok = await deletePopUp(
+                                      context: context,
+                                      title: '정말 삭제하시겠습니까?',
+                                      callback: updateParentVariable,
+                                      id: reviews?[index]['id'],
+                                    );
+                                  },
+                                  color: Colors.orange,
+                                  iconSize: 15, // Adjust size as needed
+                                ),
                               ],
                             ),
                           )
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
                         child: Text(
                           reviews?[index]['content'],
                           textAlign: TextAlign.justify,
