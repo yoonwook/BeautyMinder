@@ -351,8 +351,9 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
             _showSnackBar('Please select a cosmetic to review.');
           }
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Color(0xffd86a04),
+        shape: CircleBorder(),
         // elevation: 0, // 그림자 크기를 0으로 설정
       ),
     );
