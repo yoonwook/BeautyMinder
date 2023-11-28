@@ -8,8 +8,9 @@ import '../../services/ocr_service.dart';
 
 class ExpiryEditDialog extends StatefulWidget {
   final CosmeticExpiry expiry;
+  final Function(CosmeticExpiry) onUpdate;
 
-  ExpiryEditDialog({required this.expiry});
+  ExpiryEditDialog({required this.expiry, required this.onUpdate});
 
   @override
   _ExpiryEditDialogState createState() => _ExpiryEditDialogState();
@@ -32,6 +33,11 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
     openedDate = widget.expiry.openedDate;
   }
 
+  void _popBothDialogs() {
+    Navigator.of(context).pop(); // Pop the ExpiryEditDialog
+    Navigator.of(context).pop(); // Pop the ExpiryContentCard
+  }
+
   Future<void> _selectDate(BuildContext context,
       {bool isExpiryDate = true}) async {
     final DateTime? picked = await showDatePicker(
@@ -44,8 +50,10 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
       setState(() {
         if (isExpiryDate) {
           expiryDate = picked;
+          print("zzzz1 : ${expiryDate}");
         } else {
           openedDate = picked;
+          print("zzzz2 : ${openedDate}");
         }
       });
     }
@@ -83,6 +91,7 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
       _showErrorDialog("No image selected for OCR.");
     }
   }
+
   // 에러 메시지를 보여주는 함수
   void _showErrorDialog(String message) {
     showDialog(
@@ -103,7 +112,7 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('${widget.expiry.productName} 정보 수정'),
+      title: Text('\'${widget.expiry.productName}\' 정보 수정'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -155,9 +164,11 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
               isOpened: isOpened,
               openedDate: openedDate, // 수정된 openedDate
             );
-            Navigator.of(context).pop(updatedExpiry);
+            widget.onUpdate(updatedExpiry);
+            // Navigator.of(context).pop(updatedExpiry);
+            _popBothDialogs();
           },
-          child: Text('Submit'),
+          child: Text('수정'),
         ),
       ],
     );

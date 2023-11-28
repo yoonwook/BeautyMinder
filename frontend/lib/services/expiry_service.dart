@@ -103,21 +103,25 @@ class ExpiryService {
   static Future<CosmeticExpiry> updateExpiry(
       String expiryId, CosmeticExpiry updatedExpiry) async {
     setAccessToken();
+    print("이원준1");
     final url = Uri.http(
             Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId)
         .toString();
-    // final url = '${Config.apiURL}/expiry/$expiryId';
+    print("이원준2");
     try {
+      print("이원준3");
       final response = await client.put(url,
           options: _httpOptions('PUT', jsonHeaders),
           data: updatedExpiry.toJson());
+      print("이원준4");
       if (response.statusCode == 200) {
+        print("이원준5");
         return CosmeticExpiry.fromJson(response.data);
       } else {
         throw Exception(
             "Failed to update expiry: Status Code ${response.statusCode}");
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw Exception("DioError: ${e.message}");
     }
   }
@@ -140,58 +144,4 @@ class ExpiryService {
       throw Exception("DioError: ${e.message}");
     }
   }
-
-// Get all Expiry Items by UserId
-// static Future<List<CosmeticExpiry>> getAllExpiriesByUserId(String userId) async {
-//   setAccessToken();
-//
-//   final url = Uri.http(Config.apiURL, Config.getAllExpiryByUserIdAPI + userId).toString();
-//
-//   final response = await client.get(url, options: _httpOptions('GET', jsonHeaders));
-//   if (response.statusCode == 200) {
-//     print("Server response: ${response.data}"); // 로그 출력
-//     List<dynamic> jsonData = response.data;
-//     return jsonData.map((data) => CosmeticExpiry.fromJson(data)).toList();
-//   } else {
-//     throw Exception("Failed to get expiries by user ID");
-//   }
-// }
-
-// // Get an expiry item by UserId and ExpiryId
-// static Future<CosmeticExpiry> getExpiryByUserIdAndExpiryId(String userId, String expiryId) async {
-//   setAccessToken();
-//
-//   final url = Uri.http(Config.apiURL, Config.getAllExpiryByUserIdAPI + userId + Config.getExpiryByUserIdandExpiryIdAPI + expiryId).toString();
-//
-//   final response = await client.get(url, options: _httpOptions('GET', jsonHeaders));
-//   if (response.statusCode == 200) {
-//     return CosmeticExpiry.fromJson(response.data);
-//   } else {
-//     throw Exception("Failed to get expiry by user ID and expiry ID");
-//   }
-// }
-
-// // Update an expiry item by UserId and ExpiryId
-// static Future<CosmeticExpiry> updateExpiryByUserIdAndExpiryId(String userId, String expiryId, CosmeticExpiry updatedExpiry) async {
-//   setAccessToken();
-//
-//   final url = Uri.http(Config.apiURL, Config.getAllExpiryByUserIdAPI + userId + Config.getExpiryByUserIdandExpiryIdAPI + expiryId).toString();
-//
-//   final response = await client.put(url, options: _httpOptions('PUT', jsonHeaders), data: updatedExpiry.toJson());
-//   if (response.statusCode == 200) {
-//     return CosmeticExpiry.fromJson(response.data);
-//   } else {
-//     throw Exception("Failed to update expiry");
-//   }
-// }
-
-// // Delete an expiry item by UserId and ExpiryId
-// static Future<void> deleteExpiryByUserIdAndExpiryId(String userId, String expiryId) async {
-//   setAccessToken();
-//   final url = Uri.http(Config.apiURL, Config.getAllExpiryByUserIdAPI + userId + Config.getExpiryByUserIdandExpiryIdAPI + expiryId).toString();
-//   final response = await client.delete(url, options: _httpOptions('DELETE', jsonHeaders));
-//   if (response.statusCode != 200) {
-//     throw Exception("Failed to delete expiry");
-//   }
-// }
 }
