@@ -187,6 +187,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
                 return Card(
                   clipBehavior: Clip.antiAlias,
+                  color: Color(0xffffffff),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Padding(
