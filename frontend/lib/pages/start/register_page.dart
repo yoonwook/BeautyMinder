@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        height: MediaQuery.of(context).size.height*1.2,
+        height: MediaQuery.of(context).size.height*1.05,
         child: Column(
           children: <Widget>[
             SizedBox(height: 50),

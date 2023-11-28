@@ -17,6 +17,7 @@ class CosmeticDetailsDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text('브랜드: ${cosmetic.brandName}'),
           Text('유통기한: ${formatDate(cosmetic.expiryDate)}까지'),
           Text(
               (cosmetic.isOpened == true) ?

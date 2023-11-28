@@ -1,3 +1,4 @@
+import 'package:beautyminder/pages/my/widgets/delete_popup.dart';
 import 'package:beautyminder/pages/pouch/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -72,8 +73,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       });
     }
   }
-
-
 
   void _deleteExpiry(String expiryId, int index) async {
     try {
@@ -225,11 +224,12 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold
                               ),
+                              overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                             ),
                             // 브랜드 이름
-                            // Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
-                            //     style: TextStyle(fontSize: 14)),
+                            Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
+                                style: TextStyle(fontSize: 14)),
                             // D-Day
                             Text(
                               isDatePassed

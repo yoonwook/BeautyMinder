@@ -545,6 +545,10 @@ class _HomePageState extends State<HomePage> {
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
     BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
+    print("This is HiHiHi : ${result.value}");
+    print("This is HiHiHi2 : ${result.value?.isEmpty}");
+    print("This is HiHiHi3 : ${widget.user?.baumann?.isEmpty}");
+    print("This is HiHiHi4 : ${widget.user?.baumann}");
 
     return ElevatedButton(
       onPressed: () async {
@@ -556,6 +560,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           isApiCallProcess = true;
         });
+
         try {
           result = await BaumannService.getBaumannHistory();
 
@@ -618,7 +623,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 5),
-              Text((result.value != null) ? "${widget.user?.baumann}" : "테스트하기",
+              // widget.user?.baumann != null && widget.user!.baumann!.isNotEmpty
+              Text((widget.user?.baumann?.isEmpty == true) ? "테스트하기":"${widget.user?.baumann}",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ],
           ),

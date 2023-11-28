@@ -73,83 +73,154 @@ class BaumannHistoryPage extends StatelessWidget {
     );
   }
 
+  // Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
+  //   Color buttonColor = isEven ? Colors.white : Color(0xffffca97);
+  //   Color textColor = isEven ? Colors.black : Colors.white;
+  //
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 10),
+  //     child: Container(
+  //       height: 100,
+  //       margin: EdgeInsets.symmetric(vertical: 5),
+  //       child: ElevatedButton(
+  //         onPressed: () {
+  //           Navigator.of(context).push(MaterialPageRoute(
+  //               builder: (context) => WatchResultPage(resultData: result)));
+  //         },
+  //         style: ElevatedButton.styleFrom(
+  //           backgroundColor: buttonColor,
+  //           side: BorderSide(color: Color(0xffffca97)),
+  //           elevation: 0,
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+  //           ),
+  //         ),
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Text('피부타입: ${result.baumannType}',
+  //                     style: TextStyle(
+  //                         color: textColor,
+  //                         fontSize: 18,
+  //                         fontWeight: FontWeight.bold)),
+  //                 SizedBox(width: 16),
+  //                 Text('일시: ${result.date}',
+  //                     style: TextStyle(color: textColor, fontSize: 12)),
+  //               ],
+  //             ),
+  //             // _baumannResultContent(result, isEven),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
   Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
     Color buttonColor = isEven ? Colors.white : Color(0xffffca97);
     Color textColor = isEven ? Colors.black : Colors.white;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Container(
-        height: 100,
-        margin: EdgeInsets.symmetric(vertical: 5),
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => WatchResultPage(resultData: result)));
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: buttonColor,
-            side: BorderSide(color: Color(0xffffca97)),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
-            ),
+      child: Dismissible(
+        key: UniqueKey(),
+        background: Container(
+          color: Colors.red,
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          alignment: AlignmentDirectional.centerEnd,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('피부타입: ${result.baumannType}',
-                      style: TextStyle(
-                          color: textColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold)),
-                  SizedBox(width: 16),
-                  Text('일시: ${result.date}',
-                      style: TextStyle(color: textColor, fontSize: 12)),
-                ],
+        ),
+        onDismissed: (direction) {
+          // Implement your delete logic here
+          print("HelloHelloHello");
+
+          // Remove the dismissed item from the data source
+          resultData?.remove(result);
+
+          // Show a snackbar to undo the delete action
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("삭제되었습니다."),
+              action: SnackBarAction(
+                label: "취소",
+                onPressed: () {
+                  // Undo the delete action
+                  resultData?.insert(resultData!.indexOf(result), result);
+                },
               ),
-              // _baumannResultContent(result, isEven),
-            ],
+            ),
+          );
+        },
+        confirmDismiss: (direction) async {
+          // Show a confirmation dialog before deleting
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("정말로 삭제하시겠습니까?"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false); // Dismiss the dialog and reject the delete
+                    },
+                    child: Text("취소"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true); // Dismiss the dialog and confirm the delete
+                    },
+                    child: Text("삭제"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Container(
+          height: 100,
+          margin: EdgeInsets.symmetric(vertical: 5),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => WatchResultPage(resultData: result)));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: buttonColor,
+              side: BorderSide(color: Color(0xffffca97)),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('피부타입: ${result.baumannType}',
+                        style: TextStyle(
+                            color: textColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(width: 16),
+                    Text('일시: ${result.date}',
+                        style: TextStyle(color: textColor, fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Widget _baumannResultContent(BaumannResult result, bool isEven) {
-  //   Color cardColor = isEven ? Colors.white : Color(0xffffb876);
-  //   Color textColor = isEven ? Color(0xff6e6e6e) : Colors.white;
-  //
-  //   return Card(
-  //     color: cardColor,
-  //     elevation: 0,
-  //     child: Column(
-  //       children: [
-  //         ListTile(
-  //           subtitle: Column(
-  //             children: [
-  //               SizedBox(height: 5),
-  //               Text('색소침착도: ${result.baumannScores['pigmentation']}/57',
-  //                   style: TextStyle(color: textColor)),
-  //               Text('유수분 밸런스: ${result.baumannScores['hydration']}/44',
-  //                   style: TextStyle(color: textColor)),
-  //               Text('탄력: ${result.baumannScores['elasticity']}/85',
-  //                   style: TextStyle(color: textColor)),
-  //               Text('수분 보유력: ${result.baumannScores['moistureRetention']}/65',
-  //                   style: TextStyle(color: textColor)),
-  //               Text('민감도: ${result.baumannScores['sensitivity']}/64',
-  //                   style: TextStyle(color: textColor)),
-  //               SizedBox(height: 10),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _retestButton(BuildContext context) {
     return Padding(
