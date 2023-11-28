@@ -47,7 +47,9 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
 
     return Scaffold(
       appBar: BaumannTestAppBar(),
-      body: baumannTestUI(),
+      body: SingleChildScrollView(
+        child: baumannTestUI(),
+      )
     );
   }
 
@@ -57,23 +59,15 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 60), // 위 여백 추가
+          SizedBox(height: 50), // 위 여백 추가
           _textUIs(),
           SizedBox(height: 80), // 아래 여백 추가
           _btnType(),
+          SizedBox(height: 30),
         ],
       ),
     );
 
-    // return Column(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     SizedBox(height: 100), // 여백 추가
-    //     _textUIs(),
-    //     SizedBox(height: 80), // 여백 추가
-    //     _btnType(),
-    //   ],
-    // );
   }
 
   Widget _textUIs() {
@@ -94,14 +88,14 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
         children: [
           SizedBox(height: 30), // 여백 추가
           Text(
-            '문제 : ${currentPageData.question}',
+            '${currentPageData.question}', //문제
             style: TextStyle(
               color: Color(0xff545454),
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 80), // 여백 추가
+          SizedBox(height: 60), // 여백 추가
           Column(
             children: currentPageData.options.asMap().entries.map((entry) {
               int index = entry.key + 1;
@@ -115,7 +109,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
                   });
                 },
                 title: Text(
-                  '선택지 ${option.option} : ${option.description}',
+                  '${option.description}',//선택지
                   style: TextStyle(
                     color: Color(0xff545454),
                     fontSize: 18,
@@ -123,7 +117,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
                 ),
               );
             }).toList(),
-          )
+          ),
         ],
       ),
     );

@@ -24,7 +24,23 @@ class BaumannService {
 
   //POST 방식으로 JSON 데이터 전송하는 일반 함수
   static Future<Response> postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}) {
+      {Map<String, String>? headers}) async {
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
     return client.post(
       url,
       options: _httpOptions('POST', headers),
@@ -33,8 +49,10 @@ class BaumannService {
   }
 
   static Future<BaumResult<SurveyWrapper>> getBaumannSurveys() async {
+
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
+
 
     try {
       // GET 요청

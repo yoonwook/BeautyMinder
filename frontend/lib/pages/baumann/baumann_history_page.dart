@@ -91,6 +91,9 @@ class BaumannHistoryPage extends StatelessWidget {
             backgroundColor: buttonColor,
             side: BorderSide(color: Color(0xffffb876)),
             elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -105,11 +108,11 @@ class BaumannHistoryPage extends StatelessWidget {
                           fontSize: 18,
                           fontWeight: FontWeight.bold)),
                   SizedBox(width: 16),
-                  Text('테스트 일시: ${result.date}',
-                      style: TextStyle(color: textColor, fontSize: 18)),
+                  Text('일시: ${result.date}',
+                      style: TextStyle(color: textColor, fontSize: 12)),
                 ],
               ),
-              _baumannResultContent(result, isEven),
+              // _baumannResultContent(result, isEven),
             ],
           ),
         ),
@@ -117,37 +120,37 @@ class BaumannHistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _baumannResultContent(BaumannResult result, bool isEven) {
-    Color cardColor = isEven ? Colors.white : Color(0xffffb876);
-    Color textColor = isEven ? Color(0xff6e6e6e) : Colors.white;
-
-    return Card(
-      color: cardColor,
-      elevation: 0,
-      child: Column(
-        children: [
-          ListTile(
-            subtitle: Column(
-              children: [
-                SizedBox(height: 5),
-                Text('색소침착도: ${result.baumannScores['pigmentation']}/57',
-                    style: TextStyle(color: textColor)),
-                Text('유수분 밸런스: ${result.baumannScores['hydration']}/44',
-                    style: TextStyle(color: textColor)),
-                Text('탄력: ${result.baumannScores['elasticity']}/85',
-                    style: TextStyle(color: textColor)),
-                Text('수분 보유력: ${result.baumannScores['moistureRetention']}/65',
-                    style: TextStyle(color: textColor)),
-                Text('민감도: ${result.baumannScores['sensitivity']}/64',
-                    style: TextStyle(color: textColor)),
-                SizedBox(height: 10),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _baumannResultContent(BaumannResult result, bool isEven) {
+  //   Color cardColor = isEven ? Colors.white : Color(0xffffb876);
+  //   Color textColor = isEven ? Color(0xff6e6e6e) : Colors.white;
+  //
+  //   return Card(
+  //     color: cardColor,
+  //     elevation: 0,
+  //     child: Column(
+  //       children: [
+  //         ListTile(
+  //           subtitle: Column(
+  //             children: [
+  //               SizedBox(height: 5),
+  //               Text('색소침착도: ${result.baumannScores['pigmentation']}/57',
+  //                   style: TextStyle(color: textColor)),
+  //               Text('유수분 밸런스: ${result.baumannScores['hydration']}/44',
+  //                   style: TextStyle(color: textColor)),
+  //               Text('탄력: ${result.baumannScores['elasticity']}/85',
+  //                   style: TextStyle(color: textColor)),
+  //               Text('수분 보유력: ${result.baumannScores['moistureRetention']}/65',
+  //                   style: TextStyle(color: textColor)),
+  //               Text('민감도: ${result.baumannScores['sensitivity']}/64',
+  //                   style: TextStyle(color: textColor)),
+  //               SizedBox(height: 10),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _retestButton(BuildContext context) {
     return Padding(
