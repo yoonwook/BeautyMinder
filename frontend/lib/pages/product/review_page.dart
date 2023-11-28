@@ -1,16 +1,16 @@
 import 'dart:developer';
-
-import 'package:beautyminder/widget/commonAppBar.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
+import '/widget/commonAppBar.dart';
 import '/dto/user_model.dart';
 import '/services/shared_service.dart';
-import '../../dto/review_request_model.dart';
-import '../../dto/review_response_model.dart';
-import '../../services/review_service.dart';
+import '/dto/review_request_model.dart';
+import '/dto/review_response_model.dart';
+import '/services/review_service.dart';
 
 class CosmeticReviewPage extends StatefulWidget {
   final String cosmeticId;
@@ -22,13 +22,9 @@ class CosmeticReviewPage extends StatefulWidget {
 }
 
 class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
-  final TextEditingController _searchController = TextEditingController();
-
-  //List<Cosmetic> _searchResults = [];
-  List<ReviewResponse> _cosmeticReviews = []; // ReviewResponse 리스트로 변경
+  List<ReviewResponse> _cosmeticReviews = [];
   bool _isLoading = false;
-
-  //String _selectedCosmeticId = '';
+  final ImagePicker _picker = ImagePicker();
   List<PlatformFile>? _imageFiles;
 
   @override
@@ -37,33 +33,12 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     _fetchReviewsForCosmetic(widget.cosmeticId);
   }
 
-  /***@override
-      void dispose() {
-      _searchController.dispose();
-      super.dispose();
-      }
-
-      void _searchCosmetics() async {
-      setState(() => _isLoading = true);
-      try {
-      var results = await SearchService.searchCosmeticsByName(_searchController.text);
-      setState(() {
-      _searchResults = results;
-      _isLoading = false;
-      });
-      } catch (e) {
-      setState(() => _isLoading = false);
-      _showSnackBar('Search failed: $e');
-      }
-      }
-   ***/
   void _fetchReviewsForCosmetic(String cosmeticId) async {
     setState(() => _isLoading = true);
     try {
       var reviews = await ReviewService.getReviewsForCosmetic(cosmeticId);
       setState(() {
         _cosmeticReviews = reviews;
-        //_selectedCosmeticId = cosmeticId;
         _isLoading = false;
       });
     } catch (e) {
@@ -72,19 +47,27 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     }
   }
 
-  void getImages() async {
+  Future<void> pickImage() async {
     try {
-      _imageFiles = (await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        onFileLoading: (FilePickerStatus status) => print(status),
-        allowMultiple: false,
-        allowedExtensions: ['png', 'jpg', 'jpeg', 'heic'],
-      ))
-          ?.files;
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        PlatformFile file = PlatformFile(
+          name: image.name,
+          path: image.path,
+          size: await image.length(),
+          bytes: await image.readAsBytes(),
+        );
+        setState(() {
+          _imageFiles = [file]; // Store the selected image file.
+        });
+      } else {
+        _showSnackBar('No image selected.');
+      }
     } on PlatformException catch (e) {
       log('Unsupported operation : ' + e.toString());
     } catch (e) {
       log(e.toString());
+      _showSnackBar('Failed to pick image: $e');
     }
   }
 
@@ -98,10 +81,9 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     }
   }
 
-  void _showReviewDialog(
-      {ReviewResponse? reviewToUpdate, required String userId}) async {
+  void _showReviewDialog({ReviewResponse? reviewToUpdate, required String userId}) async {
     final _contentController = TextEditingController();
-    int _localRating = reviewToUpdate?.rating ?? 1; // 로컬 변수로 변경
+    int _localRating = reviewToUpdate?.rating ?? 3;
     if (reviewToUpdate != null) {
       _contentController.text = reviewToUpdate.content;
     }
@@ -110,19 +92,29 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       context: context,
       builder: (context) {
         return StatefulBuilder(
-          // StatefulBuilder 추가
           builder: (BuildContext context, StateSetter setDialogState) {
             return AlertDialog(
+              shape: RoundedRectangleBorder( // 모서리 둥글게
+                borderRadius: BorderRadius.circular(20),
+              ),
               title: Text(
-                  reviewToUpdate == null ? 'Write a Review' : 'Edit Review'),
+                reviewToUpdate == null ? '리뷰 작성' : 'Edit Review',
+                style: TextStyle(
+                  fontFamily: 'YourCustomFont',
+                ),
+              ),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: _contentController,
+                      cursorColor: Color(0xfff3bb88),
                       decoration: InputDecoration(
-                        hintText: 'Enter your review here',
+                        hintText: '리뷰를 작성해주세요',
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xfff3bb88)),
+                        ),
                       ),
                       maxLines: 3,
                     ),
@@ -131,41 +123,50 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                       value: _localRating,
                       items: List.generate(
                         5,
-                        (index) => DropdownMenuItem(
+                            (index) => DropdownMenuItem(
                           value: index + 1,
                           child: Text('${index + 1} Stars'),
                         ),
                       ),
                       onChanged: (value) {
                         if (value != null) {
-                          setDialogState(() {
-                            _localRating = value;
-                          });
+                          setDialogState(() => _localRating = value);
                         }
                       },
                     ),
                     ElevatedButton(
-                      onPressed: getImages,
-                      child: Text('Select Images'),
+                      onPressed: pickImage,
+                      child: Text('사진 추가'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, backgroundColor: Color(0xfff3bb88), // 텍스트 색상을 흰색으로 설정
+                      ),
                     ),
                   ],
                 ),
               ),
               actions: [
                 TextButton(
-                  child: Text('Cancel'),
+                  child: Text('취소'),
                   onPressed: () => Navigator.of(context).pop(),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Color(0xffe7a470), // 텍스트 색상을 주황색으로 설정
+                  ),
                 ),
                 TextButton(
-                  child: Text('Submit'),
+                  child: Text('제출'),
                   onPressed: () async {
                     final String content = _contentController.text;
                     if (content.isNotEmpty && widget.cosmeticId.isNotEmpty) {
                       ReviewRequest newReviewRequest = ReviewRequest(
                         content: content,
-                        rating: _localRating, // 여기에서 _localRating 사용
+                        rating: _localRating,
                         cosmeticId: widget.cosmeticId,
                       );
+
+                      if (_imageFiles == null || _imageFiles!.isEmpty) {
+                        _showSnackBar('리뷰사진을 추가해주세요!');
+                        return;
+                      }
 
                       try {
                         ReviewResponse responseReview;
@@ -173,17 +174,10 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                           responseReview = await ReviewService.addReview(
                               newReviewRequest, _imageFiles!);
                         } else {
-                          // 기존 리뷰 수정 로직
                           responseReview = await ReviewService.updateReview(
                               reviewToUpdate.id,
                               newReviewRequest,
                               _imageFiles!);
-                          // UI 업데이트
-                          int index = _cosmeticReviews.indexWhere(
-                              (review) => review.id == responseReview.id);
-                          if (index != -1) {
-                            _cosmeticReviews[index] = responseReview;
-                          }
                         }
 
                         setState(() {
@@ -191,13 +185,11 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                             _cosmeticReviews.add(responseReview);
                           } else {
                             int index = _cosmeticReviews.indexWhere(
-                                (review) => review.id == responseReview.id);
+                                    (review) => review.id == responseReview.id);
                             if (index != -1) {
                               _cosmeticReviews[index] = responseReview;
                             }
                           }
-                          //_searchResults.clear();
-                          //_searchController.clear();
                         });
                         Navigator.of(context).pop();
                         _showSnackBar(reviewToUpdate == null
@@ -211,6 +203,9 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                       _showSnackBar('Review content cannot be empty');
                     }
                   },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Color(0xffe7a470), // 텍스트 색상을 주황색으로 설정
+                  ),
                 ),
               ],
             );
@@ -221,10 +216,12 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
   }
+
+
 
   Widget _buildReviewList() {
     return Expanded(
@@ -238,7 +235,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
             elevation: 2,
             margin: EdgeInsets.all(8),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: ListTile(
               title: Row(
                 children: [
@@ -265,7 +262,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                   children: [
                     if (review.isFiltered)
                       Text(
-                        '누가 욕쓰라고 했냐?', // 필터링된 메시지 표시
+                        '욕설등의 문구로 필터링 되었습니다.', // 필터링된 메시지 표시
                         style: TextStyle(fontSize: 16, color: Colors.red),
                       )
                     else
@@ -275,7 +272,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                       ),
                     SizedBox(height: 10),
                     if (review.nlpAnalysis.isNotEmpty)
-                      Text('NLP Analysis: ${review.nlpAnalysis}')
+                      Text('리뷰 바우만 분석 수치: ${review.nlpAnalysis}')
                     // NLP 분석 결과 표시
                   ],
                 ),
@@ -338,23 +335,15 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
               ),
             )
           else
-            Expanded(
-              child: _buildReviewList(),
-            ),
+            _buildReviewList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (widget.cosmeticId.isNotEmpty) {
-            _addOrEditReview(null);
-          } else {
-            _showSnackBar('Please select a cosmetic to review.');
-          }
+          _addOrEditReview(null); // 리뷰 추가 다이얼로그를 여는 버튼으로 변경
         },
-        child: Icon(Icons.add, color: Colors.white,),
-        backgroundColor: Color(0xffd86a04),
-        shape: CircleBorder(),
-        // elevation: 0, // 그림자 크기를 0으로 설정
+        child: Icon(Icons.edit),
+        backgroundColor: Color(0xffe7a470),
       ),
     );
   }

@@ -92,6 +92,7 @@ class BaumannHistoryPage extends StatelessWidget {
   Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
     Color buttonColor = isEven ? Colors.white : Color(0xffffca97);
     Color textColor = isEven ? Colors.black : Colors.white;
+    print("\n\nhello ::::: ${result}:::::\n\n");
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -111,9 +112,10 @@ class BaumannHistoryPage extends StatelessWidget {
           // Implement your delete logic here
           print("HelloHelloHello");
 
+          print(":!:!: : ${result.id} :!:!:");
           final deletionResult = await BaumannService.deleteBaumannHistory(result.id);
 
-          if (deletionResult.isSuccess) {
+          if (deletionResult == "Success to Delete") {
             resultData?.remove(result);
 
             ScaffoldMessenger.of(context).showSnackBar(

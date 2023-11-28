@@ -144,7 +144,7 @@ class BaumannService {
   }
 
   //히스토리 삭제
-  static Future<BaumResult<List<BaumannResult>>> deleteBaumannHistory(String testId) async {
+  static Future<String> deleteBaumannHistory(String testId) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -176,24 +176,15 @@ class BaumannService {
 
       if (response.statusCode == 200) {
         print("3");
-        print("${response.data}");
+        print("/////${response.data}/////");
 
-        // 사용자 정보 파싱
-        // final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
-        final List<dynamic> jsonData = response.data as List<dynamic>;
-        final List<BaumannResult> result = jsonData
-            .map((dynamic item) =>
-            BaumannResult.fromJson(item as Map<String, dynamic>))
-            .toList();
-
-        print("This is Baumann Service(getHistory) : $result");
         print("Success Delete");
-        return BaumResult<List<BaumannResult>>.success(result);
+        return "Success to Delete";
       }
-      return BaumResult<List<BaumannResult>>.failure("Failed to delete baumann history");
+      return "Failed to delete";
     } catch (e) {
       print("An error occurred: $e");
-      return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
+      return "An error occurred: $e";
     }
   }
 }
