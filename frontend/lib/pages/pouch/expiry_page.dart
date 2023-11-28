@@ -66,6 +66,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         expiries = expiryData;
         isLoading = false; // 로딩 완료
       });
+
     } catch (e) {
       print("Error loading cosmetic expiries: $e");
       setState(() {
@@ -97,12 +98,15 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         builder: (context) => ExpiryInputDialog(cosmetic: selectedCosmetic),
       );
       if (expiryInfo != null) {
+        print("ooooo${expiryInfo}\n\n\n\n");
         final bool isOpened = expiryInfo[0] as bool;
         final DateTime expiryDate = expiryInfo[1] as DateTime;
         final DateTime? openedDate = expiryInfo[2] as DateTime?;
+        // final String brandName = expiryInfo
 
         final CosmeticExpiry newExpiry = CosmeticExpiry(
           productName: selectedCosmetic.name,
+          // brandName: brandName,
           expiryDate: expiryDate,
           isOpened: isOpened,
           openedDate: openedDate,
@@ -138,6 +142,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
   }
 
   void _showCosmeticDetailsDialog(CosmeticExpiry cosmetic) {
+
     showDialog(
       context: context,
       builder: (context) => CosmeticDetailsDialog(cosmetic: cosmetic),
@@ -146,6 +151,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffffecda),
@@ -185,6 +191,15 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
               itemBuilder: (context, index) {
                 final cosmetic = expiries[index];
                 final daysLeft = cosmetic.expiryDate.difference(DateTime.now()).inDays;
+                print("\n\n\nhihihihohoho :::!!::!!!!${cosmetic.id}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.brandName}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.isOpened}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.openedDate}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.imageUrl}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.expiryDate}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.isExpiryRecognized}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.productName}");
+                print("hihihihohoho :::!!::!!!!${cosmetic.cosmeticId}\n\n\n");
 
                 DateTime now = DateTime.now();
                 DateTime expiryDate = cosmetic.expiryDate ?? DateTime.now();
@@ -227,19 +242,22 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                             ),
+
                             // 브랜드 이름
-                            Text('Brand: ${cosmetic.brandName ?? 'N/A'}',
-                                style: TextStyle(fontSize: 14)),
+                            // Text('브랜드: ${cosmetic.brandName ?? 'NULL'}',
+                            //     style: TextStyle(fontSize: 14)),
+
                             // D-Day
-                            Text(
-                              isDatePassed
-                                  ? 'D+${difference.inDays.abs()}'
-                                  : 'D-${difference.inDays+1}',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            isDatePassed ?
+                                Text(
+                                  'D+${difference.inDays.abs()}',
+                                  style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold),
+                                ) : Text(
+                                  'D-${difference.inDays+1}',
+                                  style: (difference.inDays+1<=100) ?
+                                    TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)
+                                    : TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
+                                ),
 
                             // 만료일
                             // Text('유통기한: ${formatDate(cosmetic.expiryDate)}',
@@ -251,6 +269,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                             //             ? ' \n개봉날짜: ${formatDate(cosmetic.openedDate)}'
                             //             : ''),
                             //     style: TextStyle(fontSize: 14)),
+
                             Row(
                               children: [
                                 // 수정 버튼

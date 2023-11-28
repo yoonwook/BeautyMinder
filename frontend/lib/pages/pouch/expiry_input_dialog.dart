@@ -189,7 +189,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
         TextButton(
           onPressed: () =>
               Navigator.of(context).pop([isOpened, expiryDate, openedDate]),
-          child: Text('Submit'),
+          child: Text('등록'),
           style: TextButton.styleFrom(foregroundColor: Colors.orange),
         ),
       ],
