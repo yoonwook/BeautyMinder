@@ -20,7 +20,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late InAppWebViewController webViewController;
 
-  String api = "http://${Config.apiServer}${Config.chatAPI}";
+  String api = "http://${Config.apiURL}${Config.chatAPI}";
 
   @override
   Widget build(BuildContext context) {
