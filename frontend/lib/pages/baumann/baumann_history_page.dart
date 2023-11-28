@@ -73,14 +73,14 @@ class BaumannHistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _resultButton(
-      BuildContext context, BaumannResult result, bool isEven) {
+  Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
     Color buttonColor = isEven ? Colors.white : Color(0xffffb876);
     Color textColor = isEven ? Colors.black : Colors.white;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Container(
+        height: 100,
         margin: EdgeInsets.symmetric(vertical: 8),
         child: ElevatedButton(
           onPressed: () {
@@ -89,7 +89,7 @@ class BaumannHistoryPage extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: buttonColor,
-            side: BorderSide(color: Color(0xffffb876)),
+            side: BorderSide(color: Color(0xffffca97)),
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
@@ -98,7 +98,6 @@ class BaumannHistoryPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
