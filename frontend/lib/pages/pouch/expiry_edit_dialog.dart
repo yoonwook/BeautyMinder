@@ -46,9 +46,11 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
         if (isExpiryDate) {
           expiryDate = picked;
           print("zzzz1 : ${expiryDate}");
+          print("zzzz1 : ${opened}");
         } else {
           openedDate = picked;
           print("zzzz2 : ${openedDate}");
+          print("zzzz1 : ${opened}");
         }
       });
     }
@@ -106,6 +108,7 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    print("힘들다 : $opened");
     return AlertDialog(
       title: Text('\'${widget.expiry.productName}\' 정보 수정'),
       content: StatefulBuilder(
@@ -119,8 +122,10 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
                 onChanged: (bool value) {
                   setState(() {
                     opened = value;
+                    print("힘들다2 : $opened");
                     if (!opened) {
                       openedDate = null;
+                      print("힘들다3 : $opened");
                     }
                   });
                 },
@@ -150,23 +155,26 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
       actions: [
         TextButton(
           onPressed: () {
+            print("힘들다4 : $opened");
             // 새로운 CosmeticExpiry 객체 생성 및 현재 상태로 업데이트
             CosmeticExpiry updatedExpiry = CosmeticExpiry(
               id: widget.expiry.id,
               productName: widget.expiry.productName,
               brandName: widget.expiry.brandName,
               expiryDate: expiryDate,
-              // 수정된 expiryDate
-              isExpiryRecognized: widget.expiry.isExpiryRecognized,
+              expiryRecognized: widget.expiry.expiryRecognized,
               imageUrl: widget.expiry.imageUrl,
               cosmeticId: widget.expiry.cosmeticId,
               opened: opened,
               openedDate: openedDate, // 수정된 openedDate
             );
-            print("hahahahahaha --- $opened");
+            print("힘들다5 : $opened");
             widget.onUpdate(updatedExpiry);
+            print("힘들다6 : $opened");
             Navigator.of(context).pop(updatedExpiry);
+            print("힘들다7 : $opened");
             Navigator.of(context).pop(updatedExpiry);
+            print("힘들다8 : $opened");
           },
           child: Text('수정'),
         ),

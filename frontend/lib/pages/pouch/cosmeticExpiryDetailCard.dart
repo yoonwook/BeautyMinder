@@ -91,6 +91,7 @@ class ExpiryContentCard extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       onEdit();
+                      print("아이콘 버튼 눌러서 onEdit 실행되었을 때 opened : ${cosmetic.opened}");
                     },
                     icon: Icon(Icons.mode_edit_outline_outlined, size: 30,),
                   ),

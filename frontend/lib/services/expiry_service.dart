@@ -1,3 +1,4 @@
+import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../config.dart';
@@ -100,21 +101,41 @@ class ExpiryService {
   }
 
   // Update an
-  static Future<CosmeticExpiry> updateExpiry(
-      String expiryId, CosmeticExpiry updatedExpiry) async {
-    setAccessToken();
+  static Future<CosmeticExpiry> updateExpiry(String expiryId, CosmeticExpiry updatedExpiry) async {
+
+    // 로그인 상세 정보 가져오기
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final userId = user?.id ?? '-1';
+
     final url = Uri.http(
             Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId).toString();
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
     try {
-      print("이원준");
-      final response = await client.put(url,
-          options: _httpOptions('PUT', jsonHeaders),
+      print("*** 1 : ${updatedExpiry.opened}");
+      print("*** 2 : ${updatedExpiry.toJson()}");
+      final response = await client.put(
+          url,
+          options: _httpOptions('PUT', headers),
           data: updatedExpiry.toJson());
+      print("*** 3 : ${response.data}");
 
       print("1122Server Response: ${response.statusCode} - ${response.data}");
 
       if (response.statusCode == 200) {
         print("이원준5");
+        print("1133Server Response: ${response.statusCode} - ${response.data}");
         return CosmeticExpiry.fromJson(response.data);
       } else {
         throw Exception(

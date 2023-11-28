@@ -129,22 +129,27 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
   }
 
   void _editExpiry(CosmeticExpiry expiry, int index) async {
+    print("***Before updating: ${expiry.opened}");
     final CosmeticExpiry? updatedExpiry = await showDialog<CosmeticExpiry>(
       context: context,
       builder: (context) => ExpiryEditDialog(
         expiry: expiry,
         onUpdate: (updated) {
           setState(() {
+            print("hell : ${updated.opened}");
             expiries[index] = updated;
           });
         },
       ),
     );
+    print("***After dialog: ${updatedExpiry?.opened}");
 
     if (updatedExpiry != null) {
       try {
+        print("***Before server update: ${updatedExpiry.opened}");
         final CosmeticExpiry updated =
             await ExpiryService.updateExpiry(expiry.id!, updatedExpiry);
+        print("***After server update: ${updated.opened}");
         setState(() {
           expiries[index] = updated;
         });
@@ -155,7 +160,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
   }
 
   void _showCosmeticDetailsCard(CosmeticExpiry cosmetic, int index) {
-
     showDialog(
       context: context,
       builder: (context) => ExpiryContentCard(
