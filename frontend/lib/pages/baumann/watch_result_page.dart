@@ -130,7 +130,7 @@ class _WatchResultPageState extends State<WatchResultPage> {
           StringBuffer text = StringBuffer("");
           for (int i = 0; i < mapDataModels.length; i++) {
             text.write(
-                "${legendModels[i].name} : ${mapDataModels[i].toString()}");
+                "${mapDataModels[i].toString()}/${indicatorModel.maxValues}");
             if (i != mapDataModels.length - 1) {
               text.write("\n");
             }
@@ -460,6 +460,9 @@ class _WatchResultPageState extends State<WatchResultPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xffe58731),
             elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+            ),
           ),
           child: Text(
             '홈으로 가기',
