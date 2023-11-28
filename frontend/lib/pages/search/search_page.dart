@@ -93,7 +93,6 @@ class _SearchPageState extends State<SearchPage> {
                           searchResults: result,
                         )),
               );
-              print('////////////searchQuery : $searchQuery');
             } catch (e) {
               print('Error searching anything: $e');
             }
@@ -108,8 +107,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _searchPageUI() {
-    print("hellohelloeveryone : ${widget.data?.keywords}");
-    print("hellohelloeveryone : ${widget.data2?.cosmetics}");
     if ((widget.data?.keywords?.length == 0) &&
         (widget.data2?.cosmetics.length == 0)) {
       return Column(
@@ -128,7 +125,7 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               _keywordRankingIfMoreThanSix(),
               _noProductRanking(),
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
             ],
           ),
         );
@@ -139,7 +136,7 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               _keywordRankingIfLessThanFive(),
               _noProductRanking(),
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
             ],
           ),
         );
@@ -151,18 +148,17 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           _noKeywordRanking(),
           _productRanking(),
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
         ],
       ));
     } else {
       if ((widget.data?.keywords?.length ?? 0) >= 6) {
-        print("length : ${widget.data?.keywords?.length}");
         return SingleChildScrollView(
           child: Column(
             children: [
               _keywordRankingIfMoreThanSix(),
               _productRanking(),
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
             ],
           ),
         );
@@ -173,7 +169,7 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               _keywordRankingIfLessThanFive(),
               _productRanking(),
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
             ],
           ),
         );
@@ -209,66 +205,11 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       SizedBox(height: 40),
-      // const Padding(
-      //   padding: EdgeInsets.symmetric(horizontal: 20),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       Text(
-      //         '실시간 제품 랭킹',
-      //         style: TextStyle(
-      //           fontSize: 18,
-      //           fontWeight: FontWeight.bold,
-      //           color: Color(0xffd86a04),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // _divider(),
-      // SizedBox(height: 40),
-      // const Center(
-      //   child: Text(
-      //     '실시간 랭킹 순위를 불러올 수 없습니다.',
-      //     style: TextStyle(
-      //         fontSize: 18,
-      //         color: Colors.grey
-      //     ),
-      //   ),
-      // ),
     ]);
   }
 
   Widget _noProductRanking() {
     return Column(children: [
-      // const SizedBox(height: 40),
-      // const Padding(
-      //   padding: EdgeInsets.symmetric(horizontal: 20),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       Text(
-      //         '실시간 검색 랭킹',
-      //         style: TextStyle(
-      //           fontSize: 18,
-      //           fontWeight: FontWeight.bold,
-      //           color: Color(0xffd86a04),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // _divider(),
-      // SizedBox(height: 40),
-      // const Center(
-      //   child: Text(
-      //     '실시간 랭킹 순위를 불러올 수 없습니다.',
-      //     style: TextStyle(
-      //         fontSize: 18,
-      //         color: Colors.grey
-      //     ),
-      //   ),
-      // ),
       SizedBox(height: 40),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -298,11 +239,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _keywordRankingIfMoreThanSix() {
-    print("dfjkdlsjafkldj: ${widget.data?.keywords}");
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
     return Container(
-      height: 400,
+      height: MediaQuery.of(context).size.height/2,
       child: Column(
         children: [
           const SizedBox(height: 40),
@@ -345,7 +285,7 @@ class _SearchPageState extends State<SearchPage> {
                       final keyword = widget.data?.keywords![index];
                       final rank = index + 1;
                       return ListTile(
-                        title: Text('${rank}순위 : $keyword'),
+                        title: Text('${rank}순위 : $keyword',overflow: TextOverflow.ellipsis,),
                         onTap: () async {
                           if (keyword != null) {
                             _navigateToSearchResultPage(keyword);
@@ -368,7 +308,7 @@ class _SearchPageState extends State<SearchPage> {
                       final keyword = widget.data?.keywords![startIndex];
                       final rank = startIndex + 1;
                       return ListTile(
-                        title: Text('${rank}순위 : $keyword'),
+                        title: Text('${rank}순위 : $keyword',overflow: TextOverflow.ellipsis,),
                         onTap: () async {
                           if (keyword != null) {
                             _navigateToSearchResultPage(keyword);
@@ -387,11 +327,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _keywordRankingIfLessThanFive() {
-    print("dfjkdlsjafkldj: ${widget.data?.keywords}");
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
     return Container(
-      height: 400,
+      height: MediaQuery.of(context).size.height/2,
       child: Column(
         children: [
           const SizedBox(height: 40),
@@ -431,7 +370,8 @@ class _SearchPageState extends State<SearchPage> {
                 final keyword = widget.data?.keywords![index];
                 final rank = index + 1;
                 return ListTile(
-                  title: Text('$rank순위 : $keyword'),
+                  title: Text('$rank순위 : $keyword', overflow: TextOverflow.ellipsis,),
+
                   onTap: () async {
                     if (keyword != null) {
                       _navigateToSearchResultPage(keyword);
@@ -463,7 +403,6 @@ class _SearchPageState extends State<SearchPage> {
 
     return Column(
       children: [
-        const SizedBox(height: 40),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -485,6 +424,7 @@ class _SearchPageState extends State<SearchPage> {
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
             ],
           ),
@@ -501,7 +441,6 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
       ],
     );
   }
@@ -533,11 +472,12 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.white,
                     ),
           title: Text(
-            '$rank순위 : ${product.name}',
+            '${product.name}',
             style: TextStyle(
               fontSize: 18,
               letterSpacing: 0,
             ),
+            overflow: TextOverflow.ellipsis,
           ), // Display product name
           // Add more information if needed
         ),
@@ -554,7 +494,6 @@ class _SearchPageState extends State<SearchPage> {
           searchResults: product,
         ),
       ));
-      print('////////////searchQuery : $searchQuery');
     } catch (e) {
       print('Error searching anything: $e');
     }
@@ -571,7 +510,6 @@ class _SearchPageState extends State<SearchPage> {
           searchResults: result,
         ),
       ));
-      print('////////////searchQuery : $searchQuery');
     } catch (e) {
       print('Error searching anything: $e');
     }
