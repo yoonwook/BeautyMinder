@@ -74,14 +74,14 @@ class BaumannHistoryPage extends StatelessWidget {
   }
 
   Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
-    Color buttonColor = isEven ? Colors.white : Color(0xffffb876);
+    Color buttonColor = isEven ? Colors.white : Color(0xffffca97);
     Color textColor = isEven ? Colors.black : Colors.white;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Container(
         height: 100,
-        margin: EdgeInsets.symmetric(vertical: 8),
+        margin: EdgeInsets.symmetric(vertical: 5),
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(

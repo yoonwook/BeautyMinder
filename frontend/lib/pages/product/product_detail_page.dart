@@ -225,42 +225,94 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  // Widget _displayRatingStars() {
+  //
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Expanded(
+  //       child: Row(
+  //         children: [
+  //           Text(
+  //             '별점: ',
+  //             style: TextStyle(fontSize: 18),
+  //           ),
+  //           AbsorbPointer(
+  //             absorbing: true, // Set absorbing to true
+  //             child: RatingBar.builder(
+  //               initialRating: widget.searchResults.averageRating,
+  //               minRating: 1,
+  //               direction: Axis.horizontal,
+  //               allowHalfRating: true,
+  //               itemCount: 5,
+  //               itemSize: 20,
+  //               itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+  //               itemBuilder: (context, _) => Icon(
+  //                 Icons.star,
+  //                 color: Colors.amber,
+  //               ),
+  //               onRatingUpdate: (rating) {},
+  //             ),
+  //           ),
+  //           Text(
+  //             '(${widget.searchResults.averageRating})',
+  //             style: TextStyle(fontSize: 18),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
   Widget _displayRatingStars() {
+    double averageRating = widget.searchResults.averageRating;
+    int fullStar = averageRating.toInt();
+    double halfStar = averageRating - fullStar;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Expanded(
-        child: Row(
-          children: [
-            Text(
-              '별점: ',
-              style: TextStyle(fontSize: 18),
-            ),
-            AbsorbPointer(
-              absorbing: true, // Set absorbing to true
-              child: RatingBar.builder(
-                initialRating: widget.searchResults.averageRating,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 20,
-                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                itemBuilder: (context, _) => Icon(
+      child: Row(
+        children: [
+          Text(
+            '별점: ',
+            style: TextStyle(fontSize: 18),
+          ),
+          RatingBar.builder(
+            initialRating: averageRating,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemSize: 20,
+            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+            itemBuilder: (context, index) {
+              if (index < fullStar) {
+                return Icon(
                   Icons.star,
                   color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {},
-              ),
-            ),
-            Text(
-              '(${widget.searchResults.averageRating})',
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
+                );
+              } else if (index == fullStar && halfStar > 0) {
+                return Icon(
+                  Icons.star_half_outlined,
+                  color: Colors.amber,
+                );
+              } else {
+                return Icon(
+                  Icons.star_border,
+                  color: Colors.grey,
+                );
+              }
+            },
+            onRatingUpdate: (rating) {},
+          ),
+          Text(
+            '(${widget.searchResults.averageRating})',
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
       ),
     );
   }
+
+
 
   Widget _displayGPTReview(GPTReviewInfo gptReviewInfo, bool isPositive) {
     // bool isPositive = showPositiveReview;

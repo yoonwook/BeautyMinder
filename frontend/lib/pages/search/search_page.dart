@@ -262,7 +262,7 @@ class _SearchPageState extends State<SearchPage> {
       // SizedBox(height: 40),
       // const Center(
       //   child: Text(
-      //     '실시간 랭킹 순위를 불러올간 수 없습니다.',
+      //     '실시간 랭킹 순위를 불러올 수 없습니다.',
       //     style: TextStyle(
       //         fontSize: 18,
       //         color: Colors.grey
@@ -322,7 +322,7 @@ class _SearchPageState extends State<SearchPage> {
                 Text(
                   formattedDate,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
                   ),
@@ -391,7 +391,7 @@ class _SearchPageState extends State<SearchPage> {
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
     return Container(
-      height: 350,
+      height: 400,
       child: Column(
         children: [
           const SizedBox(height: 40),
@@ -411,7 +411,7 @@ class _SearchPageState extends State<SearchPage> {
                 Text(
                   formattedDate,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
                   ),
@@ -481,7 +481,7 @@ class _SearchPageState extends State<SearchPage> {
                 Text(
                   formattedDate2,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
                   ),
