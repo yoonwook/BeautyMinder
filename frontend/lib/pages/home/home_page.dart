@@ -387,8 +387,8 @@ class _HomePageState extends State<HomePage> {
                 // Display D-day or any other information here
                 Text(
                   isDatePassed
-                      ? 'D+${difference.inDays.abs() + 1}'
-                      : 'D-${difference.inDays}',
+                      ? 'D+${difference.inDays.abs()}'
+                      : 'D-${difference.inDays+1}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],

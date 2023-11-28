@@ -153,7 +153,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         centerTitle: false,
         title: const Text(
           "BeautyMinder",
-          style: TextStyle(color: Color(0xffd86a04)),
+          style: TextStyle(color: Color(0xffd86a04), fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(
           color: Color(0xffd86a04),
@@ -233,8 +233,8 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                             // D-Day
                             Text(
                               isDatePassed
-                                  ? 'D+${difference.inDays.abs() + 1}'
-                                  : 'D-${difference.inDays}',
+                                  ? 'D+${difference.inDays.abs()}'
+                                  : 'D-${difference.inDays+1}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
