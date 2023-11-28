@@ -9,9 +9,9 @@ class ExpiryService {
   // static String accessToken = Config.acccessToken;
   // static String refreshToken = Config.refreshToken;
   static String accessToken =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDA1NTA3MjUsImV4cCI6MTcwMTc2MDMyNSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.MESeOCDgBOPiXj9Zn-UiFqSbN0Oo30cEibwk__7IZEo";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDExNzk4MTQsImV4cCI6MTcwMzc3MTgxNCwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU2NWYxMDE3Zjk4NzRlNzQ5ZmNkMzJlIn0.gRjvkNVIRXlAhngM2cgNROEIFwhFmrkqzJQIRHcEAys";
   static String refreshToken =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDA1NTA3MjUsImV4cCI6MTcwMjM2NTEyNSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.Pl1s8CyrVYDeBor4gtD4i6ibt1CI0tDVU9bipqP5ozI';
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDExNzk4MTQsImV4cCI6MTcwMzc3MTgxNCwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU2NWYxMDE3Zjk4NzRlNzQ5ZmNkMzJlIn0.gRjvkNVIRXlAhngM2cgNROEIFwhFmrkqzJQIRHcEAys';
 
   // 액세스 토큰 설정
   static void setAccessToken() {
@@ -103,17 +103,16 @@ class ExpiryService {
   static Future<CosmeticExpiry> updateExpiry(
       String expiryId, CosmeticExpiry updatedExpiry) async {
     setAccessToken();
-    print("이원준1");
     final url = Uri.http(
-            Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId)
-        .toString();
-    print("이원준2");
+            Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId).toString();
     try {
-      print("이원준3");
+      print("이원준");
       final response = await client.put(url,
           options: _httpOptions('PUT', jsonHeaders),
           data: updatedExpiry.toJson());
-      print("이원준4");
+
+      print("1122Server Response: ${response.statusCode} - ${response.data}");
+
       if (response.statusCode == 200) {
         print("이원준5");
         return CosmeticExpiry.fromJson(response.data);

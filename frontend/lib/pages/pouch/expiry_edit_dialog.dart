@@ -17,7 +17,7 @@ class ExpiryEditDialog extends StatefulWidget {
 }
 
 class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
-  late bool isOpened;
+  late bool opened;
   late DateTime expiryDate;
   DateTime? openedDate;
 
@@ -28,14 +28,9 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
   @override
   void initState() {
     super.initState();
-    isOpened = widget.expiry.isOpened;
+    opened = widget.expiry.opened;
     expiryDate = widget.expiry.expiryDate;
     openedDate = widget.expiry.openedDate;
-  }
-
-  void _popBothDialogs() {
-    Navigator.of(context).pop(); // Pop the ExpiryEditDialog
-    Navigator.of(context).pop(); // Pop the ExpiryContentCard
   }
 
   Future<void> _selectDate(BuildContext context,
@@ -113,40 +108,44 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('\'${widget.expiry.productName}\' 정보 수정'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SwitchListTile(
-            title: Text('개봉여부'),
-            value: isOpened,
-            onChanged: (bool value) {
-              setState(() {
-                isOpened = value;
-                if (!isOpened) {
-                  openedDate = null;
-                }
-              });
-            },
-          ),
-          ListTile(
-            title: Text('유통기한: ${formatDate(expiryDate)}'),
-            trailing: Icon(Icons.calendar_today),
-            onTap: () => _selectDate(context),
-          ),ListTile(
-            title: Text('OCR'),
-            trailing: Icon(Icons.calendar_today),
-            onTap: () =>_navigateAndProcessOCR() ,
-          ),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile(
+                title: Text('개봉 여부'),
+                value: opened,
+                onChanged: (bool value) {
+                  setState(() {
+                    opened = value;
+                    if (!opened) {
+                      openedDate = null;
+                    }
+                  });
+                },
+              ),
+              ListTile(
+                title: Text('유통기한: ${formatDate(expiryDate)}'),
+                trailing: Icon(Icons.calendar_today),
+                onTap: () => _selectDate(context),
+              ),ListTile(
+                title: Text('OCR'),
+                trailing: Icon(Icons.calendar_today),
+                onTap: () =>_navigateAndProcessOCR() ,
+              ),
 
-          if (isOpened)
-            ListTile(
-              title: Text(openedDate != null
-                  ? '개봉 날짜: ${formatDate(openedDate!)}'
-                  : '개봉 날짜 선택'),
-              trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context, isExpiryDate: false),
-            ),
-        ],
+              if (opened)
+                ListTile(
+                  title: Text(openedDate != null
+                      ? '개봉 날짜: ${formatDate(openedDate!)}'
+                      : '개봉 날짜 선택'),
+                  trailing: Icon(Icons.calendar_today),
+                  onTap: () => _selectDate(context, isExpiryDate: false),
+                ),
+            ],
+          );
+        },
       ),
       actions: [
         TextButton(
@@ -161,12 +160,13 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
               isExpiryRecognized: widget.expiry.isExpiryRecognized,
               imageUrl: widget.expiry.imageUrl,
               cosmeticId: widget.expiry.cosmeticId,
-              isOpened: isOpened,
+              opened: opened,
               openedDate: openedDate, // 수정된 openedDate
             );
+            print("hahahahahaha --- $opened");
             widget.onUpdate(updatedExpiry);
-            // Navigator.of(context).pop(updatedExpiry);
-            _popBothDialogs();
+            Navigator.of(context).pop(updatedExpiry);
+            Navigator.of(context).pop(updatedExpiry);
           },
           child: Text('수정'),
         ),

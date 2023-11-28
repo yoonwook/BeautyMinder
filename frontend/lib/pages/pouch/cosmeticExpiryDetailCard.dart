@@ -17,7 +17,7 @@ class ExpiryContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4.0,
-      margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 60.0),
+      margin: EdgeInsets.symmetric(horizontal: 25.0, vertical: 60.0),
       color: Colors.white,
       child: Container(
         margin: EdgeInsets.all(10.0), // Margin inside the card
@@ -31,13 +31,15 @@ class ExpiryContentCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
+                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 50.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      cosmetic.productName,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    Center(
+                      child: Text(
+                        cosmetic.productName,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      ),
                     ),
 
                     SizedBox(height: 30,),
@@ -68,14 +70,14 @@ class ExpiryContentCard extends StatelessWidget {
                     SizedBox(height: 20,),
 
                     Text(
-                        cosmetic.isOpened == true  ? '개봉 여부 : 개봉' : '개봉 여부 : 미개봉',
+                        cosmetic.opened == true  ? '개봉 여부 : 개봉' : '개봉 여부 : 미개봉',
                         style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
                     ),
 
                     SizedBox(height: 20,),
 
                     Text(
-                        cosmetic.isOpened == true
+                        cosmetic.opened == true
                             ? '개봉일 : ${formatDate(cosmetic.openedDate)}'
                             : '개봉일 : N/A',
                         style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)

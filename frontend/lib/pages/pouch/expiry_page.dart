@@ -105,7 +105,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       );
       if (expiryInfo != null) {
         print("ooooo${expiryInfo}\n\n\n\n");
-        final bool isOpened = expiryInfo[0] as bool;
+        final bool opened = expiryInfo[0] as bool;
         final DateTime expiryDate = expiryInfo[1] as DateTime;
         final DateTime? openedDate = expiryInfo[2] as DateTime?;
         // final String brandName = expiryInfo
@@ -114,7 +114,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
           productName: selectedCosmetic.name,
           // brandName: brandName,
           expiryDate: expiryDate,
-          isOpened: isOpened,
+          opened: opened,
           openedDate: openedDate,
 
           // 다른 필드들 추가
@@ -262,27 +262,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                                     TextStyle(fontSize: 25, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)
                                     : TextStyle(fontSize: 25, color: Colors.black54, fontWeight: FontWeight.bold)
                                 ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬 추가
-                            //   children: [
-                            //     // 수정 버튼
-                            //     IconButton(
-                            //       icon: Icon(Icons.mode_edit_outline_outlined, size: 20,),
-                            //       onPressed: () => _editExpiry(cosmetic, index),
-                            //     ),
-                            //     // 삭제 버튼
-                            //     IconButton(
-                            //       icon: Icon(Icons.delete_outline_outlined, size: 20,),
-                            //       onPressed: () {
-                            //         if (cosmetic.id != null) {
-                            //           _deleteExpiry(cosmetic.id!, index);
-                            //         } else {
-                            //           print("Invalid data");
-                            //         }
-                            //       }
-                            //     ),
-                            //   ],
-                            // )
                           ],
                         ),
                       ),

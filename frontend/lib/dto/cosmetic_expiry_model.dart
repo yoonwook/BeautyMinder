@@ -8,7 +8,7 @@ class CosmeticExpiry {
   final bool isExpiryRecognized;
   String? imageUrl;
   final String? cosmeticId;
-  bool isOpened;
+  final bool opened;
   DateTime? openedDate;
 
   CosmeticExpiry({
@@ -19,7 +19,7 @@ class CosmeticExpiry {
     this.isExpiryRecognized = false,
     this.imageUrl,
     this.cosmeticId,
-    this.isOpened = false,
+    this.opened = false,
     this.openedDate,
   });
 
@@ -32,7 +32,7 @@ class CosmeticExpiry {
       isExpiryRecognized: (json['isExpiryRecognized'] as bool?) ?? false,
       imageUrl: json['imageUrl'] as String?,
       cosmeticId: json['cosmeticId'] as String?,
-      isOpened: (json['opened'] as bool?) ?? false,
+      opened: (json['opened'] as bool?) ?? false,
       openedDate: json['openedDate'] != null
           ? DateTime.parse(json['openedDate'] as String)
           : null,
@@ -49,7 +49,7 @@ class CosmeticExpiry {
       'isExpiryRecognized': isExpiryRecognized,
       'imageUrl': imageUrl,
       'cosmeticId': cosmeticId,
-      'opened': isOpened,
+      'opened': opened,
       'openedDate': openedDate != null ? formatter.format(openedDate!) : null,
     };
   }
