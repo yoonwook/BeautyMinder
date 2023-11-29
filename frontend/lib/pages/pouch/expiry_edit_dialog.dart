@@ -67,64 +67,16 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
     }
   }
 
-  // OCR 페이지로 이동하고 결과를 받아오는 함수
-  Future<void> _navigateAndProcessOCR() async {
-    final PlatformFile? pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      withData: true,
-      allowedExtensions: ['png', 'jpg', 'jpeg'],
-    ).then((result) => result?.files.first);
-
-    if (pickedFile != null) {
-      // OCR 처리를 요청하고 결과를 받습니다.
-      try {
-        print("SUCK: ${pickedFile}");
-        final response = await OCRService.selectAndUploadImage(pickedFile);
-        print("FUCK: ${response}");
-        if (response != null) {
-          final VisionResponseDTO result = VisionResponseDTO.fromJson(response);
-          final expiryDateFromOCR = DateFormat('yyyy-MM-dd').parse(result.data);
-
-          // 받아온 유통기한으로 상태 업데이트
-          setState(() {
-            expiryDate = expiryDateFromOCR;
-          });
-        }
-      } catch (e) {
-        print("hello");
-        // 오류 처리
-        _showErrorDialog(e.toString());
-      }
-    } else {
-      _showErrorDialog("No image selected for OCR.");
-    }
-  }
-
-  // 에러 메시지를 보여주는 함수
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            child: Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(3.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
+      titlePadding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 50.0),
       title: Text(
-        '\'${widget.expiry.productName}\' 정보 수정',
+        '제품 정보를 수정해주세요',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 24,
@@ -136,6 +88,44 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              ListTile(
+                title: Text(
+                  '제품명',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                trailing: Container(
+                  width: 150,
+                  child: Text(
+                    '${widget.expiry.productName}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.end,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  '브랜드',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                trailing: Container(
+                  width: 150,
+                  child: Text(
+                    '${widget.expiry.brandName}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.end,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
               SwitchListTile(
                 title: Text(
                   '개봉 여부',
@@ -166,12 +156,6 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
                 onTap: () => _selectDate(context),
               ),
 
-              // ListTile(
-              //   title: Text('OCR'),
-              //   trailing: Icon(Icons.calendar_today),
-              //   onTap: () =>_navigateAndProcessOCR() ,
-              // ),
-
               if (opened)
                 ListTile(
                   title: Text(openedDate != null
@@ -189,45 +173,34 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
         },
       ),
       actions: [
-        Container(
-          width: 70,
-          height: 30,
-          child: TextButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero, // 내용물과의 간격을 없애기 위해 추가
-              backgroundColor: Color(0xffdc7e00),
-              foregroundColor: Colors.white,
-              side: BorderSide(color: Color(0xffdc7e00)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(2.0),
-              ),
-            ),
-            onPressed: () {
-              // 새로운 CosmeticExpiry 객체 생성 및 현재 상태로 업데이트
-              CosmeticExpiry updatedExpiry = CosmeticExpiry(
-                id: widget.expiry.id,
-                productName: widget.expiry.productName,
-                brandName: widget.expiry.brandName,
-                expiryDate: expiryDate,
-                expiryRecognized: widget.expiry.expiryRecognized,
-                imageUrl: widget.expiry.imageUrl,
-                cosmeticId: widget.expiry.cosmeticId,
-                opened: opened,
-                openedDate: openedDate, // 수정된 openedDate
-              );
-              widget.onUpdate(updatedExpiry);
-              Navigator.of(context).pop(updatedExpiry);
-              Navigator.of(context).pop(updatedExpiry);
-            },
-            child: Text(
-              '수정',
-              style: TextStyle(
-                fontSize: 18,
-                // fontWeight: FontWeight.bold,
-              ),
+        TextButton(
+          style: TextButton.styleFrom(foregroundColor: Colors.orange),
+          onPressed: () {
+            // 새로운 CosmeticExpiry 객체 생성 및 현재 상태로 업데이트
+            CosmeticExpiry updatedExpiry = CosmeticExpiry(
+              id: widget.expiry.id,
+              productName: widget.expiry.productName,
+              brandName: widget.expiry.brandName,
+              expiryDate: expiryDate,
+              expiryRecognized: widget.expiry.expiryRecognized,
+              imageUrl: widget.expiry.imageUrl,
+              cosmeticId: widget.expiry.cosmeticId,
+              opened: opened,
+              openedDate: openedDate, // 수정된 openedDate
+            );
+            widget.onUpdate(updatedExpiry);
+            Navigator.of(context).pop(updatedExpiry);
+            Navigator.of(context).pop(updatedExpiry);
+          },
+          child: Text(
+            '수정',
+            style: TextStyle(
+                color: Colors.orange,
+                fontSize: 20,
+                fontWeight: FontWeight.bold
             ),
           ),
-        )
+        ),
       ],
     );
   }

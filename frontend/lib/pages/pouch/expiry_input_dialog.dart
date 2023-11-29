@@ -171,13 +171,29 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('유통기한 입력 방법 선택'),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        title: Text(
+          '유통기한 입력 방법 선택',
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 24,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.edit),
-              title: Text('직접 입력'),
+              title: Text(
+                '직접 입력',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
               onTap: () {
                 Navigator.of(context).pop();
                 _selectDate(context);
@@ -185,7 +201,13 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             ),
             ListTile(
               leading: Icon(Icons.camera_alt),
-              title: Text('카메라로 촬영'),
+              title: Text(
+                '카메라로 촬영',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
               onTap: () {
                 Navigator.of(context).pop();
                 _navigateAndProcessOCR(ImageSource.camera);
@@ -193,7 +215,13 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             ),
             ListTile(
               leading: Icon(Icons.photo_album),
-              title: Text('이미지 앨범에서 선택'),
+              title: Text(
+                '앨범에서 선택',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
               onTap: () {
                 Navigator.of(context).pop();
                 _navigateAndProcessOCR(ImageSource.gallery);
@@ -208,12 +236,66 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('${widget.cosmetic.name}의 유통기한 정보를 입력해주세요'),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      titlePadding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 50.0),
+      title: Text(
+        '제품 정보를 입력해주세요',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          ListTile(
+            title: Text(
+              '제품명',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            trailing: Container(
+              width: 150,
+              child: Text(
+                '${widget.cosmetic.name}',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.end,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              '브랜드',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            trailing: Container(
+              width: 150,
+              child: Text(
+                '${widget.cosmetic.brand}',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.end,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
           SwitchListTile(
-            title: Text('개봉여부'),
+            title: Text(
+              '개봉 여부',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             value: isOpened,
             onChanged: (bool value) {
               setState(() {
@@ -223,13 +305,17 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
                 }
               });
             },
-            activeColor: Colors.orange,
-            activeTrackColor: Colors.orangeAccent,
+            activeColor: Colors.white,
+            activeTrackColor: Colors.orange,
           ),
           ListTile(
             title: Text(expiryDate != null
                 ? '유통기한: ${formatDate(expiryDate!)}'
-                : '유통기한 선택'),
+                : '유통기한 선택',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             trailing: Icon(Icons.calendar_today),
             onTap: () =>
                 _showExpiryDateChoiceDialog(), // 유통기한 선택 방법을 선택하는 다이얼로그를 표시하는 함수 호출
@@ -238,7 +324,11 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             ListTile(
               title: Text(openedDate != null
                   ? '개봉 날짜: ${formatDate(openedDate!)}'
-                  : '개봉 날짜 선택'),
+                  : '개봉 날짜 선택',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, isExpiryDate: false),
             ),
@@ -248,7 +338,14 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
         TextButton(
           onPressed: () =>
               Navigator.of(context).pop([isOpened, expiryDate, openedDate]),
-          child: Text('등록'),
+          child: Text(
+            '등록',
+            style: TextStyle(
+              color: Colors.orange,
+              fontSize: 20,
+              fontWeight: FontWeight.bold
+            ),
+          ),
           style: TextButton.styleFrom(foregroundColor: Colors.orange),
         ),
       ],
