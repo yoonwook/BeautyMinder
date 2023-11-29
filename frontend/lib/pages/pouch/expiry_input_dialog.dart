@@ -125,15 +125,41 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
 
   // 에러 메시지를 보여주는 함수
   void _showErrorDialog(String message) {
+    print("error in OCR : $message");
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        title: Text(
+          '오류',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          '사진을 인식할 수 없습니다.',
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
         actions: [
-          TextButton(
-            child: Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
+          Container(
+            width: 70,
+            height: 30,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero, // 내용물과의 간격을 없애기 위해 추가
+                backgroundColor: Color(0xffdc7e00),
+                foregroundColor: Colors.white,
+                side: BorderSide(color: Color(0xffdc7e00)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                ),
+              ),
+              child: Text('확인'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
         ],
       ),
