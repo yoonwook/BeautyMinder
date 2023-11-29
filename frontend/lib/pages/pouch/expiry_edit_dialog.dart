@@ -74,7 +74,7 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      titlePadding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 50.0),
+      titlePadding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 50.0),
       title: Text(
         '제품 정보를 수정해주세요',
         style: TextStyle(
@@ -159,8 +159,8 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
               if (opened)
                 ListTile(
                   title: Text(openedDate != null
-                      ? '개봉 날짜: ${formatDate(openedDate!)}'
-                      : '개봉 날짜 선택',
+                      ? '개봉일: ${formatDate(openedDate!)}'
+                      : '개봉일 선택',
                     style: TextStyle(
                       fontSize: 18,
                     ),
