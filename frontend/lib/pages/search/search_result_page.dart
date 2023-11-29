@@ -136,12 +136,16 @@ class _SearchResultPageState extends State<SearchResultPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "검색 결과 : ${widget.searchQuery}",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xffd86a04),
+          Container(
+            width: MediaQuery.of(context).size.width/1.5,
+            child: Text(
+              "검색 결과 : ${widget.searchQuery}",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffd86a04),
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           Text(
@@ -191,6 +195,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                     fontSize: 18,
                     letterSpacing: 0,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ), // 이름 표시
                 // 다른 정보도 필요하다면 여기에 추가
               ),

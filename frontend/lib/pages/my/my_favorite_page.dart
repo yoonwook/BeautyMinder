@@ -91,13 +91,19 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
                   );
                 },
                 child: ListTile(
-                  contentPadding: EdgeInsets.all(10),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   leading: Image.network(
                     favorites[index]['images'][0] ?? '',
                     height: 80,
                     width: 80,
                   ),
-                  title: Text(favorites[index]['name']),
+                  title: Text(
+                    favorites[index]['name'],
+                    style: TextStyle(
+                      fontSize: 18
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ),

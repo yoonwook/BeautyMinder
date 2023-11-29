@@ -117,12 +117,11 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
           }
         } catch (e) {
           // 오류 처리
-          _showErrorDialog(e.toString());
+          _showErrorDialog("이미지 인식에 실패하였습니다.");
         }
       }
     } else {
-      // 이미지 선택 안됨 오류 처리
-      _showErrorDialog("OCR을 위한 이미지가 선택되지 않았습니다.");
+      _showErrorDialog("이미지가 선택되지 않았습니다.");
     }
   }
 
@@ -141,7 +140,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Text(
-          '사진을 인식할 수 없습니다.',
+          '$message',
           style: TextStyle(
             fontSize: 16,
           ),
