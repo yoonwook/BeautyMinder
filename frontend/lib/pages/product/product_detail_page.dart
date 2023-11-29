@@ -46,7 +46,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: true,),
       body: SingleChildScrollView(
         child: _productDetailPageUI(),
       ),

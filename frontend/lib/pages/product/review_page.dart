@@ -321,7 +321,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: true,),
       body: Column(
         children: [
           if (_isLoading)

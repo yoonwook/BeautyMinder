@@ -44,7 +44,7 @@ class _MyReviewPageState extends State<MyReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: true,),
       body: _body(),
     );
   }

@@ -44,7 +44,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CommonAppBar(),
+        appBar: CommonAppBar(automaticallyImplyLeading: true,),
         body: isLoading
             ? SpinKitThreeInOut(
                 color: Color(0xffd86a04),
