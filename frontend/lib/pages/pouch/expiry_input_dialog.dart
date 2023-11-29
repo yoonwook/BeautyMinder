@@ -38,7 +38,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: (isExpiryDate ? expiryDate : openedDate) ?? DateTime.now(),
-      firstDate: DateTime.now(),
+      firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       locale: myLocale,
       builder: (BuildContext context, Widget? child) {
