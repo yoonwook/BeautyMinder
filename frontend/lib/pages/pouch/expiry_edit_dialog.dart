@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:table_calendar/table_calendar.dart';
 import '../../dto/cosmetic_expiry_model.dart';
 import '../../dto/vision_response_dto.dart';
 import '../../services/ocr_service.dart';
@@ -33,13 +33,28 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
     openedDate = widget.expiry.openedDate;
   }
 
+
   Future<void> _selectDate(BuildContext context,
       {bool isExpiryDate = true}) async {
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isExpiryDate ? expiryDate : openedDate ?? DateTime.now(),
       firstDate: DateTime(2010),
       lastDate: DateTime(2040),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.orange, // 달력의 주요 색상을 오렌지로 설정
+            ),
+            // primaryColor: Colors.grey, // 배경색
+            // hintColor: Colors.orange, // 선택된 날짜의 색상
+            // buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null) {
       setState(() {
@@ -105,14 +120,29 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('\'${widget.expiry.productName}\' 정보 수정'),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      title: Text(
+        '\'${widget.expiry.productName}\' 정보 수정',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
+        // overflow: TextOverflow.ellipsis,
+      ),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               SwitchListTile(
-                title: Text('개봉 여부'),
+                title: Text(
+                  '개봉 여부',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
                 value: opened,
                 onChanged: (bool value) {
                   setState(() {
@@ -122,22 +152,35 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
                     }
                   });
                 },
+                activeColor: Colors.white,
+                activeTrackColor: Colors.orange,
               ),
               ListTile(
-                title: Text('유통기한: ${formatDate(expiryDate)}'),
+                title: Text(
+                  '유통기한: ${formatDate(expiryDate)}',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
                 trailing: Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context),
-              ),ListTile(
-                title: Text('OCR'),
-                trailing: Icon(Icons.calendar_today),
-                onTap: () =>_navigateAndProcessOCR() ,
               ),
+
+              // ListTile(
+              //   title: Text('OCR'),
+              //   trailing: Icon(Icons.calendar_today),
+              //   onTap: () =>_navigateAndProcessOCR() ,
+              // ),
 
               if (opened)
                 ListTile(
                   title: Text(openedDate != null
                       ? '개봉 날짜: ${formatDate(openedDate!)}'
-                      : '개봉 날짜 선택'),
+                      : '개봉 날짜 선택',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
                   trailing: Icon(Icons.calendar_today),
                   onTap: () => _selectDate(context, isExpiryDate: false),
                 ),
@@ -146,26 +189,45 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
         },
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            // 새로운 CosmeticExpiry 객체 생성 및 현재 상태로 업데이트
-            CosmeticExpiry updatedExpiry = CosmeticExpiry(
-              id: widget.expiry.id,
-              productName: widget.expiry.productName,
-              brandName: widget.expiry.brandName,
-              expiryDate: expiryDate,
-              expiryRecognized: widget.expiry.expiryRecognized,
-              imageUrl: widget.expiry.imageUrl,
-              cosmeticId: widget.expiry.cosmeticId,
-              opened: opened,
-              openedDate: openedDate, // 수정된 openedDate
-            );
-            widget.onUpdate(updatedExpiry);
-            Navigator.of(context).pop(updatedExpiry);
-            Navigator.of(context).pop(updatedExpiry);
-          },
-          child: Text('수정'),
-        ),
+        Container(
+          width: 70,
+          height: 30,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero, // 내용물과의 간격을 없애기 위해 추가
+              backgroundColor: Color(0xffdc7e00),
+              foregroundColor: Colors.white,
+              side: BorderSide(color: Color(0xffdc7e00)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+            ),
+            onPressed: () {
+              // 새로운 CosmeticExpiry 객체 생성 및 현재 상태로 업데이트
+              CosmeticExpiry updatedExpiry = CosmeticExpiry(
+                id: widget.expiry.id,
+                productName: widget.expiry.productName,
+                brandName: widget.expiry.brandName,
+                expiryDate: expiryDate,
+                expiryRecognized: widget.expiry.expiryRecognized,
+                imageUrl: widget.expiry.imageUrl,
+                cosmeticId: widget.expiry.cosmeticId,
+                opened: opened,
+                openedDate: openedDate, // 수정된 openedDate
+              );
+              widget.onUpdate(updatedExpiry);
+              Navigator.of(context).pop(updatedExpiry);
+              Navigator.of(context).pop(updatedExpiry);
+            },
+            child: Text(
+              '수정',
+              style: TextStyle(
+                fontSize: 18,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
