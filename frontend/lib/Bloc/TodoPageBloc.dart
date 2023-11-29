@@ -121,7 +121,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
       emit(TodoUpdateState(isError : false, task: state.task, todo: state.todo, todos: state.todos));
 
       print("this is TodoLoadedState");
-
+      print("state.todos : ${state.todos}");
       try {
         final result = await TodoService.taskUpdateTodo(event.todo, event.task);
 
@@ -138,7 +138,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
         if (result.value != null) {
           print("TodoUpdatedState!!");
           emit(TodoUpdatedState(
-              todo: todo, isError: false, todos: todos));
+              todo: todo, isError: false, todos: state.todos));
           print("TodoLoadedState!!");
            emit(TodoLoadedState(
                isError: state.isError, todos: state.todos, todo: state.todo));
@@ -168,6 +168,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           todo: state.todo, isError: state.isError, todos: state.todos));
       print("event.todo : ${event.todo}");
       print("event.task: ${event.task}");
+      print("state.todos : ${state.todos}");
       try {
         final String? taskid = event.task?.taskId;
         final result = await TodoService.deleteTask(event.todo, event.task);
@@ -176,7 +177,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
 
         if(result == null || result.value == null){
           emit(TodoLoadedState(
-              isError: state.isError, todos: [], todo: state.todo));
+              isError: state.isError, todos: state.todos, todo: state.todo));
           return;
         }
 
@@ -188,7 +189,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           }
         }
 
-        emit(TodoDeletedState(todo: todo, isError: false, todos: todos));
+        emit(TodoDeletedState(todo: todo, isError: false, todos: state.todos));
         //print(taskid);
         emit(TodoLoadedState(
             isError: state.isError, todos: state.todos, todo: state.todo));
@@ -201,10 +202,18 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
   }
 
   Future<void> _dayChangeEvent(TodoDayChangeEvent event, Emitter<TodoState> emit)async{
+    print("_dayChangeEvent");
 
     if(state is TodoLoadedState){
-      emit(TodoDayChangeEvent());
+      print("TodoLoadedState");
+      emit(TodoChangeDayState(todos: event.todos, todo: event.todo));
+      print("TodoChangeDayState");
+      emit(TodoLoadedState(todo: state.todo, todos: state.todos));
+    }else{
+      print("TodoErroeState");
     }
+
+
   }
 
 

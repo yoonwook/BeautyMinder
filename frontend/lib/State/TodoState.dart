@@ -94,3 +94,21 @@ class TodoErrorState extends TodoState {
   @override
   List<Object?> get props => [isError];
 }
+
+// Calendar에서 day를 변경했을때의 상태
+class TodoChangeDayState extends TodoState{
+  TodoChangeDayState({super.todo, super.todos, super.task});
+
+  @override
+  List<Object?> get props => [todo, todos, task];
+}
+
+
+// Calendar에서 day 변경이 완료 되었을 때의 상태
+class TodoChangedDayState extends TodoState{
+  TodoChangedDayState({super.todo, super.todos, super.task});
+
+  @override
+  List<Object?> get props => [todo, todos, task];
+
+}

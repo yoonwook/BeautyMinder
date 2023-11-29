@@ -4,7 +4,9 @@ import 'package:beautyminder/Observer.dart';
 import 'package:beautyminder/pages/calendar_page.dart';
 
 import 'package:beautyminder/pages/my_page.dart';
+import 'package:beautyminder/pages/picture_test.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
+import 'package:beautyminder/pages/testPage.dart';
 
 import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter/material.dart';
@@ -179,7 +181,9 @@ void main() async {
   runApp(
     MaterialApp(
       title: 'BeautyMinder',
-      home: CalendarPage(),
+      home: //testPage(),
+      //picturePage(),
+      CalendarPage(),
     ),
   );
 
@@ -197,8 +201,10 @@ void main() async {
   // );
 }
 
+
+
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+
 
   // This widget is the root of your application.
   @override
