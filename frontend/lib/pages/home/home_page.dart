@@ -41,27 +41,28 @@ class _HomePageState extends State<HomePage> {
   bool isApiCallProcess = false;
 
   List<CosmeticExpiry> expiries = [];
-
-  // List favorites = [];
   List recommends = [];
   Todo? todayTodos;
-
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    isApiCallProcess = true;
     _getExpiries();
     _getRecommends();
     _getTodayTodos();
+    isApiCallProcess = false;
   }
 
-  //유통기한 임박 화장품 호출
+
+  //유통기한 Top3 제품 호출
   Future<void> _getExpiries() async {
 
-    setState(() {
-      isLoading = true;
-    });
+    // setState(() {
+    //   isLoading = true;
+    //   isApiCallProcess = true;
+    // });
 
     try {
       List<CosmeticExpiry> loadedExpiries = await ExpiryService.getAllExpiries();
@@ -70,50 +71,55 @@ class _HomePageState extends State<HomePage> {
       for (var expiry in loadedExpiries) {
         try {
           // 예시: productName을 이용하여 관련 이미지 URL 검색
-          var cosmetic =
-              await SearchService.searchCosmeticsByName(expiry.productName);
+          var cosmetic = await SearchService.searchCosmeticsByName(expiry.productName);
           if (cosmetic.isNotEmpty) {
             expiry.imageUrl = cosmetic.first.images.isNotEmpty
                 ? cosmetic.first.images.first
                 : null;
           }
+          expiries = loadedExpiries;
         } catch (e) {
           print("Error loading image for ${expiry.productName}: $e");
         }
       }
-
-      setState(() {
-        expiries = loadedExpiries;
-      });
+      // setState(() {
+      //   expiries = loadedExpiries;
+      // });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
       setState(() {
         isLoading = false;
+        isApiCallProcess = false;
       });
     }
   }
 
+  //추천 제품 Top1 호출
   Future<void> _getRecommends() async {
     setState(() {
       isLoading = true;
+      isApiCallProcess = true;
     });
     try {
       final info = await CosmeticSearchService.getAllCosmetics();
       setState(() {
         recommends = info.value!;
-        // isLoading = false;
+        isApiCallProcess = false;
       });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
       setState(() {
         isLoading = false;
+        isApiCallProcess = false;
       });
     }
   }
 
+  //오늘의 루틴 호출
   Future<void> _getTodayTodos() async {
     setState(() {
       isLoading = true;
+      isApiCallProcess = true;
     });
     try {
       String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -121,12 +127,13 @@ class _HomePageState extends State<HomePage> {
       final info = await TodoService.getTodoOf(todayFormatted);
       setState(() {
         todayTodos = info.value!;
-        // isLoading = false;
+        isApiCallProcess = false;
       });
     } catch (e) {
       print('An error occurred while loading expiries: $e');
       setState(() {
         isLoading = false;
+        isApiCallProcess = false;
       });
     }
   }
@@ -240,19 +247,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _handleDataLoading() {
-    if (isLoading) {
-      return SpinKitCircle(color: Colors.white);
-    } else if (expiries.isEmpty) {
-      return _buildDefaultText();
-    } else {
-      return _buildExpiryInfo();
-    }
-  }
 
+  //유통기한
   Widget _invalidProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final content = _handleDataLoading();
 
     return ElevatedButton(
       onPressed: () async {
@@ -266,11 +264,9 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
         } catch (e) {
-          // Handle the error case
           print('An error occurred: $e');
         }
         finally {
-          // API 호출 상태를 초기화합니다.
           setState(() {
             isApiCallProcess = false;
           });
@@ -278,11 +274,8 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffb876),
-        // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Colors.white,
-        // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0,
-        // 그림자 없애기
         minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -290,8 +283,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
           alignment: Alignment.topLeft,
-          child: (expiries.isNotEmpty && expiries.length != 0)
-              ? Center(
+          child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -311,37 +303,25 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      _buildExpiryInfo(),
+                      _selectExpiryScreen(),
                     ],
                   ),
                 )
-              : Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "유통기한 임박 화장품 ",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                      isLoading == true
-                          ? SpinKitCircle(color: Colors.white)
-                          : _buildDefaultText(),
-                    ],
-                  ),
-                )),
+      ),
     );
+  }
+
+  Widget _selectExpiryScreen() {
+
+    if (expiries.isNotEmpty && expiries.length != 0 && !isApiCallProcess) {
+      return _buildExpiryInfo();
+    }
+    else if (expiries.isEmpty && expiries.length == 0 && isApiCallProcess) {
+      return _buildDefaultText();
+    }
+    else {
+      return SpinKitCircle(color: Colors.white, duration: Duration(seconds: 3),);
+    }
   }
 
   Widget _buildExpiryInfo() {
@@ -415,6 +395,7 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+  //추천 버튼
   Widget _recommendProductBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 40;
 
@@ -425,11 +406,8 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffecda),
-        // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Color(0xffff820e),
-        // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0,
-        // 그림자 없애기
         minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -437,8 +415,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
           alignment: Alignment.topLeft,
-          child: (recommends.isNotEmpty && recommends.length != 0)
-              ? Center(
+          child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -461,37 +438,24 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         height: 15,
                       ),
-                      _buildRecommendText(),
+                      _selectRecommendScreen(),
                     ],
                   ),
                 )
-              : Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "추천 제품 ",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                      isLoading == true
-                          ? SpinKitCircle(color: Colors.white)
-                          : _buildRecommendDefaultText(),
-                    ],
-                  ),
-                )),
+              ),
     );
+  }
+
+  Widget _selectRecommendScreen() {
+    if (recommends != null && recommends.isNotEmpty && recommends.length != 0 && !isApiCallProcess) {
+      return _buildRecommendText();
+    }
+    else if (recommends == null && recommends.isEmpty && recommends.length == 0 && !isApiCallProcess) {
+      return _buildRecommendDefaultText();
+    }
+    else {
+      return SpinKitCircle(color: Colors.white, duration: Duration(seconds: 3),);
+    }
   }
 
   Widget _buildRecommendText() {
@@ -542,6 +506,7 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+  //피부타입 버튼
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
     BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
@@ -629,6 +594,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
+  //소통방 버튼
   Widget _chatBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
 
@@ -639,11 +606,8 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffffd1a6),
-        // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Color(0xffd86a04),
-        // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0,
-        // 그림자 없애기
         minimumSize: Size(screenWidth, 90.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -672,6 +636,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
+  //오늘의 루틴 버튼
   Widget _routineBtn() {
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -682,11 +648,8 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xffe7e4e1),
-        // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Color(0xffff820e),
-        // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0,
-        // 그림자 없애기
         minimumSize: Size(screenWidth, 200.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -694,8 +657,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Align(
           alignment: Alignment.topLeft,
-          child: (recommends.isNotEmpty && recommends.length != 0)
-              ? Center(
+          child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -718,37 +680,24 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         height: 15,
                       ),
-                      _buildTodoText(),
+                      _selectTodocreen(),
                     ],
                   ),
                 )
-              : Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "나의 루틴 확인하기 ",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                      isLoading == true
-                          ? SpinKitCircle(color: Colors.white, duration: Duration(seconds: 2),)
-                          : _buildTodoDefaultText(),
-                    ],
-                  ),
-                )),
+      ),
     );
+  }
+
+  Widget _selectTodocreen() {
+    if (todayTodos != null && todayTodos?.tasks != null && todayTodos!.tasks.isNotEmpty && todayTodos!.tasks.length != 0 && !isApiCallProcess) {
+      return _buildTodoText();
+    }
+    else if ((todayTodos != null && todayTodos!.tasks == null && todayTodos!.tasks.isEmpty && todayTodos!.tasks.length == 0 && !isApiCallProcess)) {
+      return _buildTodoDefaultText();
+    }
+    else {
+      return SpinKitCircle(color: Colors.white, duration: Duration(seconds: 3),);
+    }
   }
 
   Widget _buildTodoText() {

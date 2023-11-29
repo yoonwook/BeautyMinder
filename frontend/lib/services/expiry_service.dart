@@ -31,7 +31,6 @@ class ExpiryService {
   }
 
   // Create Expiry Item
-  // Create Expiry Item
   static Future<CosmeticExpiry> createCosmeticExpiry(
       CosmeticExpiry expiry) async {
     setAccessToken();
@@ -60,23 +59,33 @@ class ExpiryService {
 
   // Get all Expiry Items
   static Future<List<CosmeticExpiry>> getAllExpiries() async {
+
     setAccessToken();
     final url = Uri.http(Config.apiURL, Config.getAllExpiriesAPI).toString();
-    // final url = '${Config.apiURL}/expiry';
+
     try {
-      final response =
-          await client.get(url, options: _httpOptions('GET', jsonHeaders));
+      final response = await client.get(
+          url,
+          options: _httpOptions('GET', jsonHeaders)
+      );
       print('Response data: ${response.data}'); // 로깅 추가
+
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data;
         return jsonData.map((data) => CosmeticExpiry.fromJson(data)).toList();
-      } else {
-        throw Exception(
-            "Failed to get expiries : Status Code ${response.statusCode}");
       }
-    } on DioError catch (e) {
-      throw Exception("DioError: ${e.message}");
+      else {
+        throw Exception("Failed to get expiries : Status Code ${response.statusCode}");
+      }
+    } catch (e) {
+      if (e is DioException && e.type == DioExceptionType.connectionTimeout) {
+        throw Exception("Connection timed out");
+      }
+      throw Exception("An error occurred: $e");
     }
+    // on DioException catch (e) {
+    //   throw Exception("DioError: ${e.message}");
+    // }
   }
 
   // Get an expiry item by and ExpiryId
@@ -85,10 +94,9 @@ class ExpiryService {
     final url = Uri.http(
             Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId)
         .toString();
-    // final url = '${Config.apiURL}/expiry/$expiryId';
+
     try {
-      final response =
-          await client.get(url, options: _httpOptions('GET', jsonHeaders));
+      final response = await client.get(url, options: _httpOptions('GET', jsonHeaders));
       if (response.statusCode == 200) {
         return CosmeticExpiry.fromJson(response.data);
       } else {
