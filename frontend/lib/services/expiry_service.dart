@@ -125,10 +125,13 @@ class ExpiryService {
     try {
       print("*** 1 : ${updatedExpiry.opened}");
       print("*** 2 : ${updatedExpiry.toJson()}");
+
       final response = await client.put(
-          url,
-          options: _httpOptions('PUT', headers),
-          data: updatedExpiry.toJson());
+        url,
+        options: _httpOptions('PUT', headers),
+        data: updatedExpiry.toJson()
+      );
+      print("*** 2.5 : ${updatedExpiry.toJson()}");
       print("*** 3 : ${response.data}");
 
       print("1122Server Response: ${response.statusCode} - ${response.data}");

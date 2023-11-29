@@ -1,5 +1,8 @@
+import 'dart:html';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -61,32 +64,61 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
-      final file = await pickedFile.readAsBytes();
-      final fileName = pickedFile.name;
+      // 이미지 자르기
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9
+          ],
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: 'Crop Image',
+                toolbarColor: Colors.orange,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            IOSUiSettings(
+              title: 'Crop Image',
+            )
+          ]
+      );
 
-      // OCR 처리를 요청하고 결과를 받습니다.
-      try {
-        final response = await OCRService.selectAndUploadImage(PlatformFile(
+      if (croppedFile != null) {
+        final file = File(croppedFile.path);
+        final fileName = file.path.split('/').last;
+        final fileSize = await file.length();
+        final fileBytes = await file.readAsBytes();
+
+        try {
+          // OCR 서비스 호출
+          final response = await OCRService.selectAndUploadImage(PlatformFile(
             name: fileName,
-            bytes: file,
-            size: file.length,
-            path: pickedFile.path));
+            bytes: fileBytes,
+            size: fileSize,
+            path: croppedFile.path,
+          ));
 
-        if (response != null) {
-          final VisionResponseDTO result = VisionResponseDTO.fromJson(response);
-          final expiryDateFromOCR = DateFormat('yyyy-MM-dd').parse(result.data);
+          if (response != null) {
+            // OCR 결과 처리
+            final VisionResponseDTO result = VisionResponseDTO.fromJson(response);
+            final expiryDateFromOCR = DateFormat('yyyy-MM-dd').parse(result.data);
 
-          // 받아온 유통기한으로 상태 업데이트
-          setState(() {
-            expiryDate = expiryDateFromOCR;
-          });
+            setState(() {
+              expiryDate = expiryDateFromOCR;
+            });
+          }
+        } catch (e) {
+          // 오류 처리
+          _showErrorDialog(e.toString());
         }
-      } catch (e) {
-        // 오류 처리
-        _showErrorDialog(e.toString());
       }
     } else {
-      _showErrorDialog("No image selected for OCR.");
+      // 이미지 선택 안됨 오류 처리
+      _showErrorDialog("OCR을 위한 이미지가 선택되지 않았습니다.");
     }
   }
 
