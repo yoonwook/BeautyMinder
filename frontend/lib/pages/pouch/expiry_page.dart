@@ -98,26 +98,26 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       context: context,
       builder: (context) => CosmeticSearchWidget(),
     );
+    print("dlwldms0 : ${selectedCosmetic!.toJson()}");
     if (selectedCosmetic != null) {
       final List<dynamic>? expiryInfo = await showDialog<List<dynamic>>(
         context: context,
         builder: (context) => ExpiryInputDialog(cosmetic: selectedCosmetic),
       );
+      print("dlwldms0 : ${expiryInfo}");
       if (expiryInfo != null) {
         print("ooooo${expiryInfo}\n\n\n\n");
         final bool opened = expiryInfo[0] as bool;
         final DateTime expiryDate = expiryInfo[1] as DateTime;
         final DateTime? openedDate = expiryInfo[2] as DateTime?;
-        // final String brandName = expiryInfo
 
         final CosmeticExpiry newExpiry = CosmeticExpiry(
           productName: selectedCosmetic.name,
-          // brandName: brandName,
           expiryDate: expiryDate,
           opened: opened,
           openedDate: openedDate,
-
-          // 다른 필드들 추가
+          brandName: selectedCosmetic.brand,
+          cosmeticId: selectedCosmetic.id,
         );
         final CosmeticExpiry addedExpiry =
             await ExpiryService.createCosmeticExpiry(newExpiry);
@@ -130,6 +130,8 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
   void _editExpiry(CosmeticExpiry expiry, int index) async {
     print("***Before updating: ${expiry.opened}");
+    print("\n\ndlwldms : ${expiry.cosmeticId}\n\n");
+    print("\n\ndlwldms : ${expiry.brandName}\n\n");
     final CosmeticExpiry? updatedExpiry = await showDialog<CosmeticExpiry>(
       context: context,
       builder: (context) => ExpiryEditDialog(
