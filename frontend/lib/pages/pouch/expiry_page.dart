@@ -1,4 +1,3 @@
-import 'package:beautyminder/pages/my/widgets/delete_popup.dart';
 import 'package:beautyminder/pages/pouch/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -121,8 +120,10 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         );
         final CosmeticExpiry addedExpiry =
             await ExpiryService.createCosmeticExpiry(newExpiry);
+
         setState(() {
           expiries.add(addedExpiry);
+          _loadExpiryData();
         });
       }
     }
