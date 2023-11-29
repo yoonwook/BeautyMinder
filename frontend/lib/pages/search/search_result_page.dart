@@ -44,9 +44,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
             flex: 1,
             child: TextField(
               controller: textController,
-              // onSubmitted: (text) {
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchResultPage(searchQuery: text)),);
-              // },
               onChanged: (text) {
                 searchQuery = text;
               },
