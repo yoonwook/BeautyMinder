@@ -136,7 +136,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         expiry: expiry,
         onUpdate: (updated) {
           setState(() {
-            print("hell : ${updated.opened}");
             expiries[index] = updated;
           });
         },

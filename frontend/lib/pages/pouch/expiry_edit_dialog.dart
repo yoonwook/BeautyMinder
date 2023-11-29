@@ -45,12 +45,8 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
       setState(() {
         if (isExpiryDate) {
           expiryDate = picked;
-          print("zzzz1 : ${expiryDate}");
-          print("zzzz1 : ${opened}");
         } else {
           openedDate = picked;
-          print("zzzz2 : ${openedDate}");
-          print("zzzz1 : ${opened}");
         }
       });
     }

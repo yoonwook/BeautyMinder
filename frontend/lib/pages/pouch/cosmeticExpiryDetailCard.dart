@@ -15,6 +15,11 @@ class ExpiryContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    DateTime expiryDate = cosmetic.expiryDate ?? DateTime.now();
+    Duration difference = expiryDate.difference(now);
+    bool isDatePassed = difference.isNegative;
+
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.symmetric(horizontal: 25.0, vertical: 60.0),
@@ -22,7 +27,11 @@ class ExpiryContentCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(10.0), // Margin inside the card
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.orange, width: 2.0), // Orange border inside the card
+          border: Border.all(
+            color:
+              (isDatePassed || (!isDatePassed && difference.inDays+1<=100)) ?
+                Colors.orange : Colors.black54,
+            width: 2.0), // Orange border inside the card
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Align(
