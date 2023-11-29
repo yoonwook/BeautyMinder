@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class HomepageAppBar extends AppBar {
   final List<Widget> actions;
 
-  HomepageAppBar({Key? key, required this.actions})
+  HomepageAppBar({Key? key, required this.actions, bool automaticallyImplyLeading = false})
       : super(
           key: key,
+          automaticallyImplyLeading: automaticallyImplyLeading,
           backgroundColor: Color(0xffffecda),
           elevation: 0,
           centerTitle: false,

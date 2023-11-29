@@ -183,6 +183,7 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffffecda),
         elevation: 0,
         centerTitle: false,
