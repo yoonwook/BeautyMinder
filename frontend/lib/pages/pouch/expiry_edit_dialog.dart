@@ -146,11 +146,25 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
                 activeTrackColor: Colors.orange,
               ),
               ListTile(
-                title: Text(
-                  '유통기한: ${formatDate(expiryDate)}',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '유통기한',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Spacer(),// 조절 가능한 간격
+                    Text(
+                      expiryDate != null
+                          ? formatDate(expiryDate!)
+                          : '유통기한 선택',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
                 trailing: Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context),
@@ -158,12 +172,25 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
 
               if (opened)
                 ListTile(
-                  title: Text(openedDate != null
-                      ? '개봉일: ${formatDate(openedDate!)}'
-                      : '개봉일 선택',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
+                  title: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '개봉일',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      Spacer(),// 조절 가능한 간격
+                      Text(
+                        expiryDate != null
+                            ? formatDate(expiryDate!)
+                            : '개봉일 선택',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
                   trailing: Icon(Icons.calendar_today),
                   onTap: () => _selectDate(context, isExpiryDate: false),

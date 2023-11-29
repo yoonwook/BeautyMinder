@@ -39,108 +39,86 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final int _currentIndex = 2;
   bool isApiCallProcess = false;
+  bool isLoading = true;
 
   List<CosmeticExpiry> expiries = [];
   List recommends = [];
   Todo? todayTodos;
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    isApiCallProcess = true;
-    _getExpiries();
-    _getRecommends();
-    _getTodayTodos();
-    isApiCallProcess = false;
+    _getAllNeeds();
   }
 
-
-  //유통기한 Top3 제품 호출
-  Future<void> _getExpiries() async {
-
-    // setState(() {
-    //   isLoading = true;
-    //   isApiCallProcess = true;
-    // });
-
+  //필요한 서비스 호출
+  Future<void> _getAllNeeds() async {
+    print("hohoho1 : api: ${isApiCallProcess}, loading : ${isLoading}");
+    // 이미 API 호출이 진행 중인지 확인
+    if (isApiCallProcess) {
+      return;
+    }
+    // API 호출 중임을 표시
+    setState(() {
+      isLoading = true;
+      isApiCallProcess = true;
+    });
+    print("hohoho2 : api: ${isApiCallProcess}, loading : ${isLoading}");
     try {
+      //유통기한
+      print("hohoho3 : api: ${isApiCallProcess}, loading : ${isLoading}");
       List<CosmeticExpiry> loadedExpiries = await ExpiryService.getAllExpiries();
-
-      // 각 expiry에 대한 이미지 URL 로드
+      print("hohoho4 : api: ${isApiCallProcess}, loading : ${isLoading}");
       for (var expiry in loadedExpiries) {
         try {
           // 예시: productName을 이용하여 관련 이미지 URL 검색
+          print("hohoho5 : api: ${isApiCallProcess}, loading : ${isLoading}");
           var cosmetic = await SearchService.searchCosmeticsByName(expiry.productName);
           if (cosmetic.isNotEmpty) {
             expiry.imageUrl = cosmetic.first.images.isNotEmpty
                 ? cosmetic.first.images.first
                 : null;
           }
+          print("hohoho6 : api: ${isApiCallProcess}, loading : ${isLoading}");
           expiries = loadedExpiries;
+          print("hohoho7 : api: ${isApiCallProcess}, loading : ${isLoading}");
         } catch (e) {
           print("Error loading image for ${expiry.productName}: $e");
         }
       }
-      // setState(() {
-      //   expiries = loadedExpiries;
-      // });
-    } catch (e) {
-      print('An error occurred while loading expiries: $e');
-      setState(() {
-        isLoading = false;
-        isApiCallProcess = false;
-      });
-    }
-  }
+      print("hohoho8 : api: ${isApiCallProcess}, loading : ${isLoading}");
+      //추천제품
+      final loadedRecommends = await CosmeticSearchService.getAllCosmetics();
+      print("hohoho9 : api: ${isApiCallProcess}, loading : ${isLoading}");
 
-  //추천 제품 Top1 호출
-  Future<void> _getRecommends() async {
-    setState(() {
-      isLoading = true;
-      isApiCallProcess = true;
-    });
-    try {
-      final info = await CosmeticSearchService.getAllCosmetics();
-      setState(() {
-        recommends = info.value!;
-        isApiCallProcess = false;
-      });
-    } catch (e) {
-      print('An error occurred while loading expiries: $e');
-      setState(() {
-        isLoading = false;
-        isApiCallProcess = false;
-      });
-    }
-  }
-
-  //오늘의 루틴 호출
-  Future<void> _getTodayTodos() async {
-    setState(() {
-      isLoading = true;
-      isApiCallProcess = true;
-    });
-    try {
+      //루틴
       String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      print("hohoho10 : api: ${isApiCallProcess}, loading : ${isLoading}");
+      final loadedTodos = await TodoService.getTodoOf(todayFormatted);
+      print("hohoho11 : api: ${isApiCallProcess}, loading : ${isLoading}");
 
-      final info = await TodoService.getTodoOf(todayFormatted);
       setState(() {
-        todayTodos = info.value!;
-        isApiCallProcess = false;
+        expiries = loadedExpiries;
+        recommends = loadedRecommends.value!;
+        todayTodos = loadedTodos.value!;
+        print("hohoho12 : api: ${isApiCallProcess}, loading : ${isLoading}");
       });
+      print("hohoho13 : api: ${isApiCallProcess}, loading : ${isLoading}");
+
     } catch (e) {
       print('An error occurred while loading expiries: $e');
+    } finally {
+      print("hohoho14 : api: ${isApiCallProcess}, loading : ${isLoading}");
       setState(() {
         isLoading = false;
         isApiCallProcess = false;
       });
+      print("hohoho15 : api: ${isApiCallProcess}, loading : ${isLoading}");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // print("Here is Home Page : ${widget.user}");
 
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget>[
@@ -160,7 +138,6 @@ class _HomePageState extends State<HomePage> {
               final result2 = await KeywordRankService.getProductRank();
 
               if (result.isSuccess) {
-                // SearchPage로 이동하고 가져온 데이터를 전달합니다.
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -171,7 +148,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               } else {
-                // API 호출 실패를 처리합니다.
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -312,14 +288,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _selectExpiryScreen() {
-
-    if (expiries.isNotEmpty && expiries.length != 0 && !isApiCallProcess) {
-      return _buildExpiryInfo();
-    }
-    else if (expiries.isEmpty && expiries.length == 0 && isApiCallProcess) {
-      return _buildDefaultText();
-    }
-    else {
+    if (!isApiCallProcess && !isLoading) {
+      if (expiries != null && expiries.isNotEmpty && expiries.length != 0) {
+        return _buildExpiryInfo();
+      } else {
+        return _buildDefaultText();
+      }
+    } else {
       return SpinKitCircle(color: Colors.white, duration: Duration(seconds: 3),);
     }
   }
@@ -447,13 +422,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _selectRecommendScreen() {
-    if (recommends != null && recommends.isNotEmpty && recommends.length != 0 && !isApiCallProcess) {
-      return _buildRecommendText();
-    }
-    else if (recommends == null && recommends.isEmpty && recommends.length == 0 && !isApiCallProcess) {
-      return _buildRecommendDefaultText();
-    }
-    else {
+    if (!isApiCallProcess && !isLoading) {
+      if (recommends != null && recommends.isNotEmpty && recommends.length != 0) {
+        return _buildRecommendText();
+      } else {
+        return _buildRecommendDefaultText();
+      }
+    } else {
       return SpinKitCircle(color: Colors.white, duration: Duration(seconds: 3),);
     }
   }
@@ -689,13 +664,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _selectTodocreen() {
-    if (todayTodos != null && todayTodos?.tasks != null && todayTodos!.tasks.isNotEmpty && todayTodos!.tasks.length != 0 && !isApiCallProcess) {
-      return _buildTodoText();
-    }
-    else if ((todayTodos != null && todayTodos!.tasks == null && todayTodos!.tasks.isEmpty && todayTodos!.tasks.length == 0 && !isApiCallProcess)) {
-      return _buildTodoDefaultText();
-    }
-    else {
+    if (!isApiCallProcess && !isLoading) {
+      if (todayTodos != null && todayTodos?.tasks != null && todayTodos!.tasks.isNotEmpty && todayTodos!.tasks.length != 0) {
+        return _buildTodoText();
+      } else {
+        return _buildTodoDefaultText();
+      }
+    } else {
       return SpinKitCircle(color: Colors.white, duration: Duration(seconds: 3),);
     }
   }

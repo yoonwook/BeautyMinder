@@ -312,25 +312,50 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             activeTrackColor: Colors.orange,
           ),
           ListTile(
-            title: Text(expiryDate != null
-                ? '유통기한: ${formatDate(expiryDate!)}'
-                : '유통기한 선택',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '유통기한',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Spacer(),// 조절 가능한 간격
+                Text(
+                  expiryDate != null
+                      ? formatDate(expiryDate!)
+                      : '유통기한 선택',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ],
             ),
             trailing: Icon(Icons.calendar_today),
-            onTap: () =>
-                _showExpiryDateChoiceDialog(), // 유통기한 선택 방법을 선택하는 다이얼로그를 표시하는 함수 호출
+            onTap: () => _showExpiryDateChoiceDialog(),
           ),
           if (isOpened)
             ListTile(
-              title: Text(openedDate != null
-                  ? '개봉일: ${formatDate(openedDate!)}'
-                  : '개봉일 선택',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '개봉일',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Spacer(),// 조절 가능한 간격
+                  Text(
+                    expiryDate != null
+                        ? formatDate(expiryDate!)
+                        : '개봉일 선택',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
               ),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context, isExpiryDate: false),
