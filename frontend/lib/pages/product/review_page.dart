@@ -270,15 +270,13 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
     return Expanded(
       child: ListView.separated(
         itemCount: _cosmeticReviews.length,
-        separatorBuilder: (context, index) =>
-            Divider(height: 1, color: Colors.grey),
+        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey),
         itemBuilder: (context, index) {
           var review = _cosmeticReviews[index];
           return Card(
             elevation: 2,
             margin: EdgeInsets.all(8),
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: ListTile(
               title: Row(
                 children: [
@@ -303,40 +301,39 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (review.isFiltered)
-                      Text(
-                        '욕설등의 문구로 필터링 되었습니다.', // 필터링된 메시지 표시
-                        style: TextStyle(fontSize: 16, color: Colors.red),
-                      )
-                    else
-                      Text(
-                        review.content, // 리뷰 내용 표시
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    // 리뷰 텍스트
+                    Text(
+                      review.content,
+                      style: TextStyle(fontSize: 16),
+                    ),
                     SizedBox(height: 10),
+                    // 리뷰 이미지
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children: review.images.map((image) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+                          child: Image.network(
+                            image,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover, // 이미지가 공간을 가득 채우도록 조정
+                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                              // 에러가 발생했을 때 동일한 크기의 아이콘을 표시
+                              return SizedBox.shrink();
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 10),
+                    // 추가적인 정보 (예: NLP 분석 결과)
                     if (review.nlpAnalysis.isNotEmpty)
-                      Text('리뷰 바우만 분석 수치: ${review.nlpAnalysis}')
-                    // NLP 분석 결과 표시
+                      Text('NLP Analysis: ${review.nlpAnalysis}'),
                   ],
                 ),
               ),
-              /***trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                  TextButton(
-                  child: Text('Edit', style: TextStyle(color: Colors.blue)),
-                  onPressed: () {
-                  _addOrEditReview(review);
-                  },
-                  ),
-                  TextButton(
-                  child: Text('Delete', style: TextStyle(color: Colors.red)),
-                  onPressed: () async {
-                  await _deleteReview(review.id);
-                  },
-                  ),
-                  ],
-                  )***/
             ),
           );
         },
