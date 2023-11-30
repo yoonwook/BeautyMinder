@@ -1,8 +1,8 @@
-import 'package:beautyminder/config.dart';
 import 'package:beautyminder/services/auth_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
+import '../config.dart';
 import '../dto/cosmetic_model.dart';
 
 class CosmeticSearchService {
