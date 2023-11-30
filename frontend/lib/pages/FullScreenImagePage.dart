@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_image_provider/device_image.dart';
 import 'package:local_image_provider/local_image.dart';
+import 'package:photo_view/photo_view.dart';
 
 class FullScreenImagePage extends StatelessWidget {
   final LocalImage image;
@@ -15,7 +16,11 @@ class FullScreenImagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      body: Center(child: Image(image: DeviceImage(image))),
+      body: Container(
+        child: PhotoView(
+          imageProvider: DeviceImage(image),
+        ),
+      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:beautyminder/pages/calendar_page.dart';
 import 'package:beautyminder/pages/my_page.dart';
 import 'package:beautyminder/pages/picture_test.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
+import 'package:beautyminder/pages/skin_timeline.dart';
 import 'package:beautyminder/pages/testPage.dart';
 
 import 'package:beautyminder/services/todo_service.dart';
@@ -153,10 +154,10 @@ void main() async {
   //final result = await TodoService.deleteTodo("sss");
   //final result = await TodoService.taskUpdateTodo(k);
   //final result = await TodoService.taskUpdateTodo();
-  final result = await TodoService.getTodo();
+//  final result = await TodoService.getTodo();
 
 
-  print("result.value : ${result.value}");
+ // print("result.value : ${result.value}");
 
   // runApp(MultiBlocProvider(
   //     providers: [
@@ -183,7 +184,8 @@ void main() async {
       title: 'BeautyMinder',
       home: //testPage(),
       //picturePage(),
-      CalendarPage(),
+      //CalendarPage(),
+      timeLine()
     ),
   );
 

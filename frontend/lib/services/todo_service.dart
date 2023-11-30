@@ -127,7 +127,7 @@ class TodoService {
   }
 
   // test성공
-  static Future<Result<Todo>> getTodo() async {
+  static Future<Result<Todo>> getTodoOf() async {
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();

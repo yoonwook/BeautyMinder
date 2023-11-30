@@ -56,6 +56,12 @@ dependencies:
   gallery_saver: ^2.1.0
   local_image_provider: ^4.0.0-nullsafety
   permission_handler: ^9.1.0
+  path_provider: ^2.1.1
+  shared_preferences: ^2.2.2
+  photo_view: ^0.14.0
+  timeline_list: ^0.0.6
+  easy_date_timeline: ^1.0.2
+  calendar_timeline: ^1.1.2
   #google_fonts: ˆ5.1.0
 
 dev_dependencies:

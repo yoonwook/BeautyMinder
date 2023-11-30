@@ -56,7 +56,7 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
         //     todayTodo = todo;
         //   }
         // }
-         final resultToday = await TodoService.getTodo();
+         final resultToday = await TodoService.getTodoOf();
 
          print("todayTodo : ${resultToday.value}");
 

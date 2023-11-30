@@ -8,12 +8,15 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_image_provider/device_image.dart';
 import 'package:local_image_provider/local_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:local_image_provider/local_image_provider.dart' as lip;
 import '../widget/commonBottomNavigationBar.dart';
 import 'FullScreenImagePage.dart';
 import 'home_page.dart';
 import 'my_page.dart';
+import 'dart:io';
+import 'package:path/path.dart' as path;
 
 class skinAlbumPage extends StatefulWidget {
   const skinAlbumPage({Key? key}) : super(key: key);
@@ -23,29 +26,8 @@ class skinAlbumPage extends StatefulWidget {
 }
 
 class _skinAlbumPage extends State<skinAlbumPage> {
-
   String selectedFilter = "all";
-
-  bool isPhotoInTimeRange(LocalImage image, String filter) {
-    DateTime now = DateTime.now();
-    DateTime? imageDate = image.creationDate;
-
-    if (imageDate == null) return false;
-
-    switch (filter) {
-      case 'Today':
-        return imageDate.year == now.year &&
-            imageDate.month == now.month &&
-            imageDate.day == now.day;
-      case 'This Week':
-        DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-        return imageDate.isAfter(startOfWeek) && imageDate.isBefore(now.add(Duration(days: 1)));
-      case 'This Month':
-        return imageDate.year == now.year && imageDate.month == now.month;
-      default: // 'All'
-        return true;
-    }
-  }
+  String title = '전체';
 
   var _currentIndex = 2;
 
@@ -64,35 +46,99 @@ class _skinAlbumPage extends State<skinAlbumPage> {
     print("Permission.storage : ${statuses[Permission.storage]}");
   }
 
+  List<LocalImage> images = [];
+  String filter = "all"; // 이미지 목록을 저장할 상태 변수
+
   @override
   void initState() {
     super.initState();
     getPermission();
+    _updateImages(); // 초기 이미지 목록 로드
+  }
+
+  void _updateImages() async {
+    // 이미지 목록을 갱신하는 메서드
+    try {
+      var newImages = await getLocalImages();
+      setState(() {
+        images = newImages;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<List<LocalImage>> getLocalImages() async {
-    print("this is getLocalImages");
     lip.LocalImageProvider imageProvider = lip.LocalImageProvider();
     bool hasPermission = await imageProvider.initialize();
     print("hasPermission : ${hasPermission}");
     if (hasPermission) {
-      //최근 이미지 30개 가져오기
-      List<LocalImage> images = await imageProvider.findLatest(30);
-      if (images.isNotEmpty) {
-        return images;
+      // 최근 이미지 30개 가져오기
+      List<LocalImage> images;
+
+      if (filter == 'all') {
+        images = images = await imageProvider.findLatest(365);
       } else {
-        print('이미지를 찾을 수 없습니다.');
-        throw '이미지를 찾을 수 없습니다.';
+        images = images = await imageProvider.findLatest(50);
       }
+
+      List<LocalImage> filteredImages = images.where((image) {
+        return image.fileName!.contains('Skinrecord');
+      }).toList();
+
+      DateTime now = DateTime.now();
+      return filteredImages.where((image) {
+        DateTime? imageDate = DateTime.parse(image.creationDate!);
+        if (imageDate == null) return false;
+
+        switch (filter) {
+          case 'Today':
+            title = '오늘';
+            return imageDate.year == now.year &&
+                imageDate.month == now.month &&
+                imageDate.day == now.day;
+          case 'This Week':
+            title = '이번 주';
+            DateTime startOfWeek =
+                now.subtract(Duration(days: now.weekday - 1));
+            return imageDate.isAfter(startOfWeek) &&
+                imageDate.isBefore(now.add(Duration(days: 1)));
+          case 'This Month':
+            title = '이번 달';
+            return imageDate.year == now.year && imageDate.month == now.month;
+          default: // 'All'
+            return true;
+        }
+      }).toList();
     } else {
       throw '이미지에 접근할 권한이 없습니다.';
       print('이미지에 접근할 권한이 없습니다.');
     }
   }
 
+  Widget _filterButton(String title, String filterValue) {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          filter = filterValue;
+          _updateImages();
+        });
+      },
+      style: TextButton.styleFrom(
+          backgroundColor:
+              filter == filterValue ? Color(0xffd86a04) : Color(0xffffecda)),
+      child: Text(
+        title,
+        style: TextStyle(
+            color: filter == filterValue ? Colors.white : Color(0xffd86a04)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: CommonAppBar(),
       body: FutureBuilder<List<LocalImage>>(
         future: getLocalImages(),
@@ -102,51 +148,57 @@ class _skinAlbumPage extends State<skinAlbumPage> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('${snapshot.error}'));
           }
 
           if (snapshot.hasData && snapshot.data != null) {
             return Column(
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 150,
                   child: Center(
-                    child: Text('전체', style: TextStyle(fontSize: 50.0)),
+                    child: Text(title,
+                        style: TextStyle(
+                            fontSize: 50.0, color: Color(0xffd86a04))),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _filterButton('All', 'all'),
+                    _filterButton('Month', 'This Month'),
+                    _filterButton('Week', 'This Week'),
+                    _filterButton('Today', 'Today'),
+                  ],
                 ),
                 Expanded(
                   child: GridView.count(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 7.0,
-                    crossAxisSpacing: 0.0,
+                    padding: EdgeInsets.zero,
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 5.0,
+                    crossAxisSpacing: 5,
+                    childAspectRatio: 1, // 셀의 종횡비를 1:1로 설정
                     children: snapshot.data!
                         .map((e) => GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        FullScreenImagePage(image: e),
+                                    builder: (context) => FullScreenImagePage(
+                                      image: e,
+                                    ),
                                   ),
                                 );
                               },
-                              child: Image(image: DeviceImage(e)),
+                              child: AspectRatio(
+                                aspectRatio: 1, // 종횡비 (예: 1은 정사각형)
+                                child: Image(
+                                    image: DeviceImage(e), fit: BoxFit.cover),
+                              ),
                             ))
                         .toList(),
-                    //padding: const EdgeInsets.all(7.0),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          _takePhoto();
-                        },
-                        icon: Icon(Icons.camera_alt_outlined),
-                        iconSize: 80.0),
-                  ],
-                )
               ],
             );
           }
@@ -155,6 +207,17 @@ class _skinAlbumPage extends State<skinAlbumPage> {
           return Center(child: Text('No images found'));
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        //foregroundColor: Color(0xffffecda),
+        backgroundColor: Color(0xffd86a04),
+        onPressed: () {
+          _takePhoto();
+        },
+        label: Text('Picture'),
+        icon: Icon(Icons.camera_alt_outlined),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat ,
       bottomNavigationBar: CommonBottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (int index) {
@@ -180,14 +243,29 @@ class _skinAlbumPage extends State<skinAlbumPage> {
   }
 
   void _takePhoto() async {
-    ImagePicker().pickImage(source: ImageSource.camera).then((value) {
-      if (value != null && value.path != null) {
-        print("저장경로  : ${value.path}");
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
-        GallerySaver.saveImage(value.path).then((value) {
-          print("사진이 저장되었습니다.");
-        });
-      }
-    });
+    if (pickedFile != null) {
+      // 임시 파일 가져오기
+      final tempImageFile = File(pickedFile.path);
+
+      // 문서 디렉토리 경로 얻기
+      final directory = await getApplicationDocumentsDirectory();
+
+      // 새로운 파일명 생성 (예: Skinrecord_<timestamp>.jpg)
+      String newFileName = 'Skinrecord_${DateTime.now()}.jpg';
+      final newFilePath = path.join(directory.path, newFileName);
+
+      // 파일을 새 경로와 이름으로 이동
+      final newImageFile = await tempImageFile.copy(newFilePath);
+
+      print("새로운 사진이 저장된 경로: ${newImageFile.path}");
+
+      // 선택적: GallerySaver를 사용하여 갤러리에도 저장
+      GallerySaver.saveImage(newImageFile.path);
+
+      _updateImages();
+    }
   }
 }

@@ -5,6 +5,7 @@ import 'package:beautyminder/pages/Todo_Add_Page.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/skin_Album_page.dart';
+import 'package:beautyminder/pages/skin_timeline.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
@@ -69,9 +70,11 @@ class _CalendarPageState extends State<CalendarPage> {
               },
               label: Text('Routine'),
               icon: Icon(Icons.add),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat ,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             bottomNavigationBar: CommonBottomNavigationBar(
                 currentIndex: _currentIndex,
                 onTap: (int index) {
@@ -93,115 +96,6 @@ class _CalendarPageState extends State<CalendarPage> {
                         builder: (context) => const MyPage()));
                   }
                 })));
-  }
-}
-
-class imageWidget extends StatefulWidget {
-  @override
-  _imageWidget createState() => _imageWidget();
-}
-
-class _imageWidget extends State<imageWidget> {
-  @override
-  @override
-  void initState() {
-    getPermission();
-    super.initState();
-  }
-
-  //권한 가져오기
-  getPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
-      Permission.photos,
-      Permission.accessMediaLocation,
-      Permission.storage,
-    ].request();
-
-    print("statuses[Permission.camera] : ${statuses[Permission.camera]}");
-    print("Permission.photos : ${statuses[Permission.photos]}");
-    print(
-        "Permission.accessMediaLocation : ${statuses[Permission.accessMediaLocation]}");
-    print("Permission.storage : ${statuses[Permission.storage]}");
-  }
-
-  Future<List<LocalImage>> getLocalImages() async {
-    print("this is getLocalImages");
-    lip.LocalImageProvider imageProvider = lip.LocalImageProvider();
-    bool hasPermission = await imageProvider.initialize();
-    print("hasPermission : ${hasPermission}");
-    if (hasPermission) {
-      List<LocalImage> images = await imageProvider.findLatest(3);
-      if (images.isNotEmpty) {
-        return images;
-      } else {
-        print('이미지를 찾을 수 없습니다.');
-        throw '이미지를 찾을 수 없습니다.';
-      }
-    } else {
-      throw '이미지에 접근할 권한이 없습니다.';
-      print('이미지에 접근할 권한이 없습니다.');
-    }
-  }
-
-  void _takePhoto() async {
-    ImagePicker().pickImage(source: ImageSource.camera).then((value) {
-      if (value != null && value.path != null) {
-        print("저장경로  : ${value.path}");
-
-        GallerySaver.saveImage(value.path).then((value) {
-          print("사진이 저장되었습니다.");
-        });
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<LocalImage>>(
-      future: getLocalImages(),
-      builder: (context, snapshot) {
-        return Column(
-          children: [
-            Expanded(
-                child: Center(
-              child: Text('사진 저장하기', style: TextStyle(fontSize: 50.0)),
-            )),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                children: snapshot.data!
-                    .map((e) => GestureDetector(
-                          onTap: () {
-                            // 여기에 사진을 크게 보여주는 로직을 구현하세요
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    FullScreenImagePage(image: e),
-                              ),
-                            );
-                          },
-                          child: Image(image: DeviceImage(e)),
-                        ))
-                    .toList(),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      _takePhoto();
-                    },
-                    icon: Icon(Icons.camera_alt_outlined),
-                    iconSize: 50.0),
-              ],
-            )
-          ],
-        );
-      },
-    );
   }
 }
 
@@ -576,7 +470,6 @@ class Buttons extends StatelessWidget {
     super.key,
   });
 
-
   void _takePhoto() async {
     ImagePicker().pickImage(source: ImageSource.camera).then((value) {
       if (value != null && value.path != null) {
@@ -596,8 +489,7 @@ class Buttons extends StatelessWidget {
       children: [
         ElevatedButton.icon(
           onPressed: () {
-           _takePhoto();
-
+            _takePhoto();
           },
           icon: const Icon(Icons.camera_alt_outlined, color: Color(0xffd86a04)),
           label: const Text(
@@ -608,7 +500,9 @@ class Buttons extends StatelessWidget {
               foregroundColor: const Color(0xffffecda),
               backgroundColor: const Color(0xffffecda)),
         ),
-        const SizedBox(width: 20,),
+        const SizedBox(
+          width: 20,
+        ),
         ElevatedButton.icon(
           onPressed: () {
             Navigator.of(context).push(
@@ -617,6 +511,23 @@ class Buttons extends StatelessWidget {
           icon: const Icon(Icons.album_rounded, color: Color(0xffd86a04)),
           label: const Text(
             "ALBUM",
+            style: TextStyle(color: Color(0xffd86a04)),
+          ),
+          style: ElevatedButton.styleFrom(
+              foregroundColor: const Color(0xffffecda),
+              backgroundColor: const Color(0xffffecda)),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const timeLine()));
+          },
+          icon: const Icon(Icons.album_rounded, color: Color(0xffd86a04)),
+          label: const Text(
+            "TimeLine",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(
