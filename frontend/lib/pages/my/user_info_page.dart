@@ -47,7 +47,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CommonAppBar(),
+        appBar: CommonAppBar(automaticallyImplyLeading: true,),
         body: isLoading
             ? SpinKitThreeInOut(
                 color: Color(0xffd86a04),
@@ -93,6 +93,9 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
+                                ),
                               ),
                               onPressed: () async {
                                 if (user != null) {
@@ -106,7 +109,13 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                   getUserInfo();
                                 }
                               },
-                              child: const Text('비밀번호 변경'),
+                              child: const Text(
+                                '비밀번호 변경',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 20), // 간격 조절
@@ -115,6 +124,9 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFFFFFF),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
+                                ),
                                 side: const BorderSide(
                                     width: 1.0, color: Color(0xFFFF820E)),
                               ),
@@ -130,7 +142,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                 }
                               },
                               child: const Text('회원탈퇴',
-                                  style: TextStyle(color: Color(0xFFFF820E))),
+                                style: TextStyle(
+                                    color: Color(0xFFFF820E),
+                                    fontSize: 18
+                                )),
                             ),
                           ),
                         ],

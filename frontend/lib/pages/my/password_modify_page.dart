@@ -55,7 +55,7 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CommonAppBar(),
+        appBar: CommonAppBar(automaticallyImplyLeading: true,),
         body: isLoading
             ? const SpinKitThreeInOut(
                 color: Color(0xffd86a04),
@@ -101,6 +101,9 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFFFFFF),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
+                                ),
                                 side: const BorderSide(
                                     width: 1.0, color: Color(0xFFFF820E)),
                               ),
@@ -108,7 +111,10 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
                                 Navigator.pop(context);
                               },
                               child: const Text('취소',
-                                  style: TextStyle(color: Color(0xFFFF820E))),
+                                style: TextStyle(
+                                    color: Color(0xFFFF820E),
+                                    fontSize: 18
+                                )),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -116,9 +122,18 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
+                                ),
                               ),
                               onPressed: _changePassword,
-                              child: const Text('수정'),
+                              child: const Text(
+                                '수정',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18
+                                ),
+                              ),
                             ),
                           ),
                         ],
