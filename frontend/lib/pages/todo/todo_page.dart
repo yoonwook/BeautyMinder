@@ -83,19 +83,18 @@ class _CalendarPageState extends State<CalendarPage> {
                 onTap: (int index) async {
                   // 페이지 전환 로직 추가
                   if (index == 0) {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => const RecPage()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const RecPage()));
                   } else if (index == 1) {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CosmeticExpiryPage()));
                   } else if (index == 2) {
                     final userProfileResult = await APIService.getUserProfile();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => HomePage(user: userProfileResult.value)));
-                  }  else if (index == 4) {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => const MyPage()));
+                  } else if (index == 4) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const MyPage()));
                   }
                 })));
   }
@@ -141,6 +140,7 @@ class _todoListWidget extends State<todoListWidget> {
     List<Widget> morningTasks = [];
     List<Widget> dinnerTasks = [];
     List<Widget> otherTasks = [];
+
 
     //debugPrint("todo.id : ${todo?.id} ");
 
@@ -191,10 +191,7 @@ class _todoListWidget extends State<todoListWidget> {
 
   Widget _calendar(List<Todo>? todos) {
     List<Todo> _getTodosForDay(DateTime day) {
-      return todos
-          ?.where((todo) => isSameDay(todo.date!, day))
-          .toList() ??
-          [];
+      return todos?.where((todo) => isSameDay(todo.date!, day)).toList() ?? [];
     }
 
     return TableCalendar(
@@ -256,6 +253,8 @@ class _todoListWidget extends State<todoListWidget> {
   }
 
   Widget _todo(Task task, Todo todo, List<Todo>? todos) {
+    late String newCategory;
+
     return Slidable(
       startActionPane: ActionPane(
         motion: const DrawerMotion(),
@@ -297,12 +296,13 @@ class _todoListWidget extends State<todoListWidget> {
                                           isSelected[buttonIndex] =
                                               buttonIndex == index;
                                         }
+
                                         if (index == 0) {
-                                          task.category = 'morning';
+                                          newCategory = 'morning';
                                         } else if (index == 1) {
-                                          task.category = 'dinner';
+                                          newCategory = 'dinner';
                                         } else {
-                                          task.category = 'other';
+                                          newCategory = 'other';
                                         }
                                       });
                                     },
@@ -335,7 +335,7 @@ class _todoListWidget extends State<todoListWidget> {
                                         icon: Icon(Icons.edit),
                                         onPressed: () {
                                           task.description = _controller.text;
-
+                                          task.category = newCategory;
                                           print("update todos : ${todos}");
 
                                           context
