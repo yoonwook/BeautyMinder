@@ -1,6 +1,7 @@
 import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/event/TodoPageEvent.dart';
+import 'package:beautyminder/pages/home/home_page.dart';
 import 'package:beautyminder/pages/todo/skin_Album_page.dart';
 import 'package:beautyminder/pages/todo/skin_timeline.dart';
 
@@ -19,6 +20,7 @@ import 'package:local_image_provider/local_image_provider.dart' as lip;
 import '../../State/TodoState.dart';
 
 import '../../dto/todo_model.dart';
+import '../../services/api_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
@@ -78,7 +80,7 @@ class _CalendarPageState extends State<CalendarPage> {
             FloatingActionButtonLocation.centerFloat,
             bottomNavigationBar: CommonBottomNavigationBar(
                 currentIndex: _currentIndex,
-                onTap: (int index) {
+                onTap: (int index) async {
                   // 페이지 전환 로직 추가
                   if (index == 0) {
                     Navigator.of(context)
@@ -87,10 +89,11 @@ class _CalendarPageState extends State<CalendarPage> {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
 
-                  } else if (index == 3) {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const CalendarPage()));
-                  } else if (index == 4) {
+                  } else if (index == 2) {
+                    final userProfileResult = await APIService.getUserProfile();
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => HomePage(user: userProfileResult.value)));
+                  }  else if (index == 4) {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) => const MyPage()));
                   }
