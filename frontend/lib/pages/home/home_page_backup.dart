@@ -172,24 +172,20 @@
 //
 //   Widget _homePageUI() {
 //     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: 20),
+//       padding: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
 //       child: Column(
 //         crossAxisAlignment: CrossAxisAlignment.center,
 //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //         children: <Widget>[
-//           SizedBox(
-//             height: 40,
-//           ),
 //           _invalidProductBtn(),
 //           SizedBox(
 //             height: 20,
 //           ),
 //           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //             children: <Widget>[
-//               Expanded(child: _recommendProductBtn()),
-//               SizedBox(
-//                 width: 30,
-//               ),
+//               _recommendProductBtn(),
+//               Spacer(),
 //               Column(
 //                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
 //                 children: <Widget>[
@@ -206,7 +202,6 @@
 //             height: 20,
 //           ),
 //           _routineBtn(),
-//           // _label()
 //         ],
 //       ),
 //     );

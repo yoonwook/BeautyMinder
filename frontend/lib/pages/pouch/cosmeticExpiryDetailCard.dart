@@ -34,86 +34,91 @@ class ExpiryContentCard extends StatelessWidget {
             width: 2.0), // Orange border inside the card
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 50.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        cosmetic.productName,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                      ),
-                    ),
-
-                    SizedBox(height: 30,),
-
-                    Center(
-                      child: cosmetic.imageUrl != null
-                          ? Image.network(cosmetic.imageUrl!,
-                          width: 200, height: 200, fit: BoxFit.cover)
-                          : Image.asset('assets/images/noImg.jpg',
-                          width: 200, height: 200, fit: BoxFit.cover),
-                    ),
-
-                    SizedBox(height: 30,),
-
-                    Text(
-                        '브랜드 : ${cosmetic.brandName ?? 'NULL'}',
-                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
-                    ),
-
-                    SizedBox(height: 20,),
-
-
-                    Text(
-                        '유통기한 : ${formatDate(cosmetic.expiryDate)} 까지',
-                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
-                    ),
-
-                    SizedBox(height: 20,),
-
-                    Text(
-                        cosmetic.opened == true  ? '개봉 여부 : 개봉' : '개봉 여부 : 미개봉',
-                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
-                    ),
-
-                    SizedBox(height: 20,),
-
-                    Text(
-                        cosmetic.opened == true
-                            ? '개봉일 : ${formatDate(cosmetic.openedDate)}'
-                            : '개봉일 : N/A',
-                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
-                    ),
-                  ],
-                ),
-              ),
-              ButtonBar(
-                alignment: MainAxisAlignment.end,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 50),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      onEdit();
-                      print("아이콘 버튼 눌러서 onEdit 실행되었을 때 opened : ${cosmetic.opened}");
-                    },
-                    icon: Icon(Icons.mode_edit_outline_outlined, size: 30,),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 50.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            cosmetic.productName,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                          ),
+                        ),
+
+                        SizedBox(height: 30,),
+
+                        Center(
+                          child: cosmetic.imageUrl != null
+                              ? Image.network(cosmetic.imageUrl!,
+                              width: 200, height: 200, fit: BoxFit.cover)
+                              : Image.asset('assets/images/noImg.jpg',
+                              width: 200, height: 200, fit: BoxFit.cover),
+                        ),
+
+                        SizedBox(height: 30,),
+
+                        Text(
+                            '브랜드 : ${cosmetic.brandName ?? 'NULL'}',
+                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
+                        ),
+
+                        SizedBox(height: 20,),
+
+
+                        Text(
+                            '유통기한 : ${formatDate(cosmetic.expiryDate)} 까지',
+                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
+                        ),
+
+                        SizedBox(height: 20,),
+
+                        Text(
+                            cosmetic.opened == true  ? '개봉 여부 : 개봉' : '개봉 여부 : 미개봉',
+                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
+                        ),
+
+                        SizedBox(height: 20,),
+
+                        Text(
+                            cosmetic.opened == true
+                                ? '개봉일 : ${formatDate(cosmetic.openedDate)}'
+                                : '개봉일 : N/A',
+                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)
+                        ),
+                      ],
+                    ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      onDelete();
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.delete_outline_outlined, size: 30,),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          onEdit();
+                          print("아이콘 버튼 눌러서 onEdit 실행되었을 때 opened : ${cosmetic.opened}");
+                        },
+                        icon: Icon(Icons.mode_edit_outline_outlined, size: 30,),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          onDelete();
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.delete_outline_outlined, size: 30,),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
