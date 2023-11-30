@@ -362,6 +362,69 @@ class APIService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+
+
+  //비밀번호 변경
+  static Future<Result<bool>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final url = Uri.http(Config.apiURL, Config.changePassword).toString();
+
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+    };
+
+    final Map<String, dynamic> passwords = {
+      'current_password': currentPassword,
+      'new_password': newPassword,
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+        'POST',
+        url,
+        body: passwords,
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        return Result.success(true);
+      }
+      return Result.failure("Failed to change password");
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
+  //비밀번호 리셋
+  static Future<Result<bool>> requestResetPassword({
+    required String email,
+  }) async {
+    final url = Uri.http(Config.apiURL, Config.requestResetPassword).toString();
+
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+        'POST',
+        url,
+        body: {'email': email},
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        return Result.success(true);
+      }
+      return Result.failure("Failed to request reset password");
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
 }
 
 // 결과 클래스
