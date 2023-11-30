@@ -95,7 +95,7 @@ class _timeLine extends State<timeLine> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: true),
       body: Column(
         children: [
           // EasyInfiniteDateTimeLine(

@@ -26,8 +26,7 @@ class TodoService {
       'Cookie': 'XRT=${Config.refreshToken}',
     };
 
-    final url = Uri.http(Config.apiURL, Config.todoAllAPI).toString();
-
+    final url = Uri.http(Config.apiURL, Config.todoAPI).toString();
     try {
       final response =
       await DioClient.sendRequest('GET', url, headers: headers);

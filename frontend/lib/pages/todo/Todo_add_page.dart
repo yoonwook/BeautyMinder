@@ -134,7 +134,7 @@ class _TodoAddPage extends State<TodoAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: true),
       body: SingleChildScrollView(
         child: Column(
           children: [

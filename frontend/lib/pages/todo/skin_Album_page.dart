@@ -32,8 +32,6 @@ class _skinAlbumPage extends State<skinAlbumPage> {
   String selectedFilter = "all";
   String title = '전체';
 
-  var _currentIndex = 2;
-
   getPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.camera,
@@ -142,7 +140,7 @@ class _skinAlbumPage extends State<skinAlbumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: true),
       body: FutureBuilder<List<LocalImage>>(
         future: getLocalImages(),
         builder: (context, snapshot) {
@@ -221,25 +219,6 @@ class _skinAlbumPage extends State<skinAlbumPage> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat ,
-      bottomNavigationBar: CommonBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (int index) {
-            // 페이지 전환 로직 추가
-            if (index == 0) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => const RecPage()));
-            } else if (index == 1) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => CosmeticExpiryPage()));
-
-            } else if (index == 3) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const CalendarPage()));
-            } else if (index == 4) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => const MyPage()));
-            }
-          }),
     );
   }
 
