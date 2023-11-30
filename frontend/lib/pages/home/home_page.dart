@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> {
 
   //필요한 서비스 호출
   Future<void> _getAllNeeds() async {
-    print("hohoho1 : api: ${isApiCallProcess}, loading : ${isLoading}");
     // 이미 API 호출이 진행 중인지 확인
     if (isApiCallProcess) {
       return;
@@ -63,63 +62,48 @@ class _HomePageState extends State<HomePage> {
       isLoading = true;
       isApiCallProcess = true;
     });
-    print("hohoho2 : api: ${isApiCallProcess}, loading : ${isLoading}");
     try {
       //유통기한
-      print("hohoho3 : api: ${isApiCallProcess}, loading : ${isLoading}");
       List<CosmeticExpiry> loadedExpiries = await ExpiryService.getAllExpiries();
-      print("hohoho4 : api: ${isApiCallProcess}, loading : ${isLoading}");
       for (var expiry in loadedExpiries) {
         try {
           // 예시: productName을 이용하여 관련 이미지 URL 검색
-          print("hohoho5 : api: ${isApiCallProcess}, loading : ${isLoading}");
           var cosmetic = await SearchService.searchCosmeticsByName(expiry.productName);
           if (cosmetic.isNotEmpty) {
             expiry.imageUrl = cosmetic.first.images.isNotEmpty
                 ? cosmetic.first.images.first
                 : null;
           }
-          print("hohoho6 : api: ${isApiCallProcess}, loading : ${isLoading}");
           expiries = loadedExpiries;
-          print("hohoho7 : api: ${isApiCallProcess}, loading : ${isLoading}");
         } catch (e) {
           print("Error loading image for ${expiry.productName}: $e");
         }
       }
-      print("hohoho8 : api: ${isApiCallProcess}, loading : ${isLoading}");
       //추천제품
       final loadedRecommends = await CosmeticSearchService.getAllCosmetics();
-      print("hohoho9 : api: ${isApiCallProcess}, loading : ${isLoading}");
 
       //루틴
       String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      print("hohoho10 : api: ${isApiCallProcess}, loading : ${isLoading}");
       final loadedTodos = await TodoService.getTodoOf(todayFormatted);
-      print("hohoho11 : api: ${isApiCallProcess}, loading : ${isLoading}");
 
       setState(() {
         expiries = loadedExpiries;
         recommends = loadedRecommends.value!;
         todayTodos = loadedTodos.value!;
-        print("hohoho12 : api: ${isApiCallProcess}, loading : ${isLoading}");
       });
-      print("hohoho13 : api: ${isApiCallProcess}, loading : ${isLoading}");
 
     } catch (e) {
       print('An error occurred while loading expiries: $e');
     } finally {
-      print("hohoho14 : api: ${isApiCallProcess}, loading : ${isLoading}");
       setState(() {
         isLoading = false;
         isApiCallProcess = false;
       });
-      print("hohoho15 : api: ${isApiCallProcess}, loading : ${isLoading}");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget>[
         IconButton(
@@ -174,8 +158,16 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ]),
-      body: SingleChildScrollView(
-        child: _homePageUI(),
+      body: Center(
+        child: isApiCallProcess || isLoading
+            ? SpinKitThreeInOut(
+                color: Color(0xffd86a04),
+                size: 50.0,
+                duration: Duration(seconds: 2),
+              )
+            : SingleChildScrollView(
+          child: _homePageUI(),
+        ),
       ),
       bottomNavigationBar: _underNavigation(),
     );
