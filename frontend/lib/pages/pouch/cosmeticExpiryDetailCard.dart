@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../dto/cosmetic_expiry_model.dart';
-import 'expiry_edit_dialog.dart';
-import '../../services/expiry_service.dart';
 
 class ExpiryContentCard extends StatelessWidget {
   final CosmeticExpiry cosmetic;
@@ -31,7 +29,7 @@ class ExpiryContentCard extends StatelessWidget {
             color:
               (isDatePassed || (!isDatePassed && difference.inDays+1<=100)) ?
                 Colors.orange : Colors.black54,
-            width: 2.0), // Orange border inside the card
+            width: 2.0),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: SingleChildScrollView(

@@ -18,7 +18,6 @@ class APIService {
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
-    print("my url: $url");
     // FormData 생성
     final formData = FormData.fromMap({
       'email': model.email ?? '',

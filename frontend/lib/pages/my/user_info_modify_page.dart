@@ -129,6 +129,7 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFFFFFF),
+                                elevation: 0,
                                 side: const BorderSide(
                                     width: 1.0, color: Color(0xFFFF820E)),
                               ),
@@ -144,6 +145,7 @@ class _UserInfoModifyPageState extends State<UserInfoModifyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
+                                elevation: 0,
                               ),
                               onPressed: () async {
                                 final ok = await popUp(

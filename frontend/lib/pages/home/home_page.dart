@@ -22,6 +22,7 @@ import '../../widget/commonBottomNavigationBar.dart';
 import '../baumann/baumann_test_start_page.dart';
 import '../chat/chat_page.dart';
 import '../my/my_page.dart';
+import '../my/user_info_page.dart';
 import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
 import '../search/search_page.dart';
@@ -104,6 +105,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("hihi this is homePage : ${widget.user?.baumann}");
     return Scaffold(
       appBar: HomepageAppBar(actions: <Widget>[
         IconButton(
@@ -472,6 +474,7 @@ class _HomePageState extends State<HomePage> {
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
     BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
+    print("hihi this is homePage2 : ${widget.user?.baumann}");
 
     return ElevatedButton(
       onPressed: () async {
@@ -486,9 +489,6 @@ class _HomePageState extends State<HomePage> {
 
         try {
           result = await BaumannService.getBaumannHistory();
-
-          // print("This is Baumann Button in Home Page : ${result.value}");
-
           if (result.isSuccess && result.value!.isNotEmpty) {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
@@ -497,7 +497,6 @@ class _HomePageState extends State<HomePage> {
           } else {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => BaumannStartPage()));
-            // print("This is Baumann Button in Home Page2 : ${result.isSuccess}");
           }
         } catch (e) {
           // Handle the error case
@@ -511,11 +510,8 @@ class _HomePageState extends State<HomePage> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xfffe9738),
-        // 버튼의 배경색을 검정색으로 설정
         foregroundColor: Colors.white,
-        // 버튼의 글씨색을 하얀색으로 설정
         elevation: 0,
-        // 그림자 없애기
         minimumSize: Size(screenWidth, 90.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
@@ -713,7 +709,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 
   Widget _underNavigation() {
     return CommonBottomNavigationBar(

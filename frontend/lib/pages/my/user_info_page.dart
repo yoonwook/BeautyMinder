@@ -27,18 +27,19 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserInfo();
   }
 
   getUserInfo() async {
     try {
+      // final info = await SharedService.getUser();
       final info = await SharedService.loginDetails();
       setState(() {
         user = info!.user;
         isLoading = false;
       });
+      print("hihi user info page2 : ${user?.baumann}");
     } catch (e) {
       print(e);
     }
@@ -46,6 +47,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("hihi user info page3 : ${user?.baumann}");
     return Scaffold(
         appBar: CommonAppBar(automaticallyImplyLeading: true,),
         body: isLoading
@@ -69,15 +71,15 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ),
                         SizedBox(height: 20),
                         MyDivider(),
-                        UserInfoItem(title: '이메일', content: user!.email),
-                        MyDivider(),
                         PhoneInfo(
                           title: '전화번호',
                           content: user!.phoneNumber ?? '',
                           onTap: _changePhone,
                         ),
                         MyDivider(),
-                        SizedBox(height: 200),
+                        UserInfoItem(title: '이메일', content: user!.email),
+                        MyDivider(),
+                        // SizedBox(height: 200),
                       ])),
                   Positioned(
                     bottom: 70, // 원하는 위치에 배치
@@ -93,6 +95,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
+                                elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
                                 ),
@@ -123,10 +126,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFFFFFFF),
+                                // backgroundColor: const Color(0xFFFFFFFF),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
                                 ),
+                                elevation: 0,
                                 side: const BorderSide(
                                     width: 1.0, color: Color(0xFFFF820E)),
                               ),
@@ -201,6 +205,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
       await _updateUser(phoneNumber: newphoneNumber);
     }
   }
+
 
   Future<void> _updateUser({
     String? imageUrl,
