@@ -425,6 +425,28 @@ class APIService {
     }
   }
 
+  //유저 정보 변경
+  static Future<Result<bool>> updateUserInfo(
+      Map<String, dynamic> userData) async {
+    final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
+
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+    };
+
+    try {
+      final response = await DioClient.sendRequest('PATCH', url,
+          body: userData, headers: headers);
+      if (response.statusCode == 200) {
+        return Result.success(true);
+      }
+      return Result.failure("Failed to update user profile");
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
 }
 
 // 결과 클래스
