@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
 
       //루틴
       String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      final loadedTodos = await TodoService.getTodoOf(todayFormatted);
+      final loadedTodos = await TodoService.getTodoOf();
 
       setState(() {
         expiries = loadedExpiries;

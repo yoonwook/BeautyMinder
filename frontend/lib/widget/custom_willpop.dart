@@ -26,24 +26,26 @@ class CustomWillPopScope extends StatelessWidget {
           }
         }
       },
-      child: PopScope(
-        canPop: canPop,
-        onPopInvoked: (didPop) {
-          if (!didPop && canPop) {
-            action();
+      child: WillPopScope(
+        onWillPop: () async {
+          if (canPop) {
+            action(); // 사용자 정의 함수 실행
+            return true; // 화면을 떠날 수 있음
           }
+          return false; // 화면을 떠나지 못함
         },
-        child: child,
+        child: child, // 현재 화면의 자식 위젯
       ),
     )
-        : PopScope(
-      canPop: canPop,
-      onPopInvoked: (didPop) {
-        if (didPop) {
-          action();
+        : WillPopScope(
+      onWillPop: () async {
+        if (canPop) {
+          action(); // 사용자 정의 함수 실행
+          return true; // 화면을 떠날 수 있음
         }
+        return false; // 화면을 떠나지 못함
       },
-      child: child,
-    );
+      child: child, // 현재 화면의 자식 위젯
+    );;
   }
 }

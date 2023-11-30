@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.1.0
+  http: ^0.13.1
   snippet_coder_utils: ^1.0.9
   flutter_secure_storage: ^9.0.0
 
@@ -64,7 +64,16 @@ dependencies:
   table_calendar: ^3.0.9
   marquee: ^2.0.0
   url_launcher: ^6.2.1
-  image_cropper: ^5.0.1
+  image_cropper: ^4.0.1
+  gallery_saver: ^2.1.0
+  local_image_provider: ^4.0.0-nullsafety
+  permission_handler: ^9.1.0
+  path_provider: ^2.1.1
+
+  photo_view: ^0.14.0
+  timeline_list: ^0.0.6
+  easy_date_timeline: ^1.0.2
+  calendar_timeline: ^1.1.2
 
 
 dev_dependencies:
