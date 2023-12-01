@@ -67,20 +67,19 @@ class _CalendarPageState extends State<CalendarPage> {
                 // Expanded(child: imageWidget()),
               ],
             ),
-            floatingActionButton: FloatingActionButton.extended(
+            floatingActionButton: FloatingActionButton(
               //foregroundColor: Color(0xffffecda),
               backgroundColor: Color(0xffd86a04),
+              // elevation: 0,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const TodoAddPage()));
               },
-              label: Text('Routine'),
-              icon: Icon(Icons.add),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              tooltip: '등록',
+              child: Icon(Icons.add),
+              shape: CircleBorder(),
             ),
-            floatingActionButtonLocation:
-            FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: CommonBottomNavigationBar(
                 currentIndex: _currentIndex,
                 onTap: (int index) async {
@@ -511,12 +510,12 @@ class Buttons extends StatelessWidget {
           },
           icon: const Icon(Icons.camera_alt_outlined, color: Color(0xffd86a04)),
           label: const Text(
-            "SKIN",
+            "피부촬영",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(
-              foregroundColor: const Color(0xffffecda),
-              backgroundColor: const Color(0xffffecda)),
+            foregroundColor: const Color(0xffffecda),
+            backgroundColor: const Color(0xffffecda)),
         ),
         const SizedBox(
           width: 20,
@@ -528,7 +527,7 @@ class Buttons extends StatelessWidget {
           },
           icon: const Icon(Icons.album_rounded, color: Color(0xffd86a04)),
           label: const Text(
-            "ALBUM",
+            "앨범",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(
@@ -545,7 +544,7 @@ class Buttons extends StatelessWidget {
           },
           icon: const Icon(Icons.album_rounded, color: Color(0xffd86a04)),
           label: const Text(
-            "TimeLine",
+            "타임 라인",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(
