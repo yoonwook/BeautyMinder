@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:beautyminder/Bloc/TodoPageBloc.dart';
 import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/event/TodoPageEvent.dart';
@@ -14,11 +16,12 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_image_provider/device_image.dart';
 import 'package:local_image_provider/local_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:local_image_provider/local_image_provider.dart' as lip;
 import '../../State/TodoState.dart';
-
+import 'package:path/path.dart' as path;
 import '../../dto/todo_model.dart';
 import '../../services/api_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
@@ -473,15 +476,28 @@ class Buttons extends StatelessWidget {
   });
 
   void _takePhoto() async {
-    ImagePicker().pickImage(source: ImageSource.camera).then((value) {
-      if (value != null && value.path != null) {
-        print("저장경로  : ${value.path}");
+    final pickedFile =
+    await ImagePicker().pickImage(source: ImageSource.camera);
 
-        GallerySaver.saveImage(value.path).then((value) {
-          print("사진이 저장되었습니다.");
-        });
-      }
-    });
+    if (pickedFile != null) {
+      // 임시 파일 가져오기
+      final tempImageFile = File(pickedFile.path);
+
+      // 문서 디렉토리 경로 얻기
+      final directory = await getApplicationDocumentsDirectory();
+
+      // 새로운 파일명 생성 (예: Skinrecord_<timestamp>.jpg)
+      String newFileName = 'Skinrecord_${DateTime.now()}.jpg';
+      final newFilePath = path.join(directory.path, newFileName);
+
+      // 파일을 새 경로와 이름으로 이동
+      final newImageFile = await tempImageFile.copy(newFilePath);
+
+      print("새로운 사진이 저장된 경로: ${newImageFile.path}");
+
+      // 선택적: GallerySaver를 사용하여 갤러리에도 저장
+      GallerySaver.saveImage(newImageFile.path);
+    }
   }
 
   @override
