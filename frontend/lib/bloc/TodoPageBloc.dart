@@ -166,36 +166,38 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     if (state is TodoLoadedState) {
       emit(TodoDeleteState(
           todo: state.todo, isError: state.isError, todos: state.todos));
-      print("event.todo : ${event.todo}");
-      print("event.task: ${event.task}");
-      print("state.todos : ${state.todos}");
-      try {
-        final String? taskid = event.task?.taskId;
-        final result = await TodoService.deleteTask(event.todo, event.task);
-        print("result.value.runtimeType: ${result.value.runtimeType}");
-        print("result: ${result.value}");
 
-        if(result == null || result.value == null){
-          emit(TodoLoadedState(
-              isError: state.isError, todos: state.todos, todo: state.todo));
-          return;
-        }
+      // try {
+      final String? taskid = event.task?.taskId;
+      final result = await TodoService.deleteTask(event.todo, event.task);
 
-        if (result.value!.containsKey('todo')) {
-          todo = Todo.fromJson(result.value?['todo']);
 
-          if (todo != null) {
-            todos.add(todo);
-          }
-        }
+      if (result.value!['todo'] == null) {
 
-        emit(TodoDeletedState(todo: todo, isError: false, todos: state.todos));
-        //print(taskid);
+
+        state.todos?.removeWhere((todo) => todo.id == state.todo?.id);
+
+
         emit(TodoLoadedState(
-            isError: state.isError, todos: state.todos, todo: state.todo));
-      } catch (e) {
-        print("Error in Delete: ${e}");
+            isError: false, todos: state.todos, todo: null /*state.todo*/));
+        return;
       }
+
+      if (result.value!.containsKey('todo')) {
+        todo = Todo.fromJson(result.value?['todo']);
+
+        if (todo != null) {
+          todos.add(todo);
+        }
+      }
+
+      emit(TodoDeletedState(todo: todo, isError: false, todos: state.todos));
+      //print(taskid);
+      emit(TodoLoadedState(
+          isError: state.isError, todos: state.todos, todo: state.todo));
+      // } catch (e) {
+      //   print("Error in Delete: ${e}");
+      // }
     } else {
       //emit(TodoErrorState(isError: true));
     }
