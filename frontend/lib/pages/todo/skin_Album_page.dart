@@ -108,6 +108,7 @@ class _skinAlbumPage extends State<skinAlbumPage> {
             title = '이번 달';
             return imageDate.year == now.year && imageDate.month == now.month;
           default: // 'All'
+            title = '전체';
             return true;
         }
       }).toList();
