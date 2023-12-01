@@ -96,71 +96,74 @@ class _timeLine extends State<timeLine> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: CommonAppBar(automaticallyImplyLeading: true),
-      body: Column(
-        children: [
-          // EasyInfiniteDateTimeLine(
-          //   controller: _controller,
-          //   activeColor: Color(0xffd86a04),
-          //   firstDate: DateTime(2023),
-          //   focusDate: _focusDate,
-          //   lastDate: DateTime(2023, 12, 31),
-          //   onDateChange: (selectedDate) {
-          //     _updateImages(selectedDate);
-          //     setState(() {
-          //       _focusDate = selectedDate;
-          //       _selectDate = selectedDate;
-          //       print(_selectDate);
-          //     });
-          //   },
-          // ),
-          CalendarTimeline(
-            initialDate: _selectDate,
-            firstDate: DateTime(2019, 1, 15),
-            lastDate: DateTime(2030, 11, 20),
-            onDateSelected: (date) => {print(date),
-            _selectDate = date,
-              setState(() {
-                _updateImages(date);
-              })
-            },
-            leftMargin: 20,
-            monthColor: Colors.blueGrey,
-            dayColor: Color(0xffd86a04),
-            activeDayColor: Color(0xffffecda),
-            activeBackgroundDayColor: Color(0xffd86a04),
-            dotsColor: Color(0xFF333A47),
-            locale: 'en_ISO',
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: images.isNotEmpty
-                ? GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 10.0,
-                      crossAxisCount: 1,
+      body: Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          children: [
+            // EasyInfiniteDateTimeLine(
+            //   controller: _controller,
+            //   activeColor: Color(0xffd86a04),
+            //   firstDate: DateTime(2023),
+            //   focusDate: _focusDate,
+            //   lastDate: DateTime(2023, 12, 31),
+            //   onDateChange: (selectedDate) {
+            //     _updateImages(selectedDate);
+            //     setState(() {
+            //       _focusDate = selectedDate;
+            //       _selectDate = selectedDate;
+            //       print(_selectDate);
+            //     });
+            //   },
+            // ),
+            CalendarTimeline(
+              initialDate: _selectDate,
+              firstDate: DateTime(2019, 1, 15),
+              lastDate: DateTime(2030, 11, 20),
+              onDateSelected: (date) => {print(date),
+                _selectDate = date,
+                setState(() {
+                  _updateImages(date);
+                })
+              },
+              leftMargin: 20,
+              monthColor: Colors.blueGrey,
+              dayColor: Color(0xffd86a04),
+              activeDayColor: Color(0xffffecda),
+              activeBackgroundDayColor: Color(0xffd86a04),
+              dotsColor: Color(0xFF333A47),
+              locale: 'en_ISO',
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: images.isNotEmpty
+                  ? GridView.builder(
+                gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                  mainAxisSpacing: 10.0,
+                  crossAxisCount: 1,
+                ),
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Image(
+                      image: DeviceImage(images[index]),
+                      fit: BoxFit.cover,
                     ),
-                    itemCount: images.length,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Image(
-                          image: DeviceImage(images[index]),
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                  )
-                : Center(
-                    child: Text(
-                      '기록된 사진이 없습니다.',
-                      style: TextStyle(fontSize: 18.0, color: Colors.black54),
-                    ),
-                  ),
-          ),
-        ],
+                  );
+                },
+              )
+                  : Center(
+                child: Text(
+                  '기록된 사진이 없습니다.',
+                  style: TextStyle(fontSize: 18.0, color: Colors.black54),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
