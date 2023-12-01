@@ -101,6 +101,7 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFFFFFF),
+                                elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
                                 ),
@@ -122,6 +123,7 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF820E),
+                                elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
                                 ),

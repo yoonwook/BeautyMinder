@@ -135,9 +135,8 @@ class ReviewService {
     List<MultipartFile> multipartImageList = imageFiles.map((file) {
       final MediaType contentType = MediaType.parse(
           lookupMimeType(file.name) ?? 'application/octet-stream');
-      return MultipartFile.fromBytes(
-        file.bytes!,
-        filename: file.name,
+      return MultipartFile.fromFileSync(
+        file.path!,
         contentType: contentType,
       );
     }).toList();

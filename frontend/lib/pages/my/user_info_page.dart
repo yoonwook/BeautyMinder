@@ -1,7 +1,6 @@
 import 'package:beautyminder/dto/delete_request_model.dart';
 import 'package:beautyminder/dto/user_model.dart';
 import 'package:beautyminder/pages/my/password_modify_page.dart';
-import 'package:beautyminder/pages/my/user_info_modify_page.dart';
 import 'package:beautyminder/pages/my/widgets/change_dialog.dart';
 import 'package:beautyminder/pages/my/widgets/my_divider.dart';
 import 'package:beautyminder/pages/my/widgets/my_page_header.dart';
@@ -126,7 +125,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                // backgroundColor: const Color(0xFFFFFFFF),
+                                backgroundColor: const Color(0xFFFFFFFF),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0), // 적절한 값을 선택하세요
                                 ),

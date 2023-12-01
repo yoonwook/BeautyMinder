@@ -346,17 +346,24 @@ class _HomePageState extends State<HomePage> {
   Widget _buildDefaultText() {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 5),
-          Text(
-            "등록된 화장품이 없습니다.\n화장품 등록하기",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          Container(
+            height: 130,
+            alignment: Alignment.center,
+            child: Text(
+              "등록된 화장품이 없습니다.\n화장품 등록하기",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
     );
   }
+
 
 
   //추천 버튼
@@ -443,7 +450,7 @@ class _HomePageState extends State<HomePage> {
                 width: MediaQuery.of(context).size.width / 2 - 100,
                 child: Text(
                   item.name,
-                  style: TextStyle(color: Colors.black, fontSize: 15),
+                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -461,8 +468,9 @@ class _HomePageState extends State<HomePage> {
         children: [
           SizedBox(height: 5),
           Text(
-            "추천 화장품이 없습니다.\n화장품 추천받기",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            "추천 화장품이 없습니다.\n\n화장품 추천받기",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -635,9 +643,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
                       _selectTodocreen(),
                     ],
                   ),
@@ -662,30 +667,32 @@ class _HomePageState extends State<HomePage> {
     print("hello this is 2: ${todayTodos}");
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          height: 100,
+          height: 120,
           margin: EdgeInsets.all(8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center, // 세로축을 기준으로 중앙 정렬
             children: [
-              SizedBox(height: 5),
               Container(
-                width: MediaQuery.of(context).size.width / 2 - 60,
+                width: MediaQuery.of(context).size.width / 2 - 50,
                 child: todayTodos != null && todayTodos!.tasks.isNotEmpty
                     ? Column(
-                        children: todayTodos!.tasks
-                            .map((task) => Column(
-                          children: [
-                            Text(
-                              task.description,
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 15),
-                            ),
-                            SizedBox(height: 5,)
-                          ],
-                        )).toList(),
-                      )
+                  children: todayTodos!.tasks
+                      .take(3)
+                      .map((task) => Column(
+                    children: [
+                      Text(
+                        task.description,
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 18),
+                      ),
+                      SizedBox(height: 10)
+                    ],
+                  ))
+                      .toList(),
+                )
                     : _buildTodoDefaultText(),
               ),
             ],
@@ -695,15 +702,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   Widget _buildTodoDefaultText() {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 5),
-          Text(
-            "등록된 루틴이 없습니다.\n화장품 사용 루틴 등록하기",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+          Container(
+            height: 130,
+            alignment: Alignment.center,
+            child: Text(
+              "등록된 루틴이 없습니다.\n화장품 사용 루틴 등록하기",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),

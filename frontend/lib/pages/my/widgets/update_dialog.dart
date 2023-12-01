@@ -1,15 +1,15 @@
 import 'dart:developer';
 
+import 'package:beautyminder/dto/review_model.dart';
 import 'package:beautyminder/dto/review_request_model.dart';
-import 'package:beautyminder/dto/review_response_model.dart';
 import 'package:beautyminder/services/review_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UpdateDialog extends StatefulWidget {
-  UpdateDialog({
-    Key? key,
+  const UpdateDialog({
+    super.key,
     this.icon,
     required this.onBarrierTap,
     required this.title,
@@ -17,14 +17,14 @@ class UpdateDialog extends StatefulWidget {
     this.caption,
     required this.review,
     required this.callback,
-  }) : super(key: key);
+  });
 
   final Widget? icon;
   final String title;
   final String? body;
   final String? caption;
   final Function() onBarrierTap;
-  final dynamic review;
+  final ReviewModel review;
   final Function() callback;
 
   @override
@@ -33,15 +33,13 @@ class UpdateDialog extends StatefulWidget {
 
 class _UpdateDialogState extends State<UpdateDialog> {
   final _contentController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
 
-  var review;
-  var reviews;
-  int _localRating = 0;
-  var _selectedCosmeticId;
+  late ReviewModel review;
+  late int _localRating;
+
   List<PlatformFile>? _imageFiles;
 
-  void getImages() async {
+  Future<void> getImages() async {
     try {
       _imageFiles = (await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -60,16 +58,16 @@ class _UpdateDialogState extends State<UpdateDialog> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      review = widget.review;
-      _localRating = review['rating'];
-      _selectedCosmeticId = review['id'];
-    });
+
+    review = widget.review;
+    _localRating = review.rating;
+    _contentController.text = review.content;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _contentController.dispose();
+
     super.dispose();
   }
 
@@ -120,12 +118,12 @@ class _UpdateDialogState extends State<UpdateDialog> {
                         const SizedBox(height: 15),
                         TextField(
                           controller: _contentController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Enter your review here',
                           ),
                           maxLines: 3,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -151,7 +149,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                                   backgroundColor:
                                       MaterialStateProperty.all(Colors.orange)),
                               onPressed: getImages,
-                              child: Text('사진 선택'),
+                              child: const Text('사진 선택'),
                             ),
                           ],
                         ),
@@ -188,7 +186,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                         Expanded(
                           child: UpdateDialogButton(
                             onTap: () async {
-                              _onPressed();
+                              await _updateReview();
                               Navigator.of(context).pop();
                             },
                             text: "수정",
@@ -209,55 +207,22 @@ class _UpdateDialogState extends State<UpdateDialog> {
     );
   }
 
-  _onPressed() async {
+  Future<void> _updateReview() async {
     final String content = _contentController.text;
-    final reviewToUpdate = ReviewResponse.fromJson({
-      'id': _selectedCosmeticId,
-      'content': review['content'],
-      'rating': review['rating'],
-      'images': review['images'],
-      'cosmetic': review['cosmetic'],
-      'createdAt': review['createdAt'],
-      'user': review['user'],
-    });
 
-    if (content.isNotEmpty && _selectedCosmeticId.isNotEmpty) {
-      ReviewRequest newReviewRequest = ReviewRequest(
+    if (content.isNotEmpty) {
+      final newReviewRequest = ReviewRequest(
         content: content,
         rating: _localRating, // 여기에서 _localRating 사용
-        cosmeticId: _selectedCosmeticId,
+        cosmeticId: review.cosmetic.id,
+        imagesToDelete: review.images,
       );
 
       try {
-        ReviewResponse responseReview;
-        if (reviewToUpdate == null) {
-          responseReview = await ReviewService.addReview(
-              newReviewRequest, _imageFiles ?? []);
-        } else {
-          // 기존 리뷰 수정 로직
-          responseReview = await ReviewService.updateReview(
-              reviewToUpdate.id, newReviewRequest, _imageFiles ?? []);
-          widget.callback();
-          // UI 업데이트
-          int index =
-              reviews.indexWhere((review) => review.id == responseReview.id);
-          if (index != -1) {
-            reviews[index] = responseReview;
-          }
-        }
-
-        setState(() {
-          if (reviewToUpdate == null) {
-            reviews.add(responseReview);
-          } else {
-            int index =
-                reviews.indexWhere((review) => review.id == responseReview.id);
-            if (index != -1) {
-              reviews[index] = responseReview;
-            }
-          }
-          _searchController.clear();
-        });
+        // 기존 리뷰 수정 로직
+        await ReviewService.updateReview(
+            review.id, newReviewRequest, _imageFiles ?? []);
+        widget.callback();
       } catch (e) {
         // _showSnackBar('Failed to add/update review: $e');
       }
@@ -269,12 +234,11 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
 class UpdateDialogButton extends StatelessWidget {
   const UpdateDialogButton(
-      {Key? key,
+      {super.key,
       required this.onTap,
       required this.text,
       required this.backgroundColor,
-      required this.textColor})
-      : super(key: key);
+      required this.textColor});
   final Function() onTap;
   final String text;
   final Color backgroundColor;

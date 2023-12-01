@@ -188,33 +188,6 @@ class _RegisterPageState extends State<RegisterPage> {
               style: TextStyle(color: Colors.red),
             ),
           )
-          // StreamBuilder<int>(
-          //   stream: verifyEmailStreamController.stream,
-          //   builder: (context, snapshot) {
-          //     if(snapshot.hasData) {
-          //       int verifyEmailSucess = snapshot.data!;
-          //
-          //       if(verifyEmailSucess == 1) {
-          //         return Padding(
-          //           padding: const EdgeInsets.only(top: 8.0),
-          //           child: Text(
-          //             '이메일 인증이 완료되었습니다.',
-          //             style: TextStyle(color: Colors.green),
-          //           ),
-          //         );
-          //       } else if (verifyEmailSucess == 2) {
-          //         return Padding(
-          //           padding: const EdgeInsets.only(top: 8.0),
-          //           child: Text(
-          //             '이메일 인증에 실패했습니다.',
-          //             style: TextStyle(color: Colors.red),
-          //           ),
-          //         );
-          //       }
-          //     }
-          //     return Container();
-          //   }
-          // )
         ],
       ),
     );
