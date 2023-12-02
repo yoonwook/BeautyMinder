@@ -9,7 +9,6 @@ import 'package:test/expect.dart';
 import '../dto/task_model.dart';
 
 class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
-
   Function()? onCloseCallback;
 
   TodoPageBloc() : super(const TodoInitState()) {
@@ -32,13 +31,12 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     // 오늘 루틴을 받아오기
     final result = (await TodoService.getAllTodos());
 
-    if(result == null){
+    if (result == null) {
       // 등록된 todo가 없으면 []을 반환
       emit(TodoLoadedState(todos: const [], isError: state.isError));
       print(" result == null ==> result.value in _initEvent : ${result.value}");
-      return ;
+      return;
     }
-
 
     try {
       List<Todo>? todos = result.value;
@@ -56,15 +54,13 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
         //     todayTodo = todo;
         //   }
         // }
-         final resultToday = await TodoService.getTodoOf();
+        final resultToday = await TodoService.getTodoOf();
 
-         print("todayTodo : ${resultToday.value}");
-
-
+        print("todayTodo : ${resultToday.value}");
 
         //정상적으로 데이터를 받아옴
-        emit(TodoLoadedState(todos: todos, isError: state.isError, todo: resultToday.value));
-
+        emit(TodoLoadedState(
+            todos: todos, isError: state.isError, todo: resultToday.value));
       } else {
         print("TodoErrorState");
         emit(TodoErrorState(isError: true));
@@ -85,28 +81,27 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
   Future<void> _addEvent(
       TodoPageAddEvent event, Emitter<TodoState> emit) async {
     print("addevent");
-      print("TodoLoadedstate in addevent");
-      // Todo가 로드된 상태에서만 Todo add event가 가능
-      emit(TodoAddState(todo: state.todo, isError: state.isError));
-      print("state.todo : ${state.todo}");
-      try {
-        final Todo todo = event.todo;
-        print("event.todo : ${event.todo}");
-        print("call addTodo in addEvent");
-        final result = await TodoService.addTodo(todo);
-        print("result.value : ${result.value}");
+    print("TodoLoadedstate in addevent");
+    // Todo가 로드된 상태에서만 Todo add event가 가능
+    emit(TodoAddState(todo: state.todo, isError: state.isError));
+    print("state.todo : ${state.todo}");
+    try {
+      final Todo todo = event.todo;
+      print("event.todo : ${event.todo}");
+      print("call addTodo in addEvent");
+      final result = await TodoService.addTodo(todo);
+      print("result.value : ${result.value}");
 
-        if (result.value != null) {
-          emit(TodoAddedState(todo: state.todo, isError: state.isError));
-          print(todo);
-          emit(TodoLoadedState(todos: state.todos, isError: state.isError));
-        } else {
-          print("Error : ${result.error}");
-        }
-      } catch (e) {
-        print("Error : ${e}");
+      if (result.value != null) {
+        emit(TodoAddedState(todo: state.todo, isError: state.isError));
+        print(todo);
+        emit(TodoLoadedState(todos: state.todos, isError: state.isError));
+      } else {
+        print("Error : ${result.error}");
       }
-
+    } catch (e) {
+      print("Error : ${e}");
+    }
   }
 
   Future<void> _TaskUpdateEvent(
@@ -118,7 +113,11 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     //emit(TodoLoadedState(todos: event.todos, todo: event.todo, task: event.task, isError :state.isError));
 
     if (state is TodoLoadedState) {
-      emit(TodoUpdateState(isError : false, task: state.task, todo: state.todo, todos: state.todos));
+      emit(TodoUpdateState(
+          isError: false,
+          task: state.task,
+          todo: state.todo,
+          todos: state.todos));
 
       print("this is TodoLoadedState");
       print("state.todos : ${state.todos}");
@@ -134,20 +133,16 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
           }
         }
 
-
         if (result.value != null) {
           print("TodoUpdatedState!!");
-          emit(TodoUpdatedState(
-              todo: todo, isError: false, todos: state.todos));
+          emit(
+              TodoUpdatedState(todo: todo, isError: false, todos: state.todos));
           print("TodoLoadedState!!");
-           emit(TodoLoadedState(
-               isError: state.isError, todos: state.todos, todo: state.todo));
+          emit(TodoLoadedState(
+              isError: state.isError, todos: state.todos, todo: state.todo));
         } else {
           // emit(TodoErrorState(isError: true));
         }
-
-
-
       } catch (e) {
         print("Error : ${e}");
       }
@@ -166,56 +161,56 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
     if (state is TodoLoadedState) {
       emit(TodoDeleteState(
           todo: state.todo, isError: state.isError, todos: state.todos));
-      print("event.todo : ${event.todo}");
-      print("event.task: ${event.task}");
-      print("state.todos : ${state.todos}");
-      try {
-        final String? taskid = event.task?.taskId;
-        final result = await TodoService.deleteTask(event.todo, event.task);
-        print("result.value.runtimeType: ${result.value.runtimeType}");
-        print("result: ${result.value}");
 
-        if(result == null || result.value == null){
-          emit(TodoLoadedState(
-              isError: state.isError, todos: state.todos, todo: state.todo));
-          return;
-        }
+      // try {
+      final String? taskid = event.task?.taskId;
+      final result = await TodoService.deleteTask(event.todo, event.task);
 
-        if (result.value!.containsKey('todo')) {
-          todo = Todo.fromJson(result.value?['todo']);
 
-          if (todo != null) {
-            todos.add(todo);
-          }
-        }
+      if (result.value!['todo'] == null) {
 
-        emit(TodoDeletedState(todo: todo, isError: false, todos: state.todos));
-        //print(taskid);
+
+        state.todos?.removeWhere((todo) => todo.id == state.todo?.id);
+
+
         emit(TodoLoadedState(
-            isError: state.isError, todos: state.todos, todo: state.todo));
-      } catch (e) {
-        print("Error in Delete: ${e}");
+            isError: false, todos: state.todos, todo: null /*state.todo*/));
+        return;
       }
+
+      if (result.value!.containsKey('todo')) {
+        todo = Todo.fromJson(result.value?['todo']);
+
+        if (todo != null) {
+          todos.add(todo);
+        }
+      }
+
+      emit(TodoDeletedState(todo: todo, isError: false, todos: state.todos));
+      //print(taskid);
+      emit(TodoLoadedState(
+          isError: state.isError, todos: state.todos, todo: state.todo));
+      // } catch (e) {
+      //   print("Error in Delete: ${e}");
+      // }
     } else {
       //emit(TodoErrorState(isError: true));
     }
   }
 
-  Future<void> _dayChangeEvent(TodoDayChangeEvent event, Emitter<TodoState> emit)async{
+  Future<void> _dayChangeEvent(
+      TodoDayChangeEvent event, Emitter<TodoState> emit) async {
     print("_dayChangeEvent");
 
-    if(state is TodoLoadedState){
+    if (state is TodoLoadedState) {
       print("TodoLoadedState");
       emit(TodoChangeDayState(todos: event.todos, todo: event.todo));
       print("TodoChangeDayState");
       emit(TodoLoadedState(todo: state.todo, todos: state.todos));
-    }else{
+    } else {
       print("TodoErroeState");
     }
-
-
   }
-
 
   Future<void> _errorEvent(
       TodoPageErrorEvent event, Emitter<TodoState> emit) async {
@@ -224,8 +219,4 @@ class TodoPageBloc extends Bloc<TodoPageEvent, TodoState> {
       emit(TodoErrorState(isError: true));
     }
   }
-
-
 }
-
-
