@@ -7,14 +7,10 @@ import '../dto/cosmetic_expiry_model.dart';
 class ExpiryService {
   static final Dio client = Dio();
 
-  // static String accessToken = Config.acccessToken;
-  // static String refreshToken = Config.refreshToken;
-  static String accessToken =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDExNzk4MTQsImV4cCI6MTcwMzc3MTgxNCwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU2NWYxMDE3Zjk4NzRlNzQ5ZmNkMzJlIn0.gRjvkNVIRXlAhngM2cgNROEIFwhFmrkqzJQIRHcEAys";
-  static String refreshToken =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE3MDExNzk4MTQsImV4cCI6MTcwMzc3MTgxNCwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU2NWYxMDE3Zjk4NzRlNzQ5ZmNkMzJlIn0.gRjvkNVIRXlAhngM2cgNROEIFwhFmrkqzJQIRHcEAys';
+  static String accessToken = Config.acccessToken;
+  static String refreshToken = Config.refreshToken;
 
-  // 액세스 토큰 설정
+//  액세스 토큰 설정
   static void setAccessToken() {
     client.options.headers['Authorization'] = 'Bearer $accessToken';
   }
@@ -34,6 +30,8 @@ class ExpiryService {
   static Future<CosmeticExpiry> createCosmeticExpiry(
       CosmeticExpiry expiry) async {
     setAccessToken();
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
     final url =
         Uri.http(Config.apiURL, Config.createCosmeticExpiryAPI).toString();

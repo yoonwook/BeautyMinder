@@ -60,6 +60,7 @@ class APIService {
   static Future<Result<bool>> delete(DeleteRequestModel model) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
+
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
@@ -307,10 +308,6 @@ class APIService {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
-    // final headers = {
-    //   'Authorization': 'Bearer $accessToken',
-    //   'Cookie': 'XRT=$refreshToken',
-    // };
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
@@ -339,10 +336,6 @@ class APIService {
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
-    // final headers = {
-    //   'Authorization': 'Bearer $accessToken',
-    //   'Cookie': 'XRT=$refreshToken',
-    // };
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
@@ -369,11 +362,18 @@ class APIService {
     required String currentPassword,
     required String newPassword,
   }) async {
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    //refreshToken 가지고오기
+    final refreshToken = await SharedService.getRefreshToken();
+
     final url = Uri.http(Config.apiURL, Config.changePassword).toString();
 
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     final Map<String, dynamic> passwords = {
@@ -401,11 +401,18 @@ class APIService {
   static Future<Result<bool>> requestResetPassword({
     required String email,
   }) async {
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    //refreshToken 가지고오기
+    final refreshToken = await SharedService.getRefreshToken();
+
     final url = Uri.http(Config.apiURL, Config.requestResetPassword).toString();
 
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -427,11 +434,18 @@ class APIService {
   //유저 정보 변경
   static Future<Result<bool>> updateUserInfo(
       Map<String, dynamic> userData) async {
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    //refreshToken 가지고오기
+    final refreshToken = await SharedService.getRefreshToken();
+
     final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
 
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {

@@ -24,6 +24,8 @@ class TodoService {
     final headers = {
       'Authorization': 'Bearer ${Config.acccessToken}',
       'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     final url = Uri.http(Config.apiURL, Config.todoAPI).toString();
@@ -31,9 +33,6 @@ class TodoService {
       final response =
       await DioClient.sendRequest('GET', url, headers: headers);
 
-      print("response: ${response.data} ${response.statusCode}");
-      print("statusCode : ${response.statusCode}");
-      print("token: $accessToken | $refreshToken");
 
       if (response.statusCode == 200) {
         Map<String, dynamic> decodedResponse;

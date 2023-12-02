@@ -12,7 +12,9 @@ import 'package:mime/mime.dart';
 
 class ReviewService {
   static final Dio client = Dio();
+
   static String accessToken = Config.acccessToken;
+  static String refreshToken = Config.refreshToken;
 
   // 액세스 토큰 설정
   static void setAccessToken() {

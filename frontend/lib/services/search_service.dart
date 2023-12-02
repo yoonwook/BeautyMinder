@@ -38,8 +38,8 @@ class SearchService {
             .toString();
 // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
@@ -88,8 +88,8 @@ class SearchService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
@@ -127,8 +127,8 @@ class SearchService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
@@ -164,8 +164,8 @@ class SearchService {
         .toString();
 // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
       // 'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
     };
