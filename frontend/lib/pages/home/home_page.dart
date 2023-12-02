@@ -468,7 +468,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           SizedBox(height: 5),
           Text(
-            "추천 화장품이 없습니다.\n\n화장품 추천받기",
+            "피부 타입 테스트를\n진행해주세요.",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -550,8 +550,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 5),
-              // widget.user?.baumann != null && widget.user!.baumann!.isNotEmpty
-              Text((widget.user?.baumann?.isEmpty == true) ? "테스트하기":"${widget.user?.baumann}",
+              // (widget.user?.baumann != null && widget.user!.baumann!.isNotEmpty)
+              Text((widget.user?.baumann?.isEmpty == true && widget.user?.baumann != null) ? "테스트하기":"${widget.user?.baumann}",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ],
           ),

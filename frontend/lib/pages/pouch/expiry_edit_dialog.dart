@@ -183,8 +183,8 @@ class _ExpiryEditDialogState extends State<ExpiryEditDialog> {
                       ),
                       Spacer(),// 조절 가능한 간격
                       Text(
-                        expiryDate != null
-                            ? formatDate(expiryDate!)
+                        openedDate != null
+                            ? formatDate(openedDate!)
                             : '개봉일 선택',
                         style: TextStyle(
                           fontSize: 18,
