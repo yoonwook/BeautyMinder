@@ -1,5 +1,6 @@
 
 import 'package:beautyminder/Observer.dart';
+import 'package:beautyminder/notification_test.dart';
 
 import 'package:beautyminder/pages/calendar_page.dart';
 
@@ -184,8 +185,9 @@ void main() async {
       title: 'BeautyMinder',
       home: //testPage(),
       //picturePage(),
-      CalendarPage(),
+      //CalendarPage(),
       //timeLine()
+      notitest()
     ),
   );
 
