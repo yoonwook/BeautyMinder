@@ -21,7 +21,7 @@ class GPTReviewService {
     );
   }
 
-  static Future<Result<GPTReviewInfo>> getGPTReviews(String id) async {
+  static Future<GPTResult<GPTReviewInfo>> getGPTReviews(String id) async {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
     // AccessToken가지고오기
@@ -61,24 +61,24 @@ class GPTReviewService {
         print(gptReviewInfo);
         print("aaaa\n");
 
-        return Result.success(gptReviewInfo);
+        return GPTResult.success(gptReviewInfo);
       }
       print("fdffff\n");
-      return Result.failure("Failed to get GPT review information");
+      return GPTResult.failure("Failed to get GPT review information");
     } catch (e) {
       print("pppppeoeoooekdkkdk\n");
-      return Result.failure("An error occurred: $e");
+      return GPTResult.failure("An error occurred: $e");
     }
   }
 }
 
 // 결과 클래스
-class Result<T> {
+class GPTResult<T> {
   final T? value;
   final String? error;
 
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
+  GPTResult.success(this.value) : error = null; // 성공
+  GPTResult.failure(this.error) : value = null; // 실패
 
   bool get isSuccess => value != null;
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CommonAppBar extends AppBar {
-  CommonAppBar({Key? key, bool automaticallyImplyLeading = false})
+  CommonAppBar({Key? key, bool automaticallyImplyLeading = false, VoidCallback? onBack, BuildContext? context})
       : super(
           key: key,
           automaticallyImplyLeading: automaticallyImplyLeading,
@@ -14,6 +14,12 @@ class CommonAppBar extends AppBar {
           ),
           iconTheme: const IconThemeData(
             color: Color(0xffd86a04),
+          ),
+          leading: automaticallyImplyLeading
+              ? null
+              : IconButton(
+            onPressed: onBack ?? () => Navigator.of(context!).pop(true),
+            icon: Icon(Icons.arrow_back_ios),
           ),
         );
 }

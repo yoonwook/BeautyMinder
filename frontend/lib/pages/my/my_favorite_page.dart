@@ -1,6 +1,4 @@
-import 'package:beautyminder/dto/favorite_model.dart';
 import 'package:beautyminder/services/api_service.dart';
-import 'package:beautyminder/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:beautyminder/pages/my/widgets/my_page_header.dart';
@@ -38,10 +36,60 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
     }
   }
 
+  _navigateToProductDetailPage(int index) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetailPage(
+          searchResults: Cosmetic(
+            id: favorites[index]['id'] ?? '',
+            name: favorites[index]['name'] ?? '',
+            brand: favorites[index]['brand'],
+            images: List<String>.from(favorites[index]['images'] ?? []),
+            glowpickUrl: favorites[index]['glowpickUrl'],
+            expirationDate: favorites[index]['expirationDate'] != null
+                ? DateTime.tryParse(favorites[index]['expirationDate'])
+                : null,
+            createdAt: favorites[index]['createdAt'] != null
+                ? DateTime.parse(favorites[index]['createdAt'])
+                : DateTime.now(),
+            purchasedDate: favorites[index]['purchasedDate'] != null
+                ? DateTime.tryParse(favorites[index]['purchasedDate'])
+                : null,
+            category: favorites[index]['category'] ?? 'Unknown',
+            averageRating:
+            (favorites[index]['averageRating'] as num?)?.toDouble() ?? 0.0,
+            reviewCount: favorites[index]['reviewCount'] as int? ?? 0,
+            totalRating: favorites[index]['totalRating'] as int? ?? 0,
+            keywords:
+            List<String>.from(favorites[index]['keywords'] ?? []),
+          ),
+          updateFavorites:(isFavorite) {
+            if(!isFavorite) {
+              print("@@@@2 : $isFavorite");
+              setState(() {
+                favorites.removeAt(index);
+                print("@@@@3 : ${favorites.toString()}");
+              });
+            }
+          }
+        ),
+      ),
+    );
+
+    // If the result is true, it means the favorite status has changed
+    if (result == true) {
+      // Refresh the favorites list
+      getFavorites();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: true,),
+      appBar: CommonAppBar(
+        automaticallyImplyLeading: true,
+      ),
       body: isLoading
           ? SpinKitThreeInOut(
         color: Color(0xffd86a04),
@@ -59,36 +107,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
               itemCount: favorites.length,
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailPage(
-                        searchResults: Cosmetic(
-                          id: favorites[index]['id'] ?? '',
-                          name: favorites[index]['name'] ?? '',
-                          brand: favorites[index]['brand'],
-                          images: List<String>.from(favorites[index]['images'] ?? []),
-                          glowpickUrl: favorites[index]['glowpickUrl'],
-                          expirationDate: favorites[index]['expirationDate'] != null
-                              ? DateTime.tryParse(favorites[index]['expirationDate'])
-                              : null,
-                          createdAt: favorites[index]['createdAt'] != null
-                              ? DateTime.parse(favorites[index]['createdAt'])
-                              : DateTime.now(),
-                          purchasedDate: favorites[index]['purchasedDate'] != null
-                              ? DateTime.tryParse(favorites[index]['purchasedDate'])
-                              : null,
-                          category: favorites[index]['category'] ?? 'Unknown',
-                          averageRating:
-                          (favorites[index]['averageRating'] as num?)?.toDouble() ?? 0.0,
-                          reviewCount: favorites[index]['reviewCount'] as int? ?? 0,
-                          totalRating: favorites[index]['totalRating'] as int? ?? 0,
-                          keywords:
-                          List<String>.from(favorites[index]['keywords'] ?? []),
-                        ),
-                      ),
-                    ),
-                  );
+                  _navigateToProductDetailPage(index);
                 },
                 child: ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -100,7 +119,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
                   title: Text(
                     favorites[index]['name'],
                     style: TextStyle(
-                      fontSize: 18
+                        fontSize: 18
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
