@@ -134,10 +134,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         FormHelper.showSimpleAlertDialog(
                           context,
                           Config.appName,
-                          "인증코드 요청에 실패했습니다.",
+                          "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
                           "확인",
                               () {
-                            Navigator.of(context).pop();
+                                Navigator.of(context, rootNavigator: true).pop();
                           },
                         );
                       }
@@ -146,10 +146,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       FormHelper.showSimpleAlertDialog(
                         context,
                         Config.appName,
-                        "인증코드 요청에 실패했습니다.",
+                        "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
                         "확인",
                             () {
-                          Navigator.of(context).pop();
+                              Navigator.of(context, rootNavigator: true).pop();
                         },
                       );
                     }
@@ -529,10 +529,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 FormHelper.showSimpleAlertDialog(
                   context,
                   Config.appName,
-                  result.error ?? "회원가입에 실패하였습니다.",
+                  "회원가입에 실패하였습니다. 입력하신 정보를 다시 확인해주세요.",
                   "확인",
                   () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
                   },
                 );
               }
