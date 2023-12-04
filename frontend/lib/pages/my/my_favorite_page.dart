@@ -89,6 +89,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
     return Scaffold(
       appBar: CommonAppBar(
         automaticallyImplyLeading: true,
+        context: context,
       ),
       body: isLoading
           ? SpinKitThreeInOut(

@@ -18,7 +18,7 @@ class BaumannHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("This is History Page : $resultData");
     return Scaffold(
-      appBar: CommonAppBar(),
+      appBar: CommonAppBar(automaticallyImplyLeading: false,),
       body: Column(
         children: [
           _baumannHistoryUI(),

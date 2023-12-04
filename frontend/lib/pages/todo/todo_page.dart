@@ -58,7 +58,7 @@ class _CalendarPageState extends State<CalendarPage> {
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
         lazy: false,
         child: Scaffold(
-            appBar: CommonAppBar(),
+            appBar: CommonAppBar(automaticallyImplyLeading: false,),
             body: Column(
               children: [
                 BlocBuilder<TodoPageBloc, TodoState>(builder: (context, state) {
