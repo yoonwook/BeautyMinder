@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../dto/cosmetic_model.dart';
 import '../../services/homeSearch_service.dart';
+import '../../services/keywordRank_service.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, required this.data, required this.data2})
@@ -23,6 +24,12 @@ class _SearchPageState extends State<SearchPage> {
   String searchQuery = ''; // 검색어를 저장할 변수
   final TextEditingController textController = TextEditingController();
 
+  bool isApiCallProcess = false;
+  bool isLoading = true;
+
+  List searchHistory = [];
+
+
   @override
   void dispose() {
     textController.dispose(); // 필요한 경우 컨트롤러를 해제합니다.
@@ -30,10 +37,52 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getAllNeeds();
+  }
+
+  //필요한 서비스 호출
+  Future<void> _getAllNeeds() async {
+    // 이미 API 호출이 진행 중인지 확인
+    if (isApiCallProcess) {
+      return;
+    }
+    // API 호출 중임을 표시
+    setState(() {
+      isLoading = true;
+      isApiCallProcess = true;
+    });
+
+    try {
+      //검색어 히스토리
+      final loadedHistory = await KeywordRankService.getSearchHistory();
+      setState(() {
+        searchHistory = loadedHistory ?? [];
+      });
+
+    } catch (e) {
+      print('An error occurred while loading expiries: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+        isApiCallProcess = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(title: _title()),
+      appBar: SearchAppBar(title: _title(),),
       body: _searchPageUI(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // 페이지를 닫을 때 이전 페이지로 데이터 전달
+          Navigator.pop(context, true);
+        },
+        child: Icon(Icons.arrow_back_ios),
+      )
     );
   }
 
@@ -111,6 +160,7 @@ class _SearchPageState extends State<SearchPage> {
         (widget.data2?.cosmetics.length == 0)) {
       return Column(
         children: [
+          _searchHistory(),
           _noKeywordRanking(),
           _noProductRanking(),
           // const SizedBox(height: 20),
@@ -123,6 +173,7 @@ class _SearchPageState extends State<SearchPage> {
         return SingleChildScrollView(
           child: Column(
             children: [
+              _searchHistory(),
               _keywordRankingIfMoreThanSix(),
               _noProductRanking(),
               // const SizedBox(height: 20),
@@ -134,6 +185,7 @@ class _SearchPageState extends State<SearchPage> {
         return SingleChildScrollView(
           child: Column(
             children: [
+              _searchHistory(),
               _keywordRankingIfLessThanFive(),
               _noProductRanking(),
               // const SizedBox(height: 20),
@@ -146,6 +198,7 @@ class _SearchPageState extends State<SearchPage> {
       return SingleChildScrollView(
           child: Column(
         children: [
+          _searchHistory(),
           _noKeywordRanking(),
           _productRanking(),
           // const SizedBox(height: 20),
@@ -156,6 +209,7 @@ class _SearchPageState extends State<SearchPage> {
         return SingleChildScrollView(
           child: Column(
             children: [
+              _searchHistory(),
               _keywordRankingIfMoreThanSix(),
               _productRanking(),
               // const SizedBox(height: 20),
@@ -167,6 +221,7 @@ class _SearchPageState extends State<SearchPage> {
         return SingleChildScrollView(
           child: Column(
             children: [
+              _searchHistory(),
               _keywordRankingIfLessThanFive(),
               _productRanking(),
               // const SizedBox(height: 20),
@@ -177,9 +232,57 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Widget _searchHistory() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: _buildHistoryButtons(),
+      ),
+    );
+  }
+
+  List<Widget> _buildHistoryButtons() {
+    if (searchHistory.isEmpty) {
+      return [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '검색 히스토리가 없습니다.',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ];
+    }
+    return [
+      for (int i = 0; i < (searchHistory.length < 5 ? searchHistory.length : 5); i++)
+        _buildHistoryButton(searchHistory[i]),
+    ];
+  }
+
+  Widget _buildHistoryButton(String keyword) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      child: ElevatedButton(
+        onPressed: () {
+          // Handle button press, e.g., navigate to search result page
+          _navigateToSearchResultPage(keyword);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey[300], // Gray color
+          foregroundColor: Colors.black54, // Text color
+          elevation: 0,
+        ),
+        child: Text(keyword),
+      ),
+    );
+  }
+
   Widget _noKeywordRanking() {
     return Column(children: [
-      const SizedBox(height: 40),
+      const SizedBox(height: 30),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
@@ -242,12 +345,12 @@ class _SearchPageState extends State<SearchPage> {
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
     return Container(
-      height: MediaQuery.of(context).size.height/2,
+      height: MediaQuery.of(context).size.height/2-60,
       child: Column(
         children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 10),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 1),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -299,7 +402,7 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                   child: ListView.builder(
                     physics:
-                        const NeverScrollableScrollPhysics(), // Disable scrolling
+                        const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: (widget.data?.keywords?.length ?? 0) ~/ 2,
                     itemBuilder: (context, index) {
@@ -330,10 +433,10 @@ class _SearchPageState extends State<SearchPage> {
     final formattedDate = _formatDateTime(widget.data?.updatedAt);
 
     return Container(
-      height: MediaQuery.of(context).size.height/2,
+      height: MediaQuery.of(context).size.height/2-60,
       child: Column(
         children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 10),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -509,7 +612,12 @@ class _SearchPageState extends State<SearchPage> {
           searchQuery: keyword,
           searchResults: result,
         ),
-      ));
+      )).then((value) {
+        // 이전 페이지로부터 데이터가 반환되었을 때, 현재 페이지를 다시 새로 고침
+        if (value != null && value is bool && value) {
+          _getAllNeeds();
+        }
+      });
     } catch (e) {
       print('Error searching anything: $e');
     }

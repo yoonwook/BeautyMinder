@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SearchAppBar extends AppBar {
   final Widget title;
 
-  SearchAppBar({Key? key, required this.title})
+  SearchAppBar({Key? key, required this.title, bool automaticallyImplyLeading = false})
       : super(
           key: key,
           backgroundColor: Color(0xffffecda),

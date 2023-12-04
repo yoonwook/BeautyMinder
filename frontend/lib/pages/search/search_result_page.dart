@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../dto/cosmetic_model.dart';
 import '../../services/homeSearch_service.dart';
+import '../../services/keywordRank_service.dart';
 import '../../widget/searchAppBar.dart';
 
 class SearchResultPage extends StatefulWidget {
@@ -21,12 +22,59 @@ class _SearchResultPageState extends State<SearchResultPage> {
   String searchQuery = ''; // 검색어를 저장할 변수
   final TextEditingController textController = TextEditingController();
 
+  bool isApiCallProcess = false;
+  bool isLoading = true;
+
+  List searchHistory = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getAllNeeds();
+  }
+
+  //필요한 서비스 호출
+  Future<void> _getAllNeeds() async {
+    // 이미 API 호출이 진행 중인지 확인
+    if (isApiCallProcess) {
+      return;
+    }
+    // API 호출 중임을 표시
+    setState(() {
+      isLoading = true;
+      isApiCallProcess = true;
+    });
+
+    try {
+      //검색어 히스토리
+      final loadedHistory = await KeywordRankService.getSearchHistory();
+      setState(() {
+        searchHistory = loadedHistory ?? [];
+      });
+
+    } catch (e) {
+      print('An error occurred while loading expiries: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+        isApiCallProcess = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // 이곳에서 검색 결과를 표시하거나 처리할 수 있음
     return Scaffold(
       appBar: SearchAppBar(title: _title()),
       body: _searchResultPageUI(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // 페이지를 닫을 때 이전 페이지로 데이터 전달
+          Navigator.pop(context, true);
+        },
+        child: Icon(Icons.arrow_back_ios),
+      )
     );
   }
 
@@ -211,7 +259,12 @@ class _SearchResultPageState extends State<SearchResultPage> {
         builder: (context) => ProductDetailPage(
           searchResults: product,
         ),
-      ));
+      )).then((value) {
+        // 이전 페이지로부터 데이터가 반환되었을 때, 현재 페이지를 다시 새로 고침
+        if (value != null && value is bool && value) {
+          _getAllNeeds();
+        }
+      });
       print('////////////searchQuery : $searchQuery');
     } catch (e) {
       print('Error searching anything: $e');

@@ -117,6 +117,44 @@ class KeywordRankService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+
+  //검색히스토리 가져오기
+  static Future<List> getSearchHistory() async {
+
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final url =
+    Uri.http(Config.apiURL, Config.getSearchHistoryAPI).toString();
+
+    // 헤더 설정
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
+    try {
+      final response = await client.get(
+          url,
+          options: _httpOptions("GET", headers)
+      );
+
+      if (response.statusCode == 200) {
+        print("${response.data}");
+        return response.data;
+      } else {
+        throw Exception("Failed to search cosmetics by keyword");
+      }
+    } catch (e) {
+      print("Error during cosmetics search: $e");
+      // return []; // 빈 리스트를 반환하거나 다른 적절한 기본값을 반환할 수 있어요.
+      return [];
+    }
+  }
 }
 
 // 결과 클래스
