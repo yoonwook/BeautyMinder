@@ -496,41 +496,16 @@ class _HomePageState extends State<HomePage> {
   //피부타입 버튼
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
-    BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
-    print("::?::5-1 : $baumannresultList");
 
     return ElevatedButton(
-      onPressed: () async {
-        // 이미 API 호출이 진행 중인지 확인
-        if (isApiCallProcess) {
-          print("안녕2 : ${result.value}");
-          return;
-        }
-        // API 호출 중임을 표시
-        setState(() {
-          isApiCallProcess = true;
-          print("안녕3 : ${result.value}");
-        });
-
-        try {
-          result = await BaumannService.getBaumannHistory();
-          if (result.isSuccess && result.value!.isNotEmpty) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    BaumannHistoryPage(resultData: result.value)));
-          } else {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => BaumannStartPage()));
-          }
-        } catch (e) {
-          // Handle the error case
-          print('An error occurred: $e');
-        } finally {
-          // API 호출 상태를 초기화합니다.
-          setState(() {
-            isApiCallProcess = false;
-            print("안녕8 : ${result.value}");
-          });
+      onPressed: () {
+        if (baumannresultList.isNotEmpty) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  BaumannHistoryPage(resultData: baumannresultList)));
+        } else {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => BaumannStartPage()));
         }
       },
       style: ElevatedButton.styleFrom(
