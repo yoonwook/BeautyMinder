@@ -54,7 +54,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   Widget build(BuildContext context) {
     print("hihi user info page3 : ${user?.baumann}");
     return Scaffold(
-        appBar: CommonAppBar(automaticallyImplyLeading: true,),
+        appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
         body: isLoading
             ? SpinKitThreeInOut(
                 color: Color(0xffd86a04),

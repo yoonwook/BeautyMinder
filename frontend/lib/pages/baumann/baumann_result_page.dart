@@ -20,7 +20,7 @@ class _BaumannResultPageState extends State<BaumannResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: false,),
+      appBar: CommonAppBar(automaticallyImplyLeading: false, context: context,),
       body: SingleChildScrollView(
         child: baumannResultUI(),
       ),

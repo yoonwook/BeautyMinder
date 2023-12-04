@@ -15,7 +15,7 @@ class FullScreenImagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: true),
+      appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
       body: Container(
         child: PhotoView(
           imageProvider: DeviceImage(image),

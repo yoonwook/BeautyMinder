@@ -28,7 +28,7 @@ class _ChatPageState extends State<ChatPage> {
       launchUrl(Uri.parse(api));
       return const Text("Web opened");
     } else {
-      return Scaffold(appBar: CommonAppBar(automaticallyImplyLeading: true,), body: _buildWebView(context));
+      return Scaffold(appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,), body: _buildWebView(context));
     }
   }
 

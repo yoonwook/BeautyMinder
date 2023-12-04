@@ -43,7 +43,8 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      _showSnackBar('Failed to load reviews: $e');
+      print('Failed to load reviews: $e');
+      _showSnackBar('리뷰를 불러오는 데 실패하였습니다.');
     }
   }
 
@@ -61,13 +62,14 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
           _imageFiles = [file]; // Store the selected image file.
         });
       } else {
-        _showSnackBar('No image selected.');
+        _showSnackBar('이미지가 선택되지 않았습니다.');
       }
     } on PlatformException catch (e) {
       log('Unsupported operation : ' + e.toString());
     } catch (e) {
       log(e.toString());
-      _showSnackBar('Failed to pick image: $e');
+      print('Failed to pick image: $e');
+      _showSnackBar('이미지 선택에 실패하였습니다.');
     }
   }
 
@@ -77,7 +79,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       String userId = user.id;
       _showReviewDialog(reviewToUpdate: review, userId: userId);
     } else {
-      _showSnackBar('You need to be logged in to add a review.');
+      _showSnackBar('리뷰를 작성하기 위해선 로그인이 필요합니다.');
     }
   }
 
@@ -99,7 +101,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                 borderRadius: BorderRadius.circular(5),
               ),
               title: Text(
-                reviewToUpdate == null ? '리뷰 작성' : 'Edit Review',
+                reviewToUpdate == null ? '리뷰 작성' : '리뷰 수정',
                 style: TextStyle(
                   fontFamily: 'YourCustomFont',
                   fontWeight: FontWeight.bold
@@ -209,7 +211,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                         );
 
                         if (_imageFiles == null || _imageFiles!.isEmpty) {
-                          _showSnackBar('리뷰사진을 추가해주세요!');
+                          _showSnackBar('리뷰 사진을 추가해주세요!');
                           return;
                         }
 
@@ -238,14 +240,15 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                           });
                           Navigator.of(context).pop();
                           _showSnackBar(reviewToUpdate == null
-                              ? 'Review added successfully'
-                              : 'Review updated successfully');
+                              ? '성공적으로 리뷰가 등록되었습니다.'
+                              : '성공적으로 리뷰가 수정되었습니다.');
                         } catch (e) {
                           Navigator.of(context).pop();
-                          _showSnackBar('Failed to add/update review: $e');
+                          print("Failed to add/update review: $e");
+                          _showSnackBar('리뷰 등록/수정에 실패하였습니다.');
                         }
                       } else {
-                        _showSnackBar('Review content cannot be empty');
+                        _showSnackBar('형식을 올바르게 작성해주세요.');
                       }
                     },
                   ),
@@ -330,7 +333,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                     SizedBox(height: 10),
                     // 추가적인 정보 (예: NLP 분석 결과)
                     if (review.nlpAnalysis.isNotEmpty)
-                      Text('NLP Analysis: ${review.nlpAnalysis}'),
+                      Text('NLP 분석: ${review.nlpAnalysis}'),
                   ],
                 ),
               ),
@@ -351,17 +354,18 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
         _cosmeticReviews.removeWhere((review) => review.id == reviewId);
         _isLoading = false;
       });
-      _showSnackBar('Review deleted successfully');
+      _showSnackBar('성공적으로 리뷰가 삭제되었습니다.');
     } catch (e) {
       setState(() => _isLoading = false);
-      _showSnackBar('Failed to delete review: $e');
+      print("Failed to delete review: $e");
+      _showSnackBar('리뷰 삭제에 실패하였습니다.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: true,),
+      appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
       body: Column(
         children: [
           if (_isLoading)

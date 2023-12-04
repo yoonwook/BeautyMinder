@@ -141,7 +141,7 @@ class _skinAlbumPage extends State<skinAlbumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: CommonAppBar(automaticallyImplyLeading: true),
+      appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
       body: FutureBuilder<List<LocalImage>>(
         future: getLocalImages(),
         builder: (context, snapshot) {

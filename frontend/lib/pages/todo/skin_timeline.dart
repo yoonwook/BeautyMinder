@@ -95,7 +95,7 @@ class _timeLine extends State<timeLine> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: CommonAppBar(automaticallyImplyLeading: true),
+      appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Column(

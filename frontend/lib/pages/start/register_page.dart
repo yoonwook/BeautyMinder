@@ -137,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           "인증코드 요청에 실패했습니다.",
                           "확인",
                               () {
-                            Navigator.of(context, rootNavigator: true).pop();
+                            Navigator.of(context).pop();
                           },
                         );
                       }
@@ -310,14 +310,6 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
-
-
-
-
-
-
-
-
 
 
   // 전화번호 필드
@@ -537,8 +529,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 FormHelper.showSimpleAlertDialog(
                   context,
                   Config.appName,
-                  result.error ?? "Register Failed",
-                  "OK",
+                  result.error ?? "회원가입에 실패하였습니다.",
+                  "확인",
                   () {
                     Navigator.of(context).pop();
                   },

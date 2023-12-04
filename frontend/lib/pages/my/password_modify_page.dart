@@ -55,7 +55,7 @@ class _PasswordModifyPageState extends State<PasswordModifyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CommonAppBar(automaticallyImplyLeading: true,),
+        appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
         body: isLoading
             ? const SpinKitThreeInOut(
                 color: Color(0xffd86a04),

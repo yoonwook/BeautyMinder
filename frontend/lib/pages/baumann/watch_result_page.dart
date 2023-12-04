@@ -19,7 +19,7 @@ class _WatchResultPageState extends State<WatchResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: true,),
+      appBar: CommonAppBar(automaticallyImplyLeading: true,context: context,),
       body: SingleChildScrollView(
         child: baumannResultUI(),
       ),
