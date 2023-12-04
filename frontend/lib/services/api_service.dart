@@ -90,6 +90,7 @@ class APIService {
   // 사용자 프로필 조회 함수
   static Future<Result<User>> getUserProfile() async {
     // 로그인 상세 정보 가져오기
+    // final user = await SharedService.getUser();
     final user = await SharedService.getUser();
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();

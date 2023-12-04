@@ -4,6 +4,7 @@ import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
 import '../../config.dart';
+import 'dio_client.dart';
 
 class BaumannService {
   // Dio 객체 생성
@@ -89,14 +90,67 @@ class BaumannService {
     }
   }
 
+  // static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
+  //   // 로그인 상세 정보 가져오기
+  //   // final user = await SharedService.getUser();
+  //   // AccessToken가지고오기
+  //   final accessToken = await SharedService.getAccessToken();
+  //   final refreshToken = await SharedService.getRefreshToken();
+  //
+  //   // final userId = user?.id ?? '-1';
+  //
+  //   // URL 생성
+  //   final url = Uri.http(Config.apiURL, Config.baumannHistoryAPI).toString();
+  //   print("This is BaumannService : $url");
+  //
+  //   // 헤더 설정
+  //   final headers = {
+  //     'Authorization': 'Bearer ${Config.acccessToken}',
+  //     'Cookie': 'XRT=${Config.refreshToken}',
+  //     // 'Authorization': 'Bearer $accessToken',
+  //     // 'Cookie': 'XRT=$refreshToken',
+  //   };
+  //
+  //   try {
+  //     print("1");
+  //     // GET 요청
+  //     final response = await client.get(
+  //       url,
+  //       options: _httpOptions('GET', headers),
+  //     );
+  //     print("2");
+  //
+  //     if (response.statusCode == 200) {
+  //       print("3");
+  //       print("${response.data}");
+  //
+  //       // 사용자 정보 파싱
+  //       // final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
+  //       final List<dynamic> jsonData = response.data as List<dynamic>;
+  //       final List<BaumannResult> result = jsonData
+  //           .map((dynamic item) =>
+  //               BaumannResult.fromJson(item as Map<String, dynamic>))
+  //           .toList();
+  //
+  //       print("This is Baumann Service(getHistory) : $result");
+  //
+  //       return BaumResult<List<BaumannResult>>.success(result);
+  //     }
+  //     return BaumResult<List<BaumannResult>>.failure(
+  //         "Failed to get baumann history");
+  //   } catch (e) {
+  //     print("An error occurred: $e");
+  //     return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
+  //   }
+  // }
   static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
     // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
+    // final user = await SharedService.getUser();
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
+    // final userId = user?.id ?? '-1';
 
     // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannHistoryAPI).toString();
@@ -128,7 +182,7 @@ class BaumannService {
         final List<dynamic> jsonData = response.data as List<dynamic>;
         final List<BaumannResult> result = jsonData
             .map((dynamic item) =>
-                BaumannResult.fromJson(item as Map<String, dynamic>))
+            BaumannResult.fromJson(item as Map<String, dynamic>))
             .toList();
 
         print("This is Baumann Service(getHistory) : $result");
@@ -142,6 +196,7 @@ class BaumannService {
       return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
     }
   }
+
 
   //히스토리 삭제
   static Future<String> deleteBaumannHistory(String testId) async {

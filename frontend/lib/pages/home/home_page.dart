@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   List<CosmeticExpiry> expiries = [];
   List recommends = [];
   Todo? todayTodos;
+  List<BaumannResult> baumannresultList = [];
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     try {
+      //유저 정보 없데이트
 
       //유통기한
       List<CosmeticExpiry> loadedExpiries = await ExpiryService.getAllExpiries();
@@ -94,12 +96,16 @@ class _HomePageState extends State<HomePage> {
       final loadedBaumannResult = await BaumannService.getBaumannHistory();
 
       setState(() {
-        expiries = loadedExpiries;
+        expiries = loadedExpiries ?? [];
         print("::?::0-1 : $expiries");
-        recommends = loadedRecommends.value!;
+        recommends = loadedRecommends.value ?? [];
         print("::?::0-2 : $recommends");
-        todayTodos = loadedTodos.value!;
+        todayTodos = loadedTodos.value ?? null;
         print("::?::0-3 : $todayTodos");
+        print("Yeah˜");
+        baumannresultList = loadedBaumannResult.value ?? [];
+        print("Yeah˜2");
+        print("::?::0-4 : $baumannresultList");
       });
 
     } catch (e) {
@@ -227,7 +233,7 @@ class _HomePageState extends State<HomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ElevatedButton(
-      onPressed: () async {
+      onPressed: () {
         if (isApiCallProcess) {
           return;
         }
@@ -491,17 +497,19 @@ class _HomePageState extends State<HomePage> {
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
     BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
-    print("안녕1 : $result");
+    print("::?::5-1 : $baumannresultList");
 
     return ElevatedButton(
       onPressed: () async {
         // 이미 API 호출이 진행 중인지 확인
         if (isApiCallProcess) {
+          print("안녕2 : ${result.value}");
           return;
         }
         // API 호출 중임을 표시
         setState(() {
           isApiCallProcess = true;
+          print("안녕3 : ${result.value}");
         });
 
         try {
@@ -510,7 +518,6 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
                     BaumannHistoryPage(resultData: result.value)));
-            print("This is BaumannList Result***** : ${result.value}");
           } else {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => BaumannStartPage()));
@@ -522,6 +529,7 @@ class _HomePageState extends State<HomePage> {
           // API 호출 상태를 초기화합니다.
           setState(() {
             isApiCallProcess = false;
+            print("안녕8 : ${result.value}");
           });
         }
       },
@@ -533,7 +541,6 @@ class _HomePageState extends State<HomePage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0), // 모서리를 더 둥글게 설정
         ),
-        // padding: EdgeInsets.zero,
       ),
       child: Align(
         alignment: Alignment.topLeft,
@@ -558,7 +565,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 5),
-              Text((widget.user?.baumann?.isEmpty == true && widget.user?.baumann != null) ? "테스트하기":"${widget.user?.baumann}",
+              Text((baumannresultList.isEmpty) ? "테스트하기":"${baumannresultList.last.baumannType}",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -566,7 +573,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 
   //소통방 버튼
   Widget _chatBtn() {

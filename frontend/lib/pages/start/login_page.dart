@@ -259,8 +259,6 @@ class _LoginPageState extends State<LoginPage> {
             final model = LoginRequestModel(email: email, password: password);
             final result = await APIService.login(model);
 
-            print("1111 : ${result.value}");
-
             if (result.value == true) {
               final userProfileResult = await APIService.getUserProfile();
               print("Here is LoginPage : ${userProfileResult.value}");
