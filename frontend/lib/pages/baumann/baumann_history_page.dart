@@ -4,7 +4,9 @@ import 'package:beautyminder/services/baumann_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../dto/baumann_result_model.dart';
+import '../../services/api_service.dart';
 import '../../widget/commonAppBar.dart';
+import '../home/home_page.dart';
 
 class BaumannHistoryPage extends StatelessWidget {
   final List<BaumannResult>? resultData;
@@ -16,7 +18,7 @@ class BaumannHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("This is History Page : $resultData");
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: true,),
+      appBar: CommonAppBar(),
       body: Column(
         children: [
           _baumannHistoryUI(),
@@ -43,7 +45,43 @@ class BaumannHistoryPage extends StatelessWidget {
           Expanded(
             child: _baumannHistoryListView(),
           ),
+          SizedBox(
+            height: 100,
+          ),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        child: Container(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () async {
+              final userProfileResult = await APIService.getUserProfile();
+              // 버튼을 클릭했을 때 홈페이지로 이동하는 함수 호출
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomePage(
+                      user: userProfileResult.value,
+                    )),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xffe58731),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+              ),
+            ),
+            child: Text(
+              '홈으로 가기',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -95,7 +133,7 @@ class BaumannHistoryPage extends StatelessWidget {
     print("\n\nhello ::::: ${result}:::::\n\n");
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Dismissible(
         key: UniqueKey(),
         direction: DismissDirection.endToStart, // Set direction to right-to-left

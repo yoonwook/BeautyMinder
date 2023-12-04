@@ -78,6 +78,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         MyDivider(),
                         UserInfoItem(title: '이메일', content: user!.email),
                         MyDivider(),
+                        UserInfoItem(title: '생성 시각', content: user!.createdAt.toString()),
+                        MyDivider(),
                         // SizedBox(height: 200),
                       ])),
                   Positioned(

@@ -161,7 +161,7 @@ class _skinAlbumPage extends State<skinAlbumPage> {
                   child: Center(
                     child: Text(title,
                         style: TextStyle(
-                            fontSize: 50.0, color: Color(0xffd86a04))),
+                            fontSize: 50.0, color: Color(0xffb4b4b4))),
                   ),
                 ),
                 Row(
@@ -215,7 +215,7 @@ class _skinAlbumPage extends State<skinAlbumPage> {
         onPressed: () {
           _takePhoto();
         },
-        label: Text('Picture'),
+        label: Text('사진 촬영'),
         icon: Icon(Icons.camera_alt_outlined),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
