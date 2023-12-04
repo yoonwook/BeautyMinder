@@ -63,7 +63,9 @@ class _HomePageState extends State<HomePage> {
       isLoading = true;
       isApiCallProcess = true;
     });
+
     try {
+
       //유통기한
       List<CosmeticExpiry> loadedExpiries = await ExpiryService.getAllExpiries();
       for (var expiry in loadedExpiries) {
@@ -80,6 +82,7 @@ class _HomePageState extends State<HomePage> {
           print("Error loading image for ${expiry.productName}: $e");
         }
       }
+
       //추천제품
       final loadedRecommends = await CosmeticSearchService.getAllCosmetics();
 
@@ -87,10 +90,16 @@ class _HomePageState extends State<HomePage> {
       String todayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final loadedTodos = await TodoService.getTodoOf();
 
+      //바우만
+      final loadedBaumannResult = await BaumannService.getBaumannHistory();
+
       setState(() {
         expiries = loadedExpiries;
+        print("::?::0-1 : $expiries");
         recommends = loadedRecommends.value!;
+        print("::?::0-2 : $recommends");
         todayTodos = loadedTodos.value!;
+        print("::?::0-3 : $todayTodos");
       });
 
     } catch (e) {
@@ -482,7 +491,7 @@ class _HomePageState extends State<HomePage> {
   Widget _personalSkinTypeBtn() {
     final screenWidth = MediaQuery.of(context).size.width / 2 - 30;
     BaumResult<List<BaumannResult>> result = BaumResult<List<BaumannResult>>.success([]);
-    print("hihi this is homePage2 : ${widget.user?.baumann}");
+    print("안녕1 : $result");
 
     return ElevatedButton(
       onPressed: () async {
@@ -545,12 +554,10 @@ class _HomePageState extends State<HomePage> {
                   Icon(
                     Icons.arrow_forward_ios,
                     size: 15,
-                    // Add any other styling properties as needed
                   ),
                 ],
               ),
               SizedBox(height: 5),
-              // (widget.user?.baumann != null && widget.user!.baumann!.isNotEmpty)
               Text((widget.user?.baumann?.isEmpty == true && widget.user?.baumann != null) ? "테스트하기":"${widget.user?.baumann}",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ],

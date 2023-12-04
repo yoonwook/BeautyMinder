@@ -166,19 +166,14 @@ class BaumannService {
     };
 
     try {
-      print("1");
       // GET 요청
       final response = await client.delete(
         url,
         options: _httpOptions('DELETE', headers),
       );
-      print("2");
 
       if (response.statusCode == 200) {
-        print("3");
-        print("/////${response.data}/////");
-
-        print("Success Delete");
+        print("Success Delete - baumann result");
         return "Success to Delete";
       }
       return "Failed to delete";

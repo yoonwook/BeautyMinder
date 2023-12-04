@@ -18,14 +18,14 @@ class CustomWillPopScope extends StatelessWidget {
   Widget build(BuildContext context) {
     return Platform.isIOS
         ? GestureDetector(
-      // onPanEnd: (details) {
-      //   if (details.velocity.pixelsPerSecond.dx < 0 ||
-      //       details.velocity.pixelsPerSecond.dx > 0) {
-      //     if (canPop) {
-      //       action();
-      //     }
-      //   }
-      // },
+      onHorizontalDragEnd: (details) {
+        if (details.velocity.pixelsPerSecond.dx < 0 ||
+            details.velocity.pixelsPerSecond.dx > 0) {
+          if (canPop) {
+            action();
+          }
+        }
+      },
       child: WillPopScope(
         onWillPop: () async {
           if (canPop) {
