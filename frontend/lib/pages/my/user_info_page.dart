@@ -6,11 +6,14 @@ import 'package:beautyminder/pages/my/widgets/my_divider.dart';
 import 'package:beautyminder/pages/my/widgets/my_page_header.dart';
 import 'package:beautyminder/pages/my/widgets/pop_up.dart';
 import 'package:beautyminder/services/api_service.dart';
+import 'package:beautyminder/services/baumann_service.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../dto/baumann_result_model.dart';
 
 class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key});
@@ -21,6 +24,7 @@ class UserInfoPage extends StatefulWidget {
 
 class _UserInfoPageState extends State<UserInfoPage> {
   User? user;
+  List<BaumannResult> baumannresultList = [];
 
   bool isLoading = true;
 
@@ -34,8 +38,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
     try {
       // final info = await SharedService.getUser();
       final info = await SharedService.loginDetails();
+      final loadedBaumannResult = await BaumannService.getBaumannHistory();
       setState(() {
-        user = info!.user;
+        user = info!.user ?? null;
+        baumannresultList = loadedBaumannResult.value ?? [];
         isLoading = false;
       });
       print("hihi user info page2 : ${user?.baumann}");
@@ -78,7 +84,9 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         MyDivider(),
                         UserInfoItem(title: '이메일', content: user!.email),
                         MyDivider(),
-                        UserInfoItem(title: '생성 시각', content: user!.createdAt.toString()),
+                        UserInfoItem(title: '피부타입', content: (baumannresultList.isEmpty)? "없음" : baumannresultList.last.baumannType),
+                        MyDivider(),
+                        UserInfoItem(title: '가입시각', content: user!.createdAt.toString()),
                         MyDivider(),
                         // SizedBox(height: 200),
                       ])),

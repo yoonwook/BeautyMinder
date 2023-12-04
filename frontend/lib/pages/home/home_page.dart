@@ -97,15 +97,9 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         expiries = loadedExpiries ?? [];
-        print("::?::0-1 : $expiries");
         recommends = loadedRecommends.value ?? [];
-        print("::?::0-2 : $recommends");
         todayTodos = loadedTodos.value ?? null;
-        print("::?::0-3 : $todayTodos");
-        print("Yeah˜");
         baumannresultList = loadedBaumannResult.value ?? [];
-        print("Yeah˜2");
-        print("::?::0-4 : $baumannresultList");
       });
 
     } catch (e) {
