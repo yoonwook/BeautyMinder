@@ -29,7 +29,6 @@ class _SearchPageState extends State<SearchPage> {
 
   List searchHistory = [];
 
-
   @override
   void dispose() {
     textController.dispose(); // 필요한 경우 컨트롤러를 해제합니다.
@@ -74,15 +73,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(title: _title(),),
+      appBar: SearchAppBar(title: _title(),context: context,),
       body: _searchPageUI(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 페이지를 닫을 때 이전 페이지로 데이터 전달
-          Navigator.pop(context, true);
-        },
-        child: Icon(Icons.arrow_back_ios),
-      )
     );
   }
 
@@ -267,7 +259,6 @@ class _SearchPageState extends State<SearchPage> {
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: ElevatedButton(
         onPressed: () {
-          // Handle button press, e.g., navigate to search result page
           _navigateToSearchResultPage(keyword);
         },
         style: ElevatedButton.styleFrom(
@@ -605,19 +596,19 @@ class _SearchPageState extends State<SearchPage> {
   void _navigateToSearchResultPage(String keyword) async {
     try {
       final result = await SearchService.searchAnything(keyword);
-      print(result);
 
-      Navigator.of(context).push(MaterialPageRoute(
+      final updatedHistory = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SearchResultPage(
           searchQuery: keyword,
           searchResults: result,
         ),
-      )).then((value) {
-        // 이전 페이지로부터 데이터가 반환되었을 때, 현재 페이지를 다시 새로 고침
-        if (value != null && value is bool && value) {
-          _getAllNeeds();
-        }
-      });
+      ));
+
+      if (updatedHistory != null && updatedHistory is List) {
+        setState(() {
+          searchHistory = updatedHistory;
+        });
+      }
     } catch (e) {
       print('Error searching anything: $e');
     }

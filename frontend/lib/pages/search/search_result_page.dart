@@ -66,15 +66,17 @@ class _SearchResultPageState extends State<SearchResultPage> {
   Widget build(BuildContext context) {
     // 이곳에서 검색 결과를 표시하거나 처리할 수 있음
     return Scaffold(
-      appBar: SearchAppBar(title: _title()),
-      body: _searchResultPageUI(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 페이지를 닫을 때 이전 페이지로 데이터 전달
-          Navigator.pop(context, true);
+      appBar: SearchAppBar(
+        title: _title(),
+        context: context,
+        onBack: () {
+          // Custom back button behavior
+          print('Custom back button pressed');
+          // Perform additional actions if needed
+          Navigator.pop(context, searchHistory);
         },
-        child: Icon(Icons.arrow_back_ios),
-      )
+      ),
+      body: _searchResultPageUI(),
     );
   }
 
