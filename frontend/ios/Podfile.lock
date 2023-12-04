@@ -9,6 +9,8 @@ PODS:
   - flutter_inappwebview/Core (0.0.1):
     - Flutter
     - OrderedSet (~> 5.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
   - fluttertoast (0.0.2):
@@ -35,6 +37,7 @@ DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - Flutter (from `Flutter`)
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
@@ -56,6 +59,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_inappwebview:
     :path: ".symlinks/plugins/flutter_inappwebview/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   fluttertoast:
@@ -77,6 +82,7 @@ SPEC CHECKSUMS:
   camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_inappwebview: 3d32228f1304635e7c028b0d4252937730bbc6cf
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
@@ -88,6 +94,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
-PODFILE CHECKSUM: 8181a3cb367ef8108a162781e6b5b85b593404ce
+PODFILE CHECKSUM: cac8ba097d353257149499f5ab750499468c41ac
 
 COCOAPODS: 1.14.2

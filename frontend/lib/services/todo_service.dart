@@ -262,6 +262,43 @@ class TodoService {
       return Result.failure("An error occurred: $e");
     }
   }
+
+  static Future<Result<Map<String, dynamic>>> taskAddInTodo(
+      Todo? todo, List<Task>? tasks) async {
+    final user = await SharedService.getUser();
+    // AccessToken가지고오기
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
+
+    final url = Uri.http(
+      Config.apiURL,
+      Config.todoUpdateAPI + todo!.id!,
+    ).toString();
+
+    final headers = {
+      'Authorization': 'Bearer ${Config.acccessToken}',
+      'Cookie': 'XRT=${Config.refreshToken}',
+      // 'Authorization': 'Bearer $accessToken',
+      // 'Cookie': 'XRT=$refreshToken',
+    };
+
+    List<Map<String, dynamic>>? add_tasks = tasks?.map((task) => task.toJson()).toList() ?? [];
+
+    Map<String, dynamic> taskUpdate = {
+      "tasksToAdd": add_tasks
+    };
+
+    try {
+      final response = await DioClient.sendRequest('PUT', url,
+          body: taskUpdate, headers: headers);
+
+      print("response : ${response}");
+      return Result.success(response.data);
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
+    }
+  }
+
 }
 
 // 결과 클래스

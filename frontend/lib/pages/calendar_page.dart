@@ -21,10 +21,16 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:local_image_provider/local_image_provider.dart' as lip;
 import '../../State/TodoState.dart';
 import '../dto/todo_model.dart';
+import '../services/api_service.dart';
 import '../widget/commonBottomNavigationBar.dart';
 import 'FullScreenImagePage.dart';
+import 'expiry_page.dart';
 import 'home_page.dart';
 import 'my_page.dart';
+
+
+late List<Todo>? global_todos;
+
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -66,7 +72,7 @@ class _CalendarPageState extends State<CalendarPage> {
               backgroundColor: Color(0xffd86a04),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TodoAddPage()));
+                    builder: (context) =>  TodoAddPage(todos: global_todos)));
               },
               label: Text('Routine'),
               icon: Icon(Icons.add),
@@ -77,20 +83,18 @@ class _CalendarPageState extends State<CalendarPage> {
                 FloatingActionButtonLocation.centerFloat,
             bottomNavigationBar: CommonBottomNavigationBar(
                 currentIndex: _currentIndex,
-                onTap: (int index) {
+                onTap: (int index) async {
                   // 페이지 전환 로직 추가
                   if (index == 0) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const RecPage()));
                   } else if (index == 1) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PouchPage()));
+                        builder: (context) => CosmeticExpiryPage()));
                   } else if (index == 2) {
+                    final userProfileResult = await APIService.getUserProfile();
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const HomePage()));
-                  } else if (index == 3) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const TodoPage()));
+                        builder: (context) => HomePage(/*user: userProfileResult.value!*/)));
                   } else if (index == 4) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const MyPage()));
@@ -433,6 +437,7 @@ class _todoListWidget extends State<todoListWidget> {
                   ],
                 ));
           } else if (state is TodoLoadedState) {
+            global_todos = state.todos;
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -442,6 +447,7 @@ class _todoListWidget extends State<todoListWidget> {
               ],
             );
           } else if (state is TodoDeletedState) {
+            global_todos = state.todos;
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -452,6 +458,7 @@ class _todoListWidget extends State<todoListWidget> {
               ],
             );
           } else {
+            global_todos = state.todos;
             return Column(
               children: [
                 _calendar(state.todos),

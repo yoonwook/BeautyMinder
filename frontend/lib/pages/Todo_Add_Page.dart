@@ -1,20 +1,26 @@
 import 'package:beautyminder/dto/todo_model.dart';
+import 'package:beautyminder/notification.dart';
 import 'package:beautyminder/pages/pouch_page.dart';
 import 'package:beautyminder/pages/recommend_bloc_screen.dart';
 import 'package:beautyminder/pages/todo_page.dart';
 import 'package:beautyminder/services/todo_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../dto/task_model.dart';
+import '../services/api_service.dart';
 import '../widget/commonAppBar.dart';
 import '../widget/commonBottomNavigationBar.dart';
 import 'calendar_page.dart';
+import 'expiry_page.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 
 class TodoAddPage extends StatefulWidget {
-  const TodoAddPage({Key? key}) : super(key: key);
+  final List<Todo>? todos;
+
+  const TodoAddPage({Key? key, required this.todos}) : super(key: key);
 
   @override
   _TodoAddPage createState() => _TodoAddPage();
@@ -27,11 +33,14 @@ class _TodoAddPage extends State<TodoAddPage> {
   List<List<bool>> _toggleSelections = [];
   List<String> categorys = [];
   Todo? todo;
-  DateTime? picked;
+  DateTime? pickedDate;
   bool isEmptyTextField = false;
+  List<String?> dates = [];
 
   late List<Task> tasks;
-
+  late int hour;
+  late int minute;
+  late int second;
   @override
   void initState() {
     // 모든 controller을 dispose
@@ -39,7 +48,17 @@ class _TodoAddPage extends State<TodoAddPage> {
     _controllers.add(TextEditingController());
     _dateController.text = DateTime.now().toString().substring(0, 10);
     _toggleSelections.add([false, false, true]);
-    picked = DateTime.parse(_dateController.text);
+    pickedDate = DateTime.parse(_dateController.text);
+    dates = widget.todos!.map((e) => e.date).toList();
+    print("dates : ${dates}");
+    print("picked: ${pickedDate}");
+    // print("DateTime.now() : ${}")
+    print(dates.contains(formatDate(DateTime.now())));
+  }
+
+  String formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd')
+        .format(date); // Use DateFormat to format the date
   }
 
   @override
@@ -70,10 +89,10 @@ class _TodoAddPage extends State<TodoAddPage> {
 
   Future<void> _selectDate(BuildContext context) async {
     // Date를 저장하는 함수
-    picked = await showDatePicker(
+    pickedDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
+        firstDate: DateTime.now(),
         lastDate: DateTime(2101),
         builder: (context, child) {
           return Theme(
@@ -81,7 +100,7 @@ class _TodoAddPage extends State<TodoAddPage> {
                 disabledColor: Colors.black87,
                 colorScheme: const ColorScheme.light(
                     primary: Color(0xffffecda),
-                    onPrimary: Colors.black87,
+                    onPrimary: Color(0xffd86a04),
                     onSurface: Colors.black
                     // onSurface: Colors.black87
                     ),
@@ -92,14 +111,84 @@ class _TodoAddPage extends State<TodoAddPage> {
             child: child!,
           );
         });
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        _dateController.text =
-            picked.toString().substring(0, 10); // 선택된 날짜를 TextField에 반영
-        print(picked);
-      });
+    if (pickedDate != null) {
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              // Apply similar theme settings as DatePicker
+              colorScheme: const ColorScheme.light(
+                primary: Color(0xffd86a04),
+                onPrimary: Colors.black87,
+                onSurface: Colors.black,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0xffffecda),
+                  foregroundColor: const Color(0xffd86a04),
+                ),
+              ),
+              // Additional theme settings for TimePicker can go here
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          // 날짜와 시간을 결합하여 _dateController에 설정합니다.
+          DateTime finalDateTime = DateTime(
+            pickedDate!.year,
+            pickedDate!.month,
+            pickedDate!.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          hour = pickedTime.hour;
+          minute = pickedTime.minute;
+          _dateController.text =
+              DateFormat('yyyy-MM-dd – HH:mm').format(finalDateTime);
+        });
+      }
     }
   }
+
+  // Future<void> _selectDate(BuildContext context) async {
+  //   // Date를 저장하는 함수
+  //   picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime.now(),
+  //       firstDate: DateTime(2000),
+  //       lastDate: DateTime(2101),
+  //       builder: (context, child) {
+  //         return Theme(
+  //           data: Theme.of(context).copyWith(
+  //               disabledColor: Colors.black87,
+  //               colorScheme: const ColorScheme.light(
+  //                   primary: Color(0xffffecda),
+  //                   onPrimary: Colors.black87,
+  //                   onSurface: Colors.black
+  //                   // onSurface: Colors.black87
+  //                   ),
+  //               textButtonTheme: TextButtonThemeData(
+  //                   style: TextButton.styleFrom(
+  //                       backgroundColor: const Color(0xffffecda),
+  //                       foregroundColor: const Color(0xffd86a04)))),
+  //           child: child!,
+  //         );
+  //       });
+  //   if (picked != null && picked != DateTime.now()) {
+  //     setState(() {
+  //       _dateController.text =
+  //           picked.toString().substring(0, 10); // 선택된 날짜를 TextField에 반영
+  //       print(picked);
+  //       print(dates.contains(formatDate(picked!)));
+  //     });
+  //   }
+  // }
 
   List<Task> createTasks() {
     tasks = List.generate(_controllers.length, (index) {
@@ -119,11 +208,10 @@ class _TodoAddPage extends State<TodoAddPage> {
 
   Todo? createRoutine() {
     createTasks();
-    print(_dateController.text.runtimeType);
     print("_dateController.text : ${_dateController.text}");
-    print("picekd : $picked");
-    todo = Todo(date: _dateController.text , tasks: tasks);
-    print("todo :${todo.toString()}" );
+    print("picekd : $pickedDate");
+    todo = Todo(date: formatDate(pickedDate!), tasks: tasks);
+    print("todo :${todo.toString()}");
     return todo;
   }
 
@@ -150,13 +238,29 @@ class _TodoAddPage extends State<TodoAddPage> {
                 TextButton.icon(
                   onPressed: () async {
                     createRoutine();
-
                     if (tasks.length == 0) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const CalendarPage()));
+                    } else if (tasks.length > 0 &&
+                        dates.contains(formatDate(pickedDate!))) {
+                      Todo? existing_todo = widget.todos!.firstWhere(
+                        (todo) =>
+                            todo.date ==
+                            formatDate(
+                                pickedDate!), // Provide a default value (null) if no match is found
+                      );
+                      await TodoService.taskAddInTodo(existing_todo, tasks);
+                      print("_dateController.text : ${_dateController.text}");
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const CalendarPage()));
                     } else {
                       print("addtodo 실행");
                       print("todo : ${todo}");
+                      print("_dateController.text : ${_dateController.text}");
+                      FlutterLocalNotification.showNotification_time(
+                          "안녕",
+                          "하세요",
+                          FlutterLocalNotification.makeDate(hour, minute, 00));
                       await TodoService.addTodo(todo!);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const CalendarPage()));
@@ -301,20 +405,19 @@ class _TodoAddPage extends State<TodoAddPage> {
       ),
       bottomNavigationBar: CommonBottomNavigationBar(
           currentIndex: _currentIndex,
-          onTap: (int index) {
+          onTap: (int index) async {
             // 페이지 전환 로직 추가
             if (index == 0) {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const RecPage()));
             } else if (index == 1) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const PouchPage()));
-            } else if (index == 2) {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            } else if (index == 3) {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CalendarPage()));
+                  builder: (context) => CosmeticExpiryPage()));
+            } else if (index == 2) {
+              final userProfileResult = await APIService.getUserProfile();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      HomePage(/*user: userProfileResult.value!*/)));
             } else if (index == 4) {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const MyPage()));

@@ -36,14 +36,14 @@ class _skinAlbumPage extends State<skinAlbumPage> {
       Permission.camera,
       Permission.photos,
       Permission.accessMediaLocation,
-      Permission.storage
+      Permission.storage,
     ].request();
 
     print("statuses[Permission.camera] : ${statuses[Permission.camera]}");
     print("Permission.photos : ${statuses[Permission.photos]}");
     print(
         "Permission.accessMediaLocation : ${statuses[Permission.accessMediaLocation]}");
-    print("Permission.storage : ${statuses[Permission.storage]}");
+    print("Permission.notification : ${statuses[Permission.notification]}");
   }
 
   List<LocalImage> images = [];
