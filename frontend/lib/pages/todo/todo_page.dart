@@ -423,7 +423,7 @@ class _todoListWidget extends State<todoListWidget> {
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
             return Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height-200,
                 width: MediaQuery.of(context).size.width,
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
