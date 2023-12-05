@@ -4,7 +4,7 @@ import 'package:beautyminder/dto/login_response_model.dart';
 import 'package:beautyminder/dto/register_request_model.dart';
 import 'package:beautyminder/dto/register_response_model.dart';
 import 'package:beautyminder/dto/update_request_model.dart';
-import 'package:dio/dio.dart'; // DIO 패키지를 이용해 HTTP 통신
+import 'package:dio/dio.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:mime/src/mime_type.dart';
 
@@ -15,23 +15,17 @@ import 'shared_service.dart';
 
 class APIService {
 
-  // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
-    // FormData 생성
     final formData = FormData.fromMap({
       'email': model.email ?? '',
       'password': model.password ?? '',
     });
 
     try {
-      // POST 요청
       final response = await DioClient.sendRequest('POST', url, body: formData);
-      print("response: $response");
       if (response.statusCode == 200) {
         await SharedService.setLoginDetails(loginResponseJson(response.data));
-
         return Result.success(true);
       }
       return Result.failure("Login failed");
@@ -40,7 +34,6 @@ class APIService {
     }
   }
 
-  // 회원가입 함수
   static Future<Result<RegisterResponseModel>> register(
       RegisterRequestModel model) async {
     // URL 생성
