@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
@@ -27,21 +26,17 @@ class OCRService {
       'image': multipartFile,
     });
 
-    print("HIII: ${multipartFile}");
-
     try {
       // 서버에 업로드
-      var response = await DioClient.sendRequest('POST', url, body: formData, headers: {"Content-Type": "multipart/form"});
+      var response = await DioClient.sendRequest('POST', url, body: formData);
 
       if (response.statusCode == 200) {
         // OCR 결과 반환
-        print("Feee: ${response}");
         return response.data;
-      }else if(response.statusCode == 404){
+      } else if (response.statusCode == 404) {
         throw Exception('사진을 인식하지 못했습니다. 다시 시도해 주세요.');
       } else {
-        throw Exception(
-            'Failed to upload image for OCR: ${response.statusMessage}');
+        throw Exception('Failed to upload image for OCR: ${response.statusMessage}');
       }
     } catch (e) {
       throw Exception('Error uploading image for OCR: $e');
