@@ -73,8 +73,6 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      // 'Authorization': 'Bearer ${Config.acccessToken}',
-      // 'Cookie': 'XRT=${Config.refreshToken}',
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
     };
@@ -103,10 +101,8 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -144,10 +140,8 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -159,11 +153,6 @@ class APIService {
       );
 
       if (response.statusCode == 200) {
-        // 사용자 정보 파싱
-        //print('res:' + response.data.toString());
-        //final favorites =
-        //    FavoriteModel.fromJson(response.data as Map<String, dynamic>);
-        //return Result.success(favorites);
 
         return Result.success(response.data);
       }
@@ -190,10 +179,8 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -230,10 +217,8 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -262,10 +247,8 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     final MediaType contentType = MediaType.parse(
@@ -274,7 +257,6 @@ class APIService {
     final formData = FormData.fromMap({
       "image": MultipartFile.fromFileSync(
         image,
-        //filename: 'new_profile.jpg',
         contentType: contentType,
       ),
     });
@@ -310,10 +292,8 @@ class APIService {
     final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -338,10 +318,8 @@ class APIService {
     final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -371,10 +349,8 @@ class APIService {
     final url = Uri.http(Config.apiURL, Config.changePassword).toString();
 
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     final Map<String, dynamic> passwords = {
@@ -443,10 +419,8 @@ class APIService {
     final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
 
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {

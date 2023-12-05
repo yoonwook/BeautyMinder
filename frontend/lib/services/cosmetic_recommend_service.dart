@@ -1,4 +1,5 @@
 import 'package:beautyminder/services/auth_service.dart';
+import 'package:beautyminder/services/dio_client.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
 
@@ -13,24 +14,6 @@ class CosmeticSearchService {
     'Content-Type': 'application/json',
   };
 
-  // 공통 HTTP 옵션 설정 함수
-  static Options _httpOptions(String method, Map<String, String>? headers) {
-    return Options(
-      method: method,
-      headers: headers,
-    );
-  }
-
-  // POST 방식으로 JSON 데이터 전송하는 일반 함수
-  static Future<Response> _postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}) {
-    return client.post(
-      url,
-      options: _httpOptions('POST', headers),
-      data: body,
-    );
-  }
-
   // Get All Cosmetics
   static Future<Result<List<Cosmetic>>> getAllCosmetics() async {
     // 로그인 상세 정보 가져오기
@@ -41,22 +24,17 @@ class CosmeticSearchService {
 
     final userId = user?.id ?? '-1';
 
-    // final url = Uri.http(Config.apiURL, Config.CosmeticAPI).toString();
     final url = Uri.http(Config.apiURL, Config.RecommendAPI).toString();
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      final response = await authClient.get(
-        url,
-        options: _httpOptions('GET', headers),
-      );
+      final response =
+          await DioClient.sendRequest('GET', url, headers: headers);
 
       print("response : ${response.data}, statuscode : ${response.statusCode}");
 
