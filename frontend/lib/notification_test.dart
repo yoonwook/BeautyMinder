@@ -12,10 +12,11 @@ class notitest extends StatefulWidget {
 class _notitest extends State<notitest> {
   @override
   void initState() {
+
     FlutterLocalNotification.init();
 
-    Future.delayed(const Duration(seconds: 3),
-        FlutterLocalNotification.requestNotificationPermission());
+    // Future.delayed(const Duration(seconds: 0),
+    //     FlutterLocalNotification.requestNotificationPermission());
 
     super.initState();
   }
@@ -26,8 +27,9 @@ class _notitest extends State<notitest> {
       body: Center(
         child: TextButton(
           onPressed: () {
-            FlutterLocalNotification.showNotification_time('title',
-                'description', FlutterLocalNotification.makeDate(20, 53, 00));
+             FlutterLocalNotification.showNotification_time('title',
+                 'description', FlutterLocalNotification.makeDate(14, 35, 00));
+            //FlutterLocalNotification.showNotification();
           },
           child: const Text('알림 보내기'),
         ),

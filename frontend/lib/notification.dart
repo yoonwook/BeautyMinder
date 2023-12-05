@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
+import 'dart:io';
 
 class FlutterLocalNotification {
   FlutterLocalNotification._();
@@ -17,18 +17,19 @@ class FlutterLocalNotification {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
-  static getPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.notification
-    ].request();
-  }
-
-
-
-
   static init() async {
+    if (Platform.isAndroid) {
+      var status = await Permission.ignoreBatteryOptimizations.status;
+      if (!status.isGranted) {
+        await Permission.ignoreBatteryOptimizations.request();
+      }
+    }
 
-    getPermission();
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
 
     AndroidInitializationSettings androidInitializationSettings =
         const AndroidInitializationSettings('mipmap/ic_launcher');
@@ -83,11 +84,8 @@ class FlutterLocalNotification {
         0, 'test title', 'test body', notificationDetails);
   }
 
-  static Future<void> showNotification_time(String title, String description, tz.TZDateTime date) async {
-
-
-
-
+  static Future<void> showNotification_time(
+      String title, String description , tz.TZDateTime date) async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('channel id', 'channel name',
             channelDescription: 'channel description',
@@ -104,7 +102,7 @@ class FlutterLocalNotification {
         title,
         description,
         date,
-       //tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
+        //tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
         //makeDate(15, 40, 00),
         NotificationDetails(
             android: androidNotificationDetails,

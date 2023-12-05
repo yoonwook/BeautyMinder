@@ -28,7 +28,6 @@ import 'package:logging/logging.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-
 // Widget _defaultHome = WelcomePage();
 
 void _setupLogging() {
@@ -39,25 +38,22 @@ void _setupLogging() {
   });
 }
 
-  getPermission() async {
-  Map<Permission, PermissionStatus> statuses = await [
-    Permission.notification
-  ].request();
+getPermission() async {
+  Map<Permission, PermissionStatus> statuses =
+      await [Permission.notification].request();
 }
 
-
-
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   getPermission();
-  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = Observer();
   _setupLogging();
-  final TodoService todoService = TodoService();
+  FlutterLocalNotification.init();
 
   PermissionStatus status = await Permission.notification.status;
 
-  if(!status.isGranted){
+  if (!status.isGranted) {
     Permission.notification.request();
   }
 
@@ -67,9 +63,9 @@ void main() async {
         title: 'BeautyMinder',
         home: //testPage(),
             //picturePage(),
-            CalendarPage()),
+            //CalendarPage()),
             //timeLine()
-            //notitest()),
+            notitest()),
   );
 }
 
