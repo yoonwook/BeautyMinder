@@ -1,176 +1,129 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:beautyminder/config.dart';
+import 'package:beautyminder/dto/review_request_model.dart';
+import 'package:beautyminder/dto/review_response_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
+import 'package:beautyminder/services/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
-import '../config.dart';
-import '../dto/cosmetic_expiry_model.dart';
+class ReviewService {
 
-class ExpiryService {
-  static final Dio client = Dio();
+  // 리뷰 추가 함수
+  static Future<ReviewResponse> addReview(ReviewRequest reviewRequest, List<PlatformFile> imageFiles) async {
+    final accessToken = await SharedService.getAccessToken();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI).toString();
 
-  static String accessToken = Config.acccessToken;
-  static String refreshToken = Config.refreshToken;
+    // 이미지 파일 처리
+    List<MultipartFile> multipartImageList = imageFiles.map((file) {
+      final MediaType contentType = MediaType.parse(lookupMimeType(file.name) ?? 'application/octet-stream');
+      return MultipartFile.fromBytes(file.bytes!, filename: file.name, contentType: contentType);
+    }).toList();
 
-//  액세스 토큰 설정
-  static void setAccessToken() {
-    client.options.headers['Authorization'] = 'Bearer $accessToken';
-  }
+    // 리뷰 데이터 처리
+    String reviewJson = jsonEncode({
+      'content': reviewRequest.content,
+      'rating': reviewRequest.rating,
+      'cosmeticId': reviewRequest.cosmeticId,
+    });
 
-  static const Map<String, String> jsonHeaders = {
-    'Content-Type': 'application/json',
-  };
-
-  static Options _httpOptions(String method, Map<String, String>? headers) {
-    return Options(
-      method: method,
-      headers: headers,
+    MultipartFile reviewMultipart = MultipartFile.fromString(
+      reviewJson,
+      contentType: MediaType('application', 'json'),
     );
-  }
 
-  // Create Expiry Item
-  static Future<CosmeticExpiry> createCosmeticExpiry(
-      CosmeticExpiry expiry) async {
-    setAccessToken();
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
+    // FormData 생성
+    var formData = FormData.fromMap({
+      'review': reviewMultipart,
+      'images': multipartImageList,
+    });
 
-    final url =
-        Uri.http(Config.apiURL, Config.createCosmeticExpiryAPI).toString();
-
-    try {
-      final response = await client.post(url,
-          options: _httpOptions('POST', jsonHeaders), data: expiry.toJson());
-      if (response.statusCode == 200) {
-        return CosmeticExpiry.fromJson(response.data);
-      } else {
-        // 에러 메시지에 응답 본문을 포함시킵니다.
-        throw Exception(
-            "Failed to create cosmetic expiry: Status Code ${response.statusCode}, Data: ${response.data}");
-      }
-    } on DioException catch (e) {
-      // DioError를 캐치하여 더 많은 정보를 로그로 남깁니다.
-      print('DioError caught: ${e.response?.data}');
-      print('Headers: ${e.response?.headers}');
-      print('Request Options: ${e.response?.requestOptions}');
-      throw Exception("Failed to create cosmetic expiry: ${e.message}");
-    }
-  }
-
-  // Get all Expiry Items
-  static Future<List<CosmeticExpiry>> getAllExpiries() async {
-
-    setAccessToken();
-    final url = Uri.http(Config.apiURL, Config.getAllExpiriesAPI).toString();
-
-    try {
-      final response = await client.get(
-          url,
-          options: _httpOptions('GET', jsonHeaders)
-      );
-      print('Response data: ${response.data}'); // 로깅 추가
-
-      if (response.statusCode == 200) {
-        List<dynamic> jsonData = response.data;
-        return jsonData.map((data) => CosmeticExpiry.fromJson(data)).toList();
-      }
-      else {
-        throw Exception("Failed to get expiries : Status Code ${response.statusCode}");
-      }
-    } catch (e) {
-      if (e is DioException && e.type == DioExceptionType.connectionTimeout) {
-        throw Exception("Connection timed out");
-      }
-      throw Exception("An error occurred: $e");
-    }
-    // on DioException catch (e) {
-    //   throw Exception("DioError: ${e.message}");
-    // }
-  }
-
-  // Get an expiry item by and ExpiryId
-  static Future<CosmeticExpiry> getExpiry(String expiryId) async {
-    setAccessToken();
-    final url = Uri.http(
-            Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId)
-        .toString();
-
-    try {
-      final response = await client.get(url, options: _httpOptions('GET', jsonHeaders));
-      if (response.statusCode == 200) {
-        return CosmeticExpiry.fromJson(response.data);
-      } else {
-        throw Exception(
-            "Failed to get expiry by expiry ID: Status Code ${response.statusCode}");
-      }
-    } on DioError catch (e) {
-      throw Exception("DioError: ${e.message}");
-    }
-  }
-
-  // Update an
-  static Future<CosmeticExpiry> updateExpiry(String expiryId, CosmeticExpiry updatedExpiry) async {
-
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
-
-    final userId = user?.id ?? '-1';
-
-    final url = Uri.http(
-            Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId).toString();
-
-    // 헤더 설정
-    final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
-    };
-
-    try {
-      print("*** 1 : ${updatedExpiry.opened}");
-      print("*** 2 : ${updatedExpiry.toJson()}");
-
-      final response = await client.put(
+    // API 요청
+    var response = await DioClient.sendRequest(
+        'POST',
         url,
-        options: _httpOptions('PUT', headers),
-        data: updatedExpiry.toJson()
-      );
-      print("*** 2.5 : ${updatedExpiry.toJson()}");
-      print("*** 3 : ${response.data}");
+        body: formData,
+        headers: {'Authorization': 'Bearer $accessToken'}
+    );
 
-      print("1122Server Response: ${response.statusCode} - ${response.data}");
-
-      if (response.statusCode == 200) {
-        print("이원준5");
-        print("1133Server Response: ${response.statusCode} - ${response.data}");
-        return CosmeticExpiry.fromJson(response.data);
-      } else {
-        throw Exception(
-            "Failed to update expiry: Status Code ${response.statusCode}");
-      }
-    } on DioException catch (e) {
-      throw Exception("DioError: ${e.message}");
+    if (response.statusCode == 201) {
+      return ReviewResponse.fromJson(response.data);
+    } else {
+      throw Exception('Failed to add review: ${response.statusMessage}');
     }
   }
 
-  // Delete an expiry item by and ExpiryId
-  static Future<void> deleteExpiry(String expiryId) async {
-    setAccessToken();
-    final url = Uri.http(
-            Config.apiURL, Config.getExpiryByUserIdandExpiryIdAPI + expiryId)
-        .toString();
-    // final url = '${Config.apiURL}/expiry/$expiryId';
-    try {
-      final response = await client.delete(url,
-          options: _httpOptions('DELETE', jsonHeaders));
-      if (response.statusCode != 200) {
-        throw Exception(
-            "Failed to delete expiry: Status Code ${response.statusCode}");
-      }
-    } on DioError catch (e) {
-      throw Exception("DioError: ${e.message}");
+  // 리뷰 조회 함수
+  static Future<List<ReviewResponse>> getReviewsForCosmetic(String cosmeticId) async {
+    final accessToken = await SharedService.getAccessToken();
+    final url = Uri.http(Config.apiURL, Config.getReviewAPI + cosmeticId).toString();
+
+    var response = await DioClient.sendRequest(
+        'GET',
+        url,
+        headers: {'Authorization': 'Bearer $accessToken'}
+    );
+
+    if (response.statusCode == 200) {
+      return (response.data as List).map((e) => ReviewResponse.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load reviews');
     }
   }
+
+  // 리뷰 삭제 함수
+  static Future<void> deleteReview(String reviewId) async {
+    final accessToken = await SharedService.getAccessToken();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI + reviewId).toString();
+
+    var response = await DioClient.sendRequest(
+        'DELETE',
+        url,
+        headers: {'Authorization': 'Bearer $accessToken'}
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete review');
+    }
+  }
+
+  // 리뷰 수정 함수
+  static Future<ReviewResponse> updateReview(String reviewId, ReviewRequest reviewRequest, List<PlatformFile> imageFiles) async {
+    final accessToken = await SharedService.getAccessToken();
+    final url = Uri.http(Config.apiURL, Config.AllReviewAPI + '/' + reviewId).toString();
+
+    // 이미지 및 리뷰 데이터 처리
+    List<MultipartFile> multipartImageList = imageFiles.map((file) {
+      final MediaType contentType = MediaType.parse(lookupMimeType(file.name) ?? 'application/octet-stream');
+      return MultipartFile.fromFileSync(file.path!, contentType: contentType);
+    }).toList();
+
+    String reviewJson = jsonEncode(reviewRequest.toJson());
+
+    // FormData 생성
+    var formData = FormData.fromMap({
+      'review': MultipartFile.fromString(reviewJson, filename: 'review.json', contentType: MediaType('application', 'json')),
+      'images': multipartImageList,
+    });
+
+    // API 요청
+    var response = await DioClient.sendRequest(
+        'PUT',
+        url,
+        body: formData,
+        headers: {'Authorization': 'Bearer $accessToken'}
+    );
+
+    if (response.statusCode == 200) {
+      return ReviewResponse.fromJson(response.data);
+    } else {
+      throw Exception('Failed to update review: ${response.statusMessage}');
+    }
+  }
+
+
 }
