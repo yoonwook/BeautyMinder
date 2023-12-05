@@ -47,8 +47,7 @@ class APIService {
 
     try {
       // POST 요청
-      final response =
-          await DioClient.sendRequest('POST', url, body: model.toJson());
+      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
       return Result.success(
           registerResponseJson(response.data as Map<String, dynamic>));
     } catch (e) {
