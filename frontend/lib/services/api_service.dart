@@ -14,6 +14,7 @@ import 'dio_client.dart';
 import 'shared_service.dart';
 
 class APIService {
+
   // 로그인 함수
   static Future<Result<bool>> login(LoginRequestModel model) async {
     // URL 생성
@@ -60,7 +61,7 @@ class APIService {
     // 로그인 상세 정보 가져오기
     final user = await SharedService.getUser();
 
-    // AccessToken가지고오기
+    // AccessToken 가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -72,10 +73,10 @@ class APIService {
 
     // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      // 'Authorization': 'Bearer ${Config.acccessToken}',
+      // 'Cookie': 'XRT=${Config.refreshToken}',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {

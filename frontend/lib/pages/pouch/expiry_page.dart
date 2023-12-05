@@ -7,7 +7,7 @@ import '../../dto/cosmetic_expiry_model.dart';
 import '../../dto/cosmetic_model.dart';
 import '../../services/api_service.dart';
 import '../../services/expiry_service.dart';
-import '../../services/homeSearch_service.dart';
+import '../../services/search_service.dart';
 import '../../widget/commonBottomNavigationBar.dart';
 import 'cosmeticExpiryDetailCard.dart';
 import '../home/home_page.dart';

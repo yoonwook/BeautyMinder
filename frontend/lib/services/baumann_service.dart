@@ -7,81 +7,52 @@ import '../../config.dart';
 import 'dio_client.dart';
 
 class BaumannService {
-  // Dio 객체 생성
-  static final Dio client = Dio();
 
-  // JSON 헤더 설정
-  static const Map<String, String> jsonHeaders = {
-    'Content-Type': 'application/json',
-  };
+  //바우만 테스트 설문 결과 전송하기
+  static Future<Response> postSurveyResult(Map<String, dynamic> body) async {
 
-  // 공통 HTTP 옵션 설정 함수
-  static Options _httpOptions(String method, Map<String, String>? headers) {
-    return Options(
-      method: method,
-      headers: headers,
-    );
-  }
-
-  //POST 방식으로 JSON 데이터 전송하는 일반 함수
-  static Future<Response> postJson(String url, Map<String, dynamic> body,
-      {Map<String, String>? headers}) async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
+    final url = Uri.http(Config.apiURL, Config.baumannTestAPI).toString();
 
-    // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
-    return client.post(
+    return DioClient.sendRequest(
+      'POST',
       url,
-      options: _httpOptions('POST', headers),
-      data: body,
+      body: body,
+      headers: headers
     );
   }
 
+  //바우만 설문지 불러오기
   static Future<BaumResult<SurveyWrapper>> getBaumannSurveys() async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
-
-    // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannSurveyAPI).toString();
 
-
     try {
-      // GET 요청
-      final response = await client.get(
-        url,
-        options: _httpOptions('GET', headers),
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
       );
 
       if (response.statusCode == 200) {
         // 사용자 정보 파싱
         final user =
             SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
-        print(user);
         return BaumResult.success(user);
       }
       return BaumResult.failure("Failed to get user profile");
@@ -90,141 +61,62 @@ class BaumannService {
     }
   }
 
-  // static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
-  //   // 로그인 상세 정보 가져오기
-  //   // final user = await SharedService.getUser();
-  //   // AccessToken가지고오기
-  //   final accessToken = await SharedService.getAccessToken();
-  //   final refreshToken = await SharedService.getRefreshToken();
-  //
-  //   // final userId = user?.id ?? '-1';
-  //
-  //   // URL 생성
-  //   final url = Uri.http(Config.apiURL, Config.baumannHistoryAPI).toString();
-  //   print("This is BaumannService : $url");
-  //
-  //   // 헤더 설정
-  //   final headers = {
-  //     'Authorization': 'Bearer ${Config.acccessToken}',
-  //     'Cookie': 'XRT=${Config.refreshToken}',
-  //     // 'Authorization': 'Bearer $accessToken',
-  //     // 'Cookie': 'XRT=$refreshToken',
-  //   };
-  //
-  //   try {
-  //     print("1");
-  //     // GET 요청
-  //     final response = await client.get(
-  //       url,
-  //       options: _httpOptions('GET', headers),
-  //     );
-  //     print("2");
-  //
-  //     if (response.statusCode == 200) {
-  //       print("3");
-  //       print("${response.data}");
-  //
-  //       // 사용자 정보 파싱
-  //       // final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
-  //       final List<dynamic> jsonData = response.data as List<dynamic>;
-  //       final List<BaumannResult> result = jsonData
-  //           .map((dynamic item) =>
-  //               BaumannResult.fromJson(item as Map<String, dynamic>))
-  //           .toList();
-  //
-  //       print("This is Baumann Service(getHistory) : $result");
-  //
-  //       return BaumResult<List<BaumannResult>>.success(result);
-  //     }
-  //     return BaumResult<List<BaumannResult>>.failure(
-  //         "Failed to get baumann history");
-  //   } catch (e) {
-  //     print("An error occurred: $e");
-  //     return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
-  //   }
-  // }
+
+  //바우만 결과 히스토리 불러오기
   static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
-    // 로그인 상세 정보 가져오기
-    // final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    // final userId = user?.id ?? '-1';
-
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannHistoryAPI).toString();
-    print("This is BaumannService : $url");
 
-    // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      print("1");
-      // GET 요청
-      final response = await client.get(
-        url,
-        options: _httpOptions('GET', headers),
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
       );
-      print("2");
 
       if (response.statusCode == 200) {
-        print("3");
-        print("${response.data}");
-
-        // 사용자 정보 파싱
-        // final result = BaumannResult.fromJson(response.data as Map<String, dynamic>);
         final List<dynamic> jsonData = response.data as List<dynamic>;
         final List<BaumannResult> result = jsonData
             .map((dynamic item) =>
             BaumannResult.fromJson(item as Map<String, dynamic>))
             .toList();
 
-        print("This is Baumann Service(getHistory) : $result");
-
         return BaumResult<List<BaumannResult>>.success(result);
       }
       return BaumResult<List<BaumannResult>>.failure(
           "Failed to get baumann history");
     } catch (e) {
-      print("An error occurred: $e");
       return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
     }
   }
 
 
-  //히스토리 삭제
+  //바우만 히스토리 삭제하기
   static Future<String> deleteBaumannHistory(String testId) async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
-
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.baumannDeleteAPI+testId).toString();
-    print("This is BaumannDeletedService : $url");
 
-    // 헤더 설정
     final headers = {
-      'Authorization': 'Bearer ${Config.acccessToken}',
-      'Cookie': 'XRT=${Config.refreshToken}',
-      // 'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      // GET 요청
-      final response = await client.delete(
-        url,
-        options: _httpOptions('DELETE', headers),
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
       );
 
       if (response.statusCode == 200) {
