@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../dto/cosmetic_model.dart';
-import '../../services/homeSearch_service.dart';
+import '../../services/search_service.dart';
 import '../../services/keywordRank_service.dart';
 
 class SearchPage extends StatefulWidget {
