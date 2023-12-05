@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:beautyminder/dto/task_model.dart';
 import 'package:beautyminder/services/dio_client.dart';
 import 'package:intl/intl.dart';
+import 'package:beautyminder/services/api_service.dart';
 
 import '../../config.dart';
 import '../dto/todo_model.dart';
@@ -17,7 +18,6 @@ class TodoService {
     // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
-    final userId = user?.id ?? '-1';
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -212,13 +212,4 @@ class TodoService {
       return Result.failure("An error occurred: $e");
     }
   }
-}
-
-// 결과 클래스
-class Result<T> {
-  final T? value;
-  final String? error;
-
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
 }

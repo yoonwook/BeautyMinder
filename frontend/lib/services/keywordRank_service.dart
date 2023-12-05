@@ -1,5 +1,6 @@
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
+import 'package:beautyminder/services/api_service.dart';
 
 import '../../config.dart';
 import '../dto/keywordRank_model.dart';
@@ -106,15 +107,4 @@ class KeywordRankService {
       return [];
     }
   }
-}
-
-// 결과 클래스
-class Result<T> {
-  final T? value;
-  final String? error;
-
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
-
-  bool get isSuccess => value != null;
 }

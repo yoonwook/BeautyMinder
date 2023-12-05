@@ -1,7 +1,7 @@
 import 'package:beautyminder/dto/cosmetic_model.dart';
 import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/services/gptReview_service.dart';
-import 'package:beautyminder/widget/myAppBar.dart';
+import 'package:beautyminder/services/api_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,7 +26,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
 
-  late Future<GPTResult<GPTReviewInfo>> _gptReviewInfo;
+  late Future<Result<GPTReviewInfo>> _gptReviewInfo;
   List favorites = [];
   bool showPositiveReview = true;
   bool isFavorite = false;
@@ -415,7 +415,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget _gptReviewContent() {
     bool isPositive = showPositiveReview;
 
-    return FutureBuilder<GPTResult<GPTReviewInfo>>(
+    return FutureBuilder<Result<GPTReviewInfo>>(
       future: _gptReviewInfo,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

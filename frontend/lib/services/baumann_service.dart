@@ -2,6 +2,7 @@ import 'package:beautyminder/dto/baumann_model.dart';
 import 'package:beautyminder/dto/baumann_result_model.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
+import 'package:beautyminder/services/api_service.dart';
 
 import '../../config.dart';
 import 'dio_client.dart';
@@ -30,7 +31,7 @@ class BaumannService {
   }
 
   //바우만 설문지 불러오기
-  static Future<BaumResult<SurveyWrapper>> getBaumannSurveys() async {
+  static Future<Result<SurveyWrapper>> getBaumannSurveys() async {
 
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
@@ -53,17 +54,17 @@ class BaumannService {
         // 사용자 정보 파싱
         final user =
             SurveyWrapper.fromJson(response.data as Map<String, dynamic>);
-        return BaumResult.success(user);
+        return Result.success(user);
       }
-      return BaumResult.failure("Failed to get user profile");
+      return Result.failure("Failed to get user profile");
     } catch (e) {
-      return BaumResult.failure("An error occurred: $e");
+      return Result.failure("An error occurred: $e");
     }
   }
 
 
   //바우만 결과 히스토리 불러오기
-  static Future<BaumResult<List<BaumannResult>>> getBaumannHistory() async {
+  static Future<Result<List<BaumannResult>>> getBaumannHistory() async {
 
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
@@ -89,12 +90,12 @@ class BaumannService {
             BaumannResult.fromJson(item as Map<String, dynamic>))
             .toList();
 
-        return BaumResult<List<BaumannResult>>.success(result);
+        return Result<List<BaumannResult>>.success(result);
       }
-      return BaumResult<List<BaumannResult>>.failure(
+      return Result<List<BaumannResult>>.failure(
           "Failed to get baumann history");
     } catch (e) {
-      return BaumResult<List<BaumannResult>>.failure("An error occurred: $e");
+      return Result<List<BaumannResult>>.failure("An error occurred: $e");
     }
   }
 
@@ -129,15 +130,4 @@ class BaumannService {
       return "An error occurred: $e";
     }
   }
-}
-
-// 결과 클래스
-class BaumResult<T> {
-  final T? value;
-  final String? error;
-
-  BaumResult.success(this.value) : error = null; // 성공
-  BaumResult.failure(this.error) : value = null; // 실패
-
-  bool get isSuccess => value != null;
 }

@@ -31,8 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    email = "token@test";
-    password = '1234';
+    // email = "token@test";
+    // password = '1234';
   }
 
   @override
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Container(
             height: 60,
             child: TextFormField(
-              initialValue: 'token@test',
+              // initialValue: 'token@test',
               focusNode: emailFocusNode,
               validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
               onChanged: (val) => email = val,
@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Container(
             height: 60,
             child: TextFormField(
-              initialValue: '1234',
+              // initialValue: '1234',
               focusNode: passwordFocusNode,
               validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
               onChanged: (val) => password = val,

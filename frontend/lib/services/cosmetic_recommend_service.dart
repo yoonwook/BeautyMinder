@@ -1,6 +1,7 @@
 import 'package:beautyminder/services/dio_client.dart';
 import 'package:beautyminder/services/shared_service.dart';
 import 'package:dio/dio.dart';
+import 'package:beautyminder/services/api_service.dart';
 
 import '../config.dart';
 import '../dto/cosmetic_model.dart';
@@ -58,11 +59,3 @@ class CosmeticSearchService {
   }
 }
 
-class Result<T> {
-  final T? value;
-  final String? error;
-
-  Result.success(this.value) : error = null;
-
-  Result.failure(this.error) : value = null;
-}

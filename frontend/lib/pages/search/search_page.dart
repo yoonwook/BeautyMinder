@@ -625,13 +625,13 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-// 결과 클래스
-class Result<T> {
-  final T? value;
-  final String? error;
-
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
-
-  bool get isSuccess => value != null;
-}
+// // 결과 클래스
+// class Result<T> {
+//   final T? value;
+//   final String? error;
+//
+//   Result.success(this.value) : error = null; // 성공
+//   Result.failure(this.error) : value = null; // 실패
+//
+//   bool get isSuccess => value != null;
+// }
