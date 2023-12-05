@@ -118,45 +118,6 @@ class APIService {
     }
   }
 
-  // 즐겨찾기 조회 함수
-  static Future<Result<List<dynamic>>> getFavorites() async {
-    /// 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
-    final accessToken = await SharedService.getAccessToken();
-    final refreshToken = await SharedService.getRefreshToken();
-
-    final userId = user?.id ?? '-1';
-
-    // URL 생성
-    final url = Uri.http(Config.apiURL, '/user/favorites').toString();
-
-    // 헤더 설정
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
-    };
-
-    try {
-      // GET 요청
-      final response = await DioClient.sendRequest(
-        'GET',
-        url,
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-
-        return Result.success(response.data);
-      }
-
-      return Result.failure("Failed to get user favorites");
-    } catch (e) {
-      print(e);
-      return Result.failure("An error occurred: $e");
-    }
-  }
-
   // 리뷰 조회 함수
   static Future<Result<List<dynamic>>> getReviews() async {
     // 로그인 상세 정보 가져오기

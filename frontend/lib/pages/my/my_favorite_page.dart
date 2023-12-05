@@ -1,4 +1,5 @@
 import 'package:beautyminder/services/api_service.dart';
+import 'package:beautyminder/services/favorites_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:beautyminder/pages/my/widgets/my_page_header.dart';
@@ -26,7 +27,7 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
 
   getFavorites() async {
     try {
-      final info = await APIService.getFavorites();
+      final info = await FavoritesService.getFavorites();
       setState(() {
         favorites = info.value!;
         isLoading = false;
