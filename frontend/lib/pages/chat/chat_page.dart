@@ -5,9 +5,11 @@ import 'package:beautyminder/widget/commonAppBar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../config.dart';
+import '../../services/shared_service.dart';
 import '../../widget/custom_willpop.dart';
 
 class ChatPage extends StatefulWidget {
@@ -21,14 +23,74 @@ class _ChatPageState extends State<ChatPage> {
   late InAppWebViewController webViewController;
 
   String api = "http://${Config.apiURL}${Config.chatAPI}";
+  bool isApiCallProcess = false;
+  bool isLoading = true;
+
+  late final accessToken;
+  late final refreshToken;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _getTokens();
+  }
+
+  Future<void> _getTokens() async {
+
+    if (isApiCallProcess) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      isApiCallProcess = true;
+    });
+
+    try {
+
+      final loadedAccessToken = await SharedService.getAccessToken();
+      final loadedRefreshToken = await SharedService.getRefreshToken();
+
+      setState(() {
+        accessToken = loadedAccessToken;
+        refreshToken = loadedRefreshToken;
+      });
+
+    } catch (e) {
+      print('An error occurred : $e');
+    }
+    finally {
+      setState(() {
+        isLoading = false;
+        isApiCallProcess = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      launchUrl(Uri.parse(api));
-      return const Text("Web opened");
+    if (isLoading) {
+      return Center(
+        child: SpinKitThreeInOut(
+          color: Color(0xffd86a04),
+          size: 50.0,
+          duration: Duration(seconds: 2),
+        ),
+      );
     } else {
-      return Scaffold(appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,), body: _buildWebView(context));
+      if (kIsWeb) {
+        launchUrl(Uri.parse(api));
+        return const Text("Web opened");
+      } else {
+        return Scaffold(
+          appBar: CommonAppBar(
+            automaticallyImplyLeading: true,
+            context: context,
+          ),
+          body: _buildWebView(context),
+        );
+      }
     }
   }
 
@@ -55,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
       },
       initialUrlRequest: URLRequest(
         url: Uri.parse(api),
-        headers: {"Authorization": "Bearer ${Config.acccessToken}"},
+        headers: {"Authorization": "Bearer $accessToken"},
       ),
       shouldOverrideUrlLoading: (controller, navigationAction) async {
         var request = navigationAction.request;
@@ -68,14 +130,14 @@ class _ChatPageState extends State<ChatPage> {
         await cookieManager.setCookie(
           url: url!,
           name: "Access-Token",
-          value: Config.acccessToken,
+          value: accessToken.toString(),
         );
         if (Platform.isIOS && isUrlMatching && request.headers != null) {
           return NavigationActionPolicy.ALLOW;
         }
 
         if (isUrlMatching) {
-          request.headers = {"Authorization": "Bearer ${Config.acccessToken}"};
+          request.headers = {"Authorization": "Bearer $accessToken"};
           controller.loadUrl(urlRequest: request);
           return NavigationActionPolicy.CANCEL;
         }

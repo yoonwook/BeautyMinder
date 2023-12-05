@@ -131,6 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         showVerificationDialog();
                         print("TokenToken : $response");
                       } else {
+                        print("TokenToken : $response");
                         FormHelper.showSimpleAlertDialog(
                           context,
                           Config.appName,
