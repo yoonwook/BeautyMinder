@@ -19,9 +19,9 @@ import 'pages/start/register_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
-  }
+  //if (defaultTargetPlatform == TargetPlatform.android) {
+  //  await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  //}
 
   runApp(MultiBlocProvider(
       providers: [
