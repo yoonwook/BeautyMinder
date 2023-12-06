@@ -56,12 +56,12 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             ),
             textTheme: TextTheme(
               headline4: TextStyle(
-                fontFamily: 'YourFontFamily', // Replace with your font
+                fontFamily: 'YourFontFamily',
                 fontSize: 20.0,
                 color: Colors.black,
               ),
               button: TextStyle(
-                fontFamily: 'YourFontFamily', // Replace with your font
+                fontFamily: 'YourFontFamily',
                 color: Colors.orange,
               ),
             ),
@@ -177,7 +177,7 @@ class _ExpiryInputDialogState extends State<ExpiryInputDialog> {
             height: 30,
             child: TextButton(
               style: TextButton.styleFrom(
-                padding: EdgeInsets.zero, // 내용물과의 간격을 없애기 위해 추가
+                padding: EdgeInsets.zero,
                 backgroundColor: Color(0xffdc7e00),
                 foregroundColor: Colors.white,
                 side: BorderSide(color: Color(0xffdc7e00)),

@@ -54,7 +54,9 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
       DateTime now = DateTime.now();
       var futures = <Future>[];
 
-      for (var expiry in expiryData) {
+      for (var i = 0; i < expiryData.length; i++) {
+        var expiry = expiryData[i];
+
         futures.add(
             SearchService.searchCosmeticsByName(expiry.productName).then((cosmetics) {
               if (cosmetics.isNotEmpty) {
@@ -74,7 +76,8 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
           FlutterLocalNotification.showNotification_time(
               "유통기한 알림",
               "${expiry.productName}의 유통기한이 오늘까지입니다!",
-              FlutterLocalNotification.makeDateForExpiry(expiryDate)
+              FlutterLocalNotification.makeDateForExpiry(expiryDate),
+              i
           );
         }
       }
@@ -83,12 +86,12 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
       setState(() {
         expiries = expiryData;
-        isLoading = false; // 로딩 완료
+        isLoading = false;
       });
     } catch (e) {
       print("Error loading cosmetic expiries: $e");
       setState(() {
-        isLoading = false; // 에러 발생 시 로딩 완료 처리
+        isLoading = false;
       });
     }
   }
@@ -186,7 +189,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -210,7 +212,9 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
         children: [
           Opacity(
             opacity: isLoading ? 0.5 : 1.0, // 로딩 중일 때 투명도를 낮춤
-            child: GridView.builder(
+            child: expiries.isEmpty
+                ? Center(child: Text("등록된 화장품이 없습니다!")) // 비어있을 때의 메시지
+                :GridView.builder(
               padding: EdgeInsets.all(8),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
@@ -270,7 +274,6 @@ class _CosmeticExpiryPageState extends State<CosmeticExpiryPage> {
                               TextStyle(fontSize: 15, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)
                                   : TextStyle(fontSize: 15, color: Colors.black54, fontWeight: FontWeight.bold)
                           ),
-
                         ],
                       ),
                     ),

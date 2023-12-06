@@ -14,7 +14,7 @@ class FlutterLocalNotification {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
-
+  // Add a GlobalKey for navigation
   static final GlobalKey<NavigatorState> navigatorKey =
   GlobalKey<NavigatorState>();
 
@@ -48,7 +48,7 @@ class FlutterLocalNotification {
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (NotificationResponse details) async {
-          _navigateToRoutinePage();
+          _navigateToRoutinePage(); // Call the navigation function
         });
   }
 
@@ -64,9 +64,9 @@ class FlutterLocalNotification {
   }
 
   static void _navigateToRoutinePage() {
-
+    // Use the navigatorKey to navigate
     navigatorKey.currentState?.push(MaterialPageRoute(
-      builder: (context) => CosmeticExpiryPage(),
+      builder: (context) => CosmeticExpiryPage(), // Replace with your actual page
     ));
   }
 
@@ -79,26 +79,32 @@ class FlutterLocalNotification {
         priority: Priority.max,
         showWhen: false);
 
-    print("2222");
     const NotificationDetails notificationDetails = NotificationDetails(
         android: androidNotificationDetails,
         iOS: DarwinNotificationDetails(badgeNumber: 1));
-    print("3333");
+
     await flutterLocalNotificationsPlugin.show(
         0, 'test title', 'test body', notificationDetails);
-    print("4444");
+
   }
   //유통기한 날짜 함수
   static makeDateForExpiry(DateTime expiryDate) {
     var seoul = tz.getLocation('Asia/Seoul');
     var now = tz.TZDateTime.now(seoul);
-    tz.TZDateTime when = tz.TZDateTime(seoul, now.year, now.month, now.day, now.hour, now.minute).add(Duration(seconds: 30));
+    tz.TZDateTime when;
+
+    if (expiryDate.isAtSameMomentAs(DateTime(now.year, now.month, now.day))) {
+      when = now.add(Duration(seconds: 15));
+    } else {
+      when = tz.TZDateTime(seoul, expiryDate.year, expiryDate.month, expiryDate.day);
+    }
+
     return when;
   }
 
 
   static Future<void> showNotification_time(
-      String title, String description, tz.TZDateTime date) async {
+      String title, String description, tz.TZDateTime date, int id) async {
     const AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails('channel id', 'channel name',
         channelDescription: 'channel description',
@@ -111,7 +117,7 @@ class FlutterLocalNotification {
         iOS: DarwinNotificationDetails(badgeNumber: 1));
 
     flutterLocalNotificationsPlugin.zonedSchedule(
-        2,
+        id,
         title,
         description,
         date,
