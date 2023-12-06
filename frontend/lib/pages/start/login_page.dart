@@ -268,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
             } else {
               // 에러 토스트 메시지
               Fluttertoast.showToast(
-                msg: result.error ?? "로그인에 실패하였습니다.",
+                msg: "로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
               );
