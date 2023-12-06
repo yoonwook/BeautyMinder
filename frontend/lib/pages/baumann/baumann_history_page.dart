@@ -51,13 +51,13 @@ class BaumannHistoryPage extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        // padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        padding: EdgeInsets.only(left: 20, right:20, top:5, bottom:50),
         child: Container(
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () async {
               final userProfileResult = await APIService.getUserProfile();
-              // 버튼을 클릭했을 때 홈페이지로 이동하는 함수 호출
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -70,7 +70,7 @@ class BaumannHistoryPage extends StatelessWidget {
               backgroundColor: const Color(0xffe58731),
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+                borderRadius: BorderRadius.circular(5.0),
               ),
             ),
             child: Text(
@@ -130,7 +130,6 @@ class BaumannHistoryPage extends StatelessWidget {
   Widget _resultButton(BuildContext context, BaumannResult result, bool isEven) {
     Color buttonColor = isEven ? Colors.white : Color(0xffffca97);
     Color textColor = isEven ? Colors.black : Colors.white;
-    print("\n\nhello ::::: ${result}:::::\n\n");
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -146,33 +145,8 @@ class BaumannHistoryPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        onDismissed: (direction) async {
-          // Implement your delete logic here
-          print("HelloHelloHello");
-
-          print(":!:!: : ${result.id} :!:!:");
-          final deletionResult = await BaumannService.deleteBaumannHistory(result.id);
-
-          if (deletionResult == "Success to Delete") {
-            resultData?.remove(result);
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("삭제되었습니다."),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("삭제에 실패했습니다."),
-              ),
-            );
-          }
-        },
-
         confirmDismiss: (direction) async {
-
-          return await showDialog(
+          bool deletionConfirmed = await showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -180,13 +154,13 @@ class BaumannHistoryPage extends StatelessWidget {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(false);
+                      Navigator.of(context).pop(false); // 삭제 취소
                     },
                     child: Text("취소"),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true); // 삭제 진행
                     },
                     child: Text("삭제"),
                   ),
@@ -194,7 +168,36 @@ class BaumannHistoryPage extends StatelessWidget {
               );
             },
           );
+          if (deletionConfirmed) {
+            bool deletionSuccessful = false;
+            final deletionResult = await BaumannService.deleteBaumannHistory(result.id);
+            if (deletionResult == "Success to Delete") {
+              deletionSuccessful = true;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("삭제되었습니다."),
+                ),
+              );
+            } else {
+              deletionSuccessful = false;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("삭제에 실패했습니다."),
+                ),
+              );
+            }
+
+            // 삭제가 성공적으로 이루어졌을 때만 resultData에서 제거
+            if (deletionSuccessful) {
+              resultData?.remove(result);
+            }
+
+            return deletionSuccessful; // 항목이 성공적으로 삭제되었을 때만 true 반환
+          } else {
+            return false; // 삭제가 취소되었을 때는 false 반환
+          }
         },
+
         child: Container(
           height: 100,
           margin: EdgeInsets.symmetric(vertical: 5),
