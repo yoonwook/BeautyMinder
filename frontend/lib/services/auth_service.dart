@@ -12,7 +12,7 @@ Options _httpOptions(String method, Map<String, String>? headers) {
   );
 }
 
-// Auth POST 방식으로 JSON 데이터 전송하는 일반 함수
+//POST 방식으로 JSON 데이터 전송
 Future<Response> authPost(String url, Map<String, dynamic> body,
     {Map<String, String>? headers}) {
   return authClient.post(

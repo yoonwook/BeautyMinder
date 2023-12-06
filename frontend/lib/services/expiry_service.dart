@@ -6,6 +6,7 @@ import '../dto/cosmetic_expiry_model.dart';
 import 'dio_client.dart';
 
 class ExpiryService {
+
   // Create Expiry Item
   static Future<CosmeticExpiry> createCosmeticExpiry(CosmeticExpiry expiry) async {
     final url = Uri.http(Config.apiURL, Config.createCosmeticExpiryAPI).toString();

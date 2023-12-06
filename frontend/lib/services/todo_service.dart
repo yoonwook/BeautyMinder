@@ -10,12 +10,10 @@ import '../dto/todo_model.dart';
 import 'shared_service.dart';
 
 class TodoService {
-  // Get All Todos
-  // 유저의 모둔 Routine(todo)를 가지고 오는 서비스
-  static Future<Result<List<Todo>>> getAllTodos() async {
-    final user = await SharedService.getUser();
 
-    // AccessToken가지고오기
+  // 유저의 모든 Routine 가져오기
+  static Future<Result<List<Todo>>> getAllTodos() async {
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -57,12 +55,9 @@ class TodoService {
     }
   }
 
-  // Add a new Todo
-  // 새로운 루틴(Todo)를 추가
+  // 새로운 루틴 추가
   static Future<Result<Todo>> addTodo(Todo todo) async {
-    final user = await SharedService.getUser();
 
-    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -83,15 +78,11 @@ class TodoService {
     }
   }
 
-  // 오늘의 Routine을 받아오는 함수
+  // 오늘의 Routine 받아오기
   static Future<Result<Todo>> getTodoOf() async {
-    final user = await SharedService.getUser();
 
-    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
-
-    final userId = user?.id ?? '-1';
 
     String now = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -139,12 +130,10 @@ class TodoService {
     }
   }
 
-  // rotutine의 task를 삭제
+  // rotutine의 task 삭제
   static Future<Result<Map<String, dynamic>>> deleteTask(
       Todo? todo, Task? task) async {
-    final user = await SharedService.getUser();
 
-    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -172,12 +161,11 @@ class TodoService {
     }
   }
 
-  //존
+
+  //루틴 수정
   static Future<Result<Map<String, dynamic>>> taskUpdateTodo(
       Todo? todo, Task? task) async {
-    final user = await SharedService.getUser();
 
-    // AccessToken가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
@@ -206,7 +194,6 @@ class TodoService {
       final response = await DioClient.sendRequest('PUT', url,
           body: taskUpdate, headers: headers);
 
-      print("response : ${response}");
       return Result.success(response.data);
     } catch (e) {
       return Result.failure("An error occurred: $e");

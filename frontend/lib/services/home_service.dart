@@ -27,7 +27,6 @@ class HomeService {
       );
 
       if (response.statusCode == 200) {
-        // 사용자 정보 파싱
         final user = User.fromJson(response.data as Map<String, dynamic>);
         return Result.success(user);
       }

@@ -13,6 +13,7 @@ class CosmeticSearchService {
     'Content-Type': 'application/json',
   };
 
+  //추천 제품 전체 불러오기
   static Future<Result<List<Cosmetic>>> getAllCosmetics() async {
 
     final accessToken = await SharedService.getAccessToken();

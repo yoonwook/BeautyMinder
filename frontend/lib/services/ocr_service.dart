@@ -7,6 +7,7 @@ import '../config.dart';
 import 'dio_client.dart';
 
 class OCRService {
+
   // 이미지 선택 및 업로드 함수
   static Future<dynamic> selectAndUploadImage(PlatformFile file) async {
     final url = Uri.http(Config.apiURL, Config.ocrAPI).toString();
@@ -21,13 +22,11 @@ class OCRService {
         contentType: contentType
     );
 
-    // FormData 생성
     FormData formData = FormData.fromMap({
       'image': multipartFile,
     });
 
     try {
-      // 서버에 업로드
       var response = await DioClient.sendRequest('POST', url, body: formData);
 
       if (response.statusCode == 200) {
