@@ -115,7 +115,7 @@ class BaumannService {
 
     try {
       final response = await DioClient.sendRequest(
-          'GET',
+          'DELETE',
           url,
           headers: headers
       );

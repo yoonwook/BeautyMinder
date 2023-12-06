@@ -15,6 +15,7 @@ import 'shared_service.dart';
 
 class APIService {
 
+  //로그인
   static Future<Result<bool>> login(LoginRequestModel model) async {
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
     final formData = FormData.fromMap({
@@ -34,13 +35,13 @@ class APIService {
     }
   }
 
+  //회원가입
   static Future<Result<RegisterResponseModel>> register(
       RegisterRequestModel model) async {
-    // URL 생성
+
     final url = Uri.http(Config.apiURL, Config.registerAPI).toString();
 
     try {
-      // POST 요청
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
       return Result.success(
           registerResponseJson(response.data as Map<String, dynamic>));
