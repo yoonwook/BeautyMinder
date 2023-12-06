@@ -1,36 +1,34 @@
 import 'dart:io';
 
-import 'package:beautyminder/Bloc/TodoPageBloc.dart';
-import 'package:beautyminder/dto/task_model.dart';
-import 'package:beautyminder/event/TodoPageEvent.dart';
-import 'package:beautyminder/pages/home/home_page.dart';
 import 'package:beautyminder/pages/todo/skin_Album_page.dart';
 import 'package:beautyminder/pages/todo/skin_timeline.dart';
-
-import 'package:beautyminder/widget/commonAppBar.dart';
+import 'package:beautyminder/services/notification.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:local_image_provider/device_image.dart';
-import 'package:local_image_provider/local_image.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:local_image_provider/local_image_provider.dart' as lip;
-import '../../State/TodoState.dart';
 import 'package:path/path.dart' as path;
+
+import '../../Bloc/TodoPageBloc.dart';
+import '../../State/TodoState.dart';
+import '../../dto/task_model.dart';
 import '../../dto/todo_model.dart';
+import '../../event/TodoPageEvent.dart';
 import '../../services/api_service.dart';
+import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
+import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
 import '../recommend/recommend_bloc_screen.dart';
-import 'FullScreenImagePage.dart';
 import 'Todo_add_page.dart';
 
+late List<Todo>? global_todos;
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -50,6 +48,7 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
+    FlutterLocalNotification.init();
   }
 
   @override
@@ -58,7 +57,10 @@ class _CalendarPageState extends State<CalendarPage> {
         create: (_) => TodoPageBloc()..add(TodoPageInitEvent()),
         lazy: false,
         child: Scaffold(
-            appBar: CommonAppBar(automaticallyImplyLeading: false,),
+            appBar: CommonAppBar(
+              automaticallyImplyLeading: true,
+              context: context,
+            ),
             body: Column(
               children: [
                 BlocBuilder<TodoPageBloc, TodoState>(builder: (context, state) {
@@ -67,19 +69,20 @@ class _CalendarPageState extends State<CalendarPage> {
                 // Expanded(child: imageWidget()),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: FloatingActionButton.extended(
               //foregroundColor: Color(0xffffecda),
               backgroundColor: Color(0xffd86a04),
-              // elevation: 0,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TodoAddPage()));
+                    builder: (context) => TodoAddPage(todos: global_todos)));
               },
-              tooltip: '등록',
-              child: Icon(Icons.add),
-              shape: CircleBorder(),
+              label: Text('Routine'),
+              icon: Icon(Icons.add),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             bottomNavigationBar: CommonBottomNavigationBar(
                 currentIndex: _currentIndex,
                 onTap: (int index) async {
@@ -93,7 +96,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   } else if (index == 2) {
                     final userProfileResult = await APIService.getUserProfile();
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => HomePage(user: userProfileResult.value)));
+                        builder: (context) =>
+                            HomePage(user: userProfileResult.value!)));
                   } else if (index == 4) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const MyPage()));
@@ -129,6 +133,14 @@ class _todoListWidget extends State<todoListWidget> {
   }
 
   Widget _todoList(List<Todo>? todos, Todo? todo) {
+    if (todo == null) {
+      return const Center(
+
+        child: Text("입력된 루틴이 없습니다. \n루틴을 등록해주세요",
+            style: TextStyle(color: Colors.grey, fontSize: 30), textAlign: TextAlign.center,),
+      );
+    }
+
     // Todos
     return Padding(
         padding: const EdgeInsets.all(16),
@@ -142,7 +154,6 @@ class _todoListWidget extends State<todoListWidget> {
     List<Widget> morningTasks = [];
     List<Widget> dinnerTasks = [];
     List<Widget> otherTasks = [];
-
 
     //debugPrint("todo.id : ${todo?.id} ");
 
@@ -174,17 +185,17 @@ class _todoListWidget extends State<todoListWidget> {
     }
 
     if (morningTasks.isNotEmpty) {
-      children.add(_row('아침'));
+      children.add(_row('morning'));
       children.addAll(morningTasks);
     }
 
     if (dinnerTasks.isNotEmpty) {
-      children.add(_row('저녁'));
+      children.add(_row('dinner'));
       children.addAll(dinnerTasks);
     }
 
     if (otherTasks.isNotEmpty) {
-      children.add(_row('기타'));
+      children.add(_row('other'));
       children.addAll(otherTasks);
     }
 
@@ -193,7 +204,10 @@ class _todoListWidget extends State<todoListWidget> {
 
   Widget _calendar(List<Todo>? todos) {
     List<Todo> _getTodosForDay(DateTime day) {
-      return todos?.where((todo) => isSameDay(todo.date!, day)).toList() ?? [];
+      return todos
+              ?.where((todo) => isSameDay(DateTime.parse(todo.date!), day))
+              .toList() ??
+          [];
     }
 
     return TableCalendar(
@@ -255,8 +269,6 @@ class _todoListWidget extends State<todoListWidget> {
   }
 
   Widget _todo(Task task, Todo todo, List<Todo>? todos) {
-    late String newCategory;
-
     return Slidable(
       startActionPane: ActionPane(
         motion: const DrawerMotion(),
@@ -264,7 +276,7 @@ class _todoListWidget extends State<todoListWidget> {
         dragDismissible: false,
         children: [
           SlidableAction(
-            label: '수정',
+            label: 'Update',
             backgroundColor: Colors.orange,
             icon: Icons.archive,
             onPressed: (context) {
@@ -282,9 +294,9 @@ class _todoListWidget extends State<todoListWidget> {
                     return BlocProvider.value(
                         value: BlocProvider.of<TodoPageBloc>(context),
                         child:
-                        StatefulBuilder(builder: (context, setDialogState) {
+                            StatefulBuilder(builder: (context, setDialogState) {
                           return AlertDialog(
-                            title: Text('수정'),
+                            title: Text('Update Todo'),
                             content: SingleChildScrollView(
                               child: Column(
                                 children: [
@@ -293,18 +305,17 @@ class _todoListWidget extends State<todoListWidget> {
                                     onPressed: (int index) {
                                       setDialogState(() {
                                         for (int buttonIndex = 0;
-                                        buttonIndex < isSelected.length;
-                                        buttonIndex++) {
+                                            buttonIndex < isSelected.length;
+                                            buttonIndex++) {
                                           isSelected[buttonIndex] =
                                               buttonIndex == index;
                                         }
-
                                         if (index == 0) {
-                                          newCategory = 'morning';
+                                          task.category = 'morning';
                                         } else if (index == 1) {
-                                          newCategory = 'dinner';
+                                          task.category = 'dinner';
                                         } else {
-                                          newCategory = 'other';
+                                          task.category = 'other';
                                         }
                                       });
                                     },
@@ -312,17 +323,17 @@ class _todoListWidget extends State<todoListWidget> {
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10),
-                                        child: Text('아침'),
+                                        child: Text('Morning'),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10),
-                                        child: Text('저녁'),
+                                        child: Text('Dinner'),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10),
-                                        child: Text('기타'),
+                                        child: Text('Other'),
                                       ),
                                     ],
                                   ),
@@ -330,14 +341,14 @@ class _todoListWidget extends State<todoListWidget> {
                                     children: [
                                       Expanded(
                                           child: TextField(
-                                            controller: _controller,
-                                            onChanged: (value) {},
-                                          )),
+                                        controller: _controller,
+                                        onChanged: (value) {},
+                                      )),
                                       IconButton(
                                         icon: Icon(Icons.edit),
                                         onPressed: () {
                                           task.description = _controller.text;
-                                          task.category = newCategory;
+
                                           print("update todos : ${todos}");
 
                                           context
@@ -356,7 +367,7 @@ class _todoListWidget extends State<todoListWidget> {
                                   ),
                                   const Padding(
                                       padding:
-                                      EdgeInsets.symmetric(vertical: 10)),
+                                          EdgeInsets.symmetric(vertical: 10)),
                                   TextButton.icon(
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -380,7 +391,7 @@ class _todoListWidget extends State<todoListWidget> {
         dismissible: DismissiblePane(onDismissed: () {}),
         children: [
           SlidableAction(
-            label: '삭제',
+            label: 'delete',
             backgroundColor: Colors.red,
             icon: Icons.delete,
             onPressed: (context) async {
@@ -423,9 +434,9 @@ class _todoListWidget extends State<todoListWidget> {
         builder: (context, state) {
           if (state is TodoInitState || state is TodoDownloadedState) {
             return Container(
-                height: MediaQuery.of(context).size.height-200,
+                height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -437,6 +448,7 @@ class _todoListWidget extends State<todoListWidget> {
                   ],
                 ));
           } else if (state is TodoLoadedState) {
+            global_todos = state.todos;
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -446,6 +458,7 @@ class _todoListWidget extends State<todoListWidget> {
               ],
             );
           } else if (state is TodoDeletedState) {
+            global_todos = state.todos;
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -456,6 +469,7 @@ class _todoListWidget extends State<todoListWidget> {
               ],
             );
           } else {
+            global_todos = state.todos;
             return Column(
               children: [
                 _calendar(state.todos),
@@ -510,12 +524,12 @@ class Buttons extends StatelessWidget {
           },
           icon: const Icon(Icons.camera_alt_outlined, color: Color(0xffd86a04)),
           label: const Text(
-            "피부촬영",
+            "SKIN",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(
-            foregroundColor: const Color(0xffffecda),
-            backgroundColor: const Color(0xffffecda)),
+              foregroundColor: const Color(0xffffecda),
+              backgroundColor: const Color(0xffffecda)),
         ),
         const SizedBox(
           width: 20,
@@ -527,7 +541,7 @@ class Buttons extends StatelessWidget {
           },
           icon: const Icon(Icons.album_rounded, color: Color(0xffd86a04)),
           label: const Text(
-            "앨범",
+            "ALBUM",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(
@@ -544,7 +558,7 @@ class Buttons extends StatelessWidget {
           },
           icon: const Icon(Icons.album_rounded, color: Color(0xffd86a04)),
           label: const Text(
-            "타임 라인",
+            "TimeLine",
             style: TextStyle(color: Color(0xffd86a04)),
           ),
           style: ElevatedButton.styleFrom(

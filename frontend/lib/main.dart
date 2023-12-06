@@ -14,10 +14,15 @@ import 'Bloc/TodoPageBloc.dart';
 import 'pages/start/login_page.dart';
 import 'pages/start/register_page.dart';
 
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
 // Widget _defaultHome = WelcomePage();
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
 
   //if (defaultTargetPlatform == TargetPlatform.android) {
   //  await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);

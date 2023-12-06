@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../dto/cosmetic_model.dart';
-import '../../services/homeSearch_service.dart';
+import '../../services/search_service.dart';
 import '../../services/keywordRank_service.dart';
 
 class SearchPage extends StatefulWidget {
@@ -625,13 +625,13 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-// 결과 클래스
-class Result<T> {
-  final T? value;
-  final String? error;
-
-  Result.success(this.value) : error = null; // 성공
-  Result.failure(this.error) : value = null; // 실패
-
-  bool get isSuccess => value != null;
-}
+// // 결과 클래스
+// class Result<T> {
+//   final T? value;
+//   final String? error;
+//
+//   Result.success(this.value) : error = null; // 성공
+//   Result.failure(this.error) : value = null; // 실패
+//
+//   bool get isSuccess => value != null;
+// }

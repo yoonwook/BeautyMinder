@@ -1,14 +1,10 @@
-// DioClient.class
-
 import 'package:dio/dio.dart';
 
 class DioClient {
   static final Dio client = Dio(
-    // Make this static
     BaseOptions(
-      // baseUrl: Config.apiURL,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
     ),
   );
 
@@ -17,7 +13,7 @@ class DioClient {
     'Content-Type': 'application/json',
   };
 
-  // 모든 http 요청 하나의 함수로
+  // 모든 http 요청
   static Future<Response> sendRequest(
     String method,
     String url, {

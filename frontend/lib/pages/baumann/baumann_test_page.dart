@@ -197,24 +197,26 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
   // 새로운 함수: 데이터를 백엔드로 전송
   Future<void> sendSurveyToBackend(Map<String, int?> surveyData) async {
     // 유저 정보 가지고 오기
-    final user = await SharedService.getUser();
+    // final user = await SharedService.getUser();
+    final accessToken = await SharedService.getAccessToken();
+    final refreshToken = await SharedService.getRefreshToken();
 
     // AccessToken가지고오기
-    final accessToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
-    //refreshToken 가지고오기
-    final refreshToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
+    // final accessToken =
+    //     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMDU0OTQzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.-tq20j-ZRmL9WRdBZEPrELjpxrbOJ0JUztzfGHCwLKM";
+    // //refreshToken 가지고오기
+    // final refreshToken =
+    //     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZWF1dHltaW5kZXIiLCJpYXQiOjE2OTk5NDQ2MzksImV4cCI6MTcwMTE1NDIzOSwic3ViIjoidG9rZW5AdGVzdCIsImlkIjoiNjU1MGFmZWYxYWI2ZDU4YjNmMTVmZTFjIn0.dAXFUJI2vpjiQKakrRC_UTqgpG_BD_Df4vOeQq46HWQ";
 
     // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
-    final userId = user?.id ?? '-1';
+    // final userId = user?.id ?? '-1';
 
-    final url = Uri.http(Config.apiURL, Config.baumannTestAPI).toString();
+    // final url = Uri.http(Config.apiURL, Config.baumannTestAPI).toString();
 
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
-    };
+    // final headers = {
+    //   'Authorization': 'Bearer $accessToken',
+    //   'Cookie': 'XRT=$refreshToken',
+    // };
 
     try {
       // JSON 데이터 생성
@@ -223,8 +225,7 @@ class _BaumannTestPageState extends State<BaumannTestPage> {
       };
 
       // 백엔드로 JSON 데이터 전송
-      final response =
-          await BaumannService.postJson(url, jsonData, headers: headers);
+      final response = await BaumannService.postSurveyResult(jsonData);
 
       // 응답 처리
       if (response.statusCode == 200) {

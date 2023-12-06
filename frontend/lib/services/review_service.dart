@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:beautyminder/config.dart';
 import 'package:beautyminder/dto/review_request_model.dart';
@@ -36,13 +35,11 @@ class ReviewService {
       contentType: MediaType('application', 'json'),
     );
 
-    // FormData 생성
     var formData = FormData.fromMap({
       'review': reviewMultipart,
       'images': multipartImageList,
     });
 
-    // API 요청
     var response = await DioClient.sendRequest(
         'POST',
         url,
@@ -104,13 +101,11 @@ class ReviewService {
 
     String reviewJson = jsonEncode(reviewRequest.toJson());
 
-    // FormData 생성
     var formData = FormData.fromMap({
       'review': MultipartFile.fromString(reviewJson, filename: 'review.json', contentType: MediaType('application', 'json')),
       'images': multipartImageList,
     });
 
-    // API 요청
     var response = await DioClient.sendRequest(
         'PUT',
         url,
@@ -124,6 +119,5 @@ class ReviewService {
       throw Exception('Failed to update review: ${response.statusMessage}');
     }
   }
-
 
 }

@@ -1,7 +1,7 @@
 import 'package:beautyminder/dto/cosmetic_model.dart';
 import 'package:beautyminder/pages/product/review_page.dart';
 import 'package:beautyminder/services/gptReview_service.dart';
-import 'package:beautyminder/widget/myAppBar.dart';
+import 'package:beautyminder/services/api_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,7 +26,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
 
-  late Future<GPTResult<GPTReviewInfo>> _gptReviewInfo;
+  late Future<Result<GPTReviewInfo>> _gptReviewInfo;
   List favorites = [];
   bool showPositiveReview = true;
   bool isFavorite = false;
@@ -39,35 +39,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     print("start page : $isFavorite");
     super.initState();
     _gptReviewInfo = GPTReviewService.getGPTReviews(widget.searchResults.id);
-    _loadFavoriteState(widget.searchResults.id);
-    _getFavoriteList();
+    _getAllNeeds(widget.searchResults.id);
   }
 
-  Future<void> _loadFavoriteState(String prouctId) async {
-    isFavorite = await FavoriteManager().getFavoriteState(prouctId);
-    setState(() {}); // Trigger a rebuild to reflect the initial state.
-  }
-
-  Future<void> _saveFavoriteState(String prouctId) async {
-    await FavoriteManager().setFavoriteState(prouctId, isFavorite);
-  }
-
-  Future<void> _getFavoriteList() async {
-    // 이미 API 호출이 진행 중인지 확인
+  //필요한 서비스 호출
+  Future<void> _getAllNeeds(String prouctId) async {
     if (isApiCallProcess) {
       return;
     }
-    // API 호출 중임을 표시
     setState(() {
       isLoading = true;
       isApiCallProcess = true;
     });
 
     try {
-      //검색어 히스토리
-      final loadedFavoriteList = await APIService.getFavorites();
+      //즐겨찾기 제품 호출
+      final loadedFavoriteList = await FavoritesService.getFavorites();
+
       setState(() {
         favorites = loadedFavoriteList.value ?? [];
+        isFavorite = favorites.any((favorite) => favorite['id'] == widget.searchResults.id);
       });
 
     } catch (e) {
@@ -162,16 +153,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         setState(() {
           isFavorite = !isFavorite;
         });
-        await _saveFavoriteState(widget.searchResults.id);
-
-        // Call FavoritesService to upload or delete favorites based on the button state
         try {
-          // Assuming you have the cosmeticId from your widget
           String cosmeticId = widget.searchResults.id;
 
-          // Call the appropriate method based on the button state
           if (isFavorite) {
-            // Call the uploadFavorites method from FavoritesService
             String result = await FavoritesService.uploadFavorites(cosmeticId);
 
             if (result == "success upload user favorites") {
@@ -179,8 +164,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             } else {
               print("Failed to upload favorites");
             }
-          } else {
-            // Call the deleteFavorites method from FavoritesService
+          }
+          else {
             String result = await FavoritesService.deleteFavorites(cosmeticId);
 
             if (result == "success deleted user favorites") {
@@ -191,12 +176,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           }
           if (widget.updateFavorites != null) {
             widget.updateFavorites!(isFavorite);
-            print("@@@@1 : $isFavorite");
           }
         } catch (e) {
           print("An error occurred while handling favorites: $e");
         }
-        // Navigator.pop(context, isFavorite);
       },
       icon: Icon(
         isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -235,43 +218,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  // Widget _displayRatingStars() {
-  //
-  //   return Padding(
-  //     padding: const EdgeInsets.all(8.0),
-  //     child: Expanded(
-  //       child: Row(
-  //         children: [
-  //           Text(
-  //             '별점: ',
-  //             style: TextStyle(fontSize: 18),
-  //           ),
-  //           AbsorbPointer(
-  //             absorbing: true, // Set absorbing to true
-  //             child: RatingBar.builder(
-  //               initialRating: widget.searchResults.averageRating,
-  //               minRating: 1,
-  //               direction: Axis.horizontal,
-  //               allowHalfRating: true,
-  //               itemCount: 5,
-  //               itemSize: 20,
-  //               itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-  //               itemBuilder: (context, _) => Icon(
-  //                 Icons.star,
-  //                 color: Colors.amber,
-  //               ),
-  //               onRatingUpdate: (rating) {},
-  //             ),
-  //           ),
-  //           Text(
-  //             '(${widget.searchResults.averageRating})',
-  //             style: TextStyle(fontSize: 18),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
   Widget _displayRatingStars() {
     double averageRating = widget.searchResults.averageRating;
     int fullStar = averageRating.toInt();
@@ -415,7 +361,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget _gptReviewContent() {
     bool isPositive = showPositiveReview;
 
-    return FutureBuilder<GPTResult<GPTReviewInfo>>(
+    return FutureBuilder<Result<GPTReviewInfo>>(
       future: _gptReviewInfo,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -621,25 +567,5 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       endIndent: 10,
       color: Colors.grey,
     );
-  }
-}
-
-class FavoriteManager {
-  static final FavoriteManager _instance = FavoriteManager._internal();
-
-  factory FavoriteManager() {
-    return _instance;
-  }
-
-  FavoriteManager._internal();
-
-  Future<bool> getFavoriteState(String productId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isFavorite_$productId') ?? false;
-  }
-
-  Future<void> setFavoriteState(String productId, bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isFavorite_$productId', value);
   }
 }

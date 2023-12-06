@@ -1,4 +1,5 @@
 import 'package:beautyminder/pages/home/home_page.dart';
+import 'package:beautyminder/pages/start/register_page.dart';
 import 'package:beautyminder/widget/loginAppBar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../dto/login_request_model.dart';
 import '../../services/api_service.dart';
+import 'find_password_byEmail.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -31,8 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    email = "token@test";
-    password = '1234';
+    // email = "token@test";
+    // password = '1234';
   }
 
   @override
@@ -71,14 +73,14 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 30), // 여백 추가
           _buildPasswordField(), // 비밀번호 필드
 
-          SizedBox(height: 50), // 여백 추가
-          _buildForgetPassword(), // 비밀번호 찾기
-
-          SizedBox(height: 20), // 여백 추가
+          SizedBox(height: 80), // 여백 추가
           _buildLoginButton(), // 로그인 버튼
 
-          SizedBox(height: 50), // 여백 추가
+          SizedBox(height: 80), // 여백 추가
           _buildOrText(), // OR 텍스트
+
+          SizedBox(height: 30), // 여백 추가
+          _buildForgetPassword(), // 비밀번호 찾기
 
           SizedBox(height: 20), // 여백 추가
           _buildSignupText(), // 회원가입 텍스트
@@ -111,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Container(
             height: 60,
             child: TextFormField(
-              initialValue: 'token@test',
+              // initialValue: 'token@test',
               focusNode: emailFocusNode,
               validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
               onChanged: (val) => email = val,
@@ -162,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Container(
             height: 60,
             child: TextFormField(
-              initialValue: '1234',
+              // initialValue: '1234',
               focusNode: passwordFocusNode,
               validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
               onChanged: (val) => password = val,
@@ -199,31 +201,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ],
-    );
-  }
-
-  // 비밀번호 찾기
-  Widget _buildForgetPassword() {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 25),
-        child: RichText(
-          text: TextSpan(
-            style: const TextStyle(color: Colors.black, fontSize: 14.0),
-            children: <TextSpan>[
-              TextSpan(
-                text: 'Forget Password ?',
-                style: const TextStyle(
-                  color: Colors.black,
-                  decoration: TextDecoration.underline,
-                ),
-                recognizer: TapGestureRecognizer()..onTap = () {},
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -268,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
             } else {
               // 에러 토스트 메시지
               Fluttertoast.showToast(
-                msg: result.error ?? "로그인에 실패하였습니다.",
+                msg: "로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
               );
@@ -280,6 +257,37 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
       },
+    );
+  }
+
+  // 비밀번호 찾기
+  Widget _buildForgetPassword() {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        child: RichText(
+          text: TextSpan(
+            style: const TextStyle(color: Colors.black, fontSize: 15.0),
+            children: <TextSpan>[
+              const TextSpan(text: '비밀번호를 잊어버리셨나요? '),
+              TextSpan(
+                text: '비밀번호 찾기',
+                style: const TextStyle(
+                  color: Color(0xffd86a04),
+                  fontWeight: FontWeight.bold,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              FindPasswordByEmailPage()));
+                  },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -301,10 +309,10 @@ class _LoginPageState extends State<LoginPage> {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.only(right: 25),
+        padding: const EdgeInsets.only(left: 25, right: 25),
         child: RichText(
           text: TextSpan(
-            style: const TextStyle(color: Colors.black, fontSize: 14.0),
+            style: const TextStyle(color: Colors.black, fontSize: 15.0),
             children: <TextSpan>[
               const TextSpan(text: '등록된 계정이 없으신가요? '),
               TextSpan(
@@ -315,7 +323,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    Navigator.pushNamed(context, '/user/signup');
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            RegisterPage()));
                   },
               ),
             ],

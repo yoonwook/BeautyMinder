@@ -7,10 +7,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../dto/user_model.dart';
 
 class SharedService {
+
   // 안전한 저장소 설정
   static const storage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock));
+      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock)
+  );
 
   // 로그인 여부 확인
   static Future<bool> isLoggedIn() async {
