@@ -1,4 +1,5 @@
 import 'package:beautyminder/pages/home/home_page.dart';
+import 'package:beautyminder/pages/start/register_page.dart';
 import 'package:beautyminder/widget/loginAppBar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../dto/login_request_model.dart';
 import '../../services/api_service.dart';
+import 'find_password_byEmail.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -71,14 +73,14 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 30), // 여백 추가
           _buildPasswordField(), // 비밀번호 필드
 
-          SizedBox(height: 50), // 여백 추가
-          _buildForgetPassword(), // 비밀번호 찾기
-
-          SizedBox(height: 20), // 여백 추가
+          SizedBox(height: 80), // 여백 추가
           _buildLoginButton(), // 로그인 버튼
 
-          SizedBox(height: 50), // 여백 추가
+          SizedBox(height: 80), // 여백 추가
           _buildOrText(), // OR 텍스트
+
+          SizedBox(height: 30), // 여백 추가
+          _buildForgetPassword(), // 비밀번호 찾기
 
           SizedBox(height: 20), // 여백 추가
           _buildSignupText(), // 회원가입 텍스트
@@ -202,31 +204,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 비밀번호 찾기
-  Widget _buildForgetPassword() {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 25),
-        child: RichText(
-          text: TextSpan(
-            style: const TextStyle(color: Colors.black, fontSize: 14.0),
-            children: <TextSpan>[
-              TextSpan(
-                text: 'Forget Password ?',
-                style: const TextStyle(
-                  color: Colors.black,
-                  decoration: TextDecoration.underline,
-                ),
-                recognizer: TapGestureRecognizer()..onTap = () {},
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   // 로그인 버튼
   Widget _buildLoginButton() {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -283,6 +260,37 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // 비밀번호 찾기
+  Widget _buildForgetPassword() {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 25, right: 25),
+        child: RichText(
+          text: TextSpan(
+            style: const TextStyle(color: Colors.black, fontSize: 15.0),
+            children: <TextSpan>[
+              const TextSpan(text: '비밀번호를 잊어버리셨나요? '),
+              TextSpan(
+                text: '비밀번호 찾기',
+                style: const TextStyle(
+                  color: Color(0xffd86a04),
+                  fontWeight: FontWeight.bold,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              FindPasswordByEmailPage()));
+                  },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // OR 텍스트
   Widget _buildOrText() {
     return const Center(
@@ -301,10 +309,10 @@ class _LoginPageState extends State<LoginPage> {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.only(right: 25),
+        padding: const EdgeInsets.only(left: 25, right: 25),
         child: RichText(
           text: TextSpan(
-            style: const TextStyle(color: Colors.black, fontSize: 14.0),
+            style: const TextStyle(color: Colors.black, fontSize: 15.0),
             children: <TextSpan>[
               const TextSpan(text: '등록된 계정이 없으신가요? '),
               TextSpan(
@@ -315,7 +323,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    Navigator.pushNamed(context, '/user/signup');
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            RegisterPage()));
                   },
               ),
             ],
