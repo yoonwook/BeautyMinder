@@ -14,7 +14,7 @@ class Todo {
   });
 
   late final String? id;
-  late final DateTime? date;
+  late final String? date;
   late final List<Task> tasks;
   late User? user;
   late final DateTime? createdAt;
@@ -38,7 +38,7 @@ Todo {
 
     return Todo(
       id: json['id'],
-      date: DateTime.parse(json['date']),
+      date: json['date'],
       tasks: tasksList,
       user: User.fromJson(json['user']),
       createdAt: DateTime.parse(json['createdAt']),
