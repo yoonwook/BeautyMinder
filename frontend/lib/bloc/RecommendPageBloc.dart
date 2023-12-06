@@ -23,15 +23,27 @@ class RecommendPageBloc extends Bloc<RecommendPageEvent, RecommendState> {
       // 추천 상품 받아오는 로직 구현이 필요
       final result = (await CosmeticSearchService.getAllCosmetics());
 
-      AllCosmetics = result.value!;
+      print("result.value : ${result.value}" );
 
-      //print("RecommendPageBloc cosmetics : ${cosmetics}");
+      if(result.value == null){
+        print("result.value == null");
+        AllCosmetics = [];
+        print("AllCosmetics : ${AllCosmetics}");
+        print("length : ${AllCosmetics.length}");
+      }else{
+        AllCosmetics = result.value!;
+      }
 
-      if (AllCosmetics != null) {
+
+
+
+      if (AllCosmetics != null && AllCosmetics.length >0) {
         // 정상적으로 데이터를 받아왔다면
+        print("AllCosmetics != null || AllCosmetics != []");
         emit(RecommendLoadedState(
             recCosmetics: AllCosmetics, category: state.category));
       } else {
+        print('error발생');
         emit(RecommendErrorState(recCosmetics: [], isError: true));
       }
     });

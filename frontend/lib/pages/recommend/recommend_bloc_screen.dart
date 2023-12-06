@@ -9,6 +9,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../services/api_service.dart';
 import '../../widget/commonAppBar.dart';
 import '../../widget/commonBottomNavigationBar.dart';
+import '../../widget/homepageAppBar.dart';
+import '../baumann/baumann_test_start_page.dart';
 import '../home/home_page.dart';
 import '../my/my_page.dart';
 import '../pouch/expiry_page.dart';
@@ -94,7 +96,18 @@ class _RecPage extends State<RecPage> {
     return BlocProvider(
       create: (_) => RecommendPageBloc()..add(RecommendPageInitEvent()),
       child: Scaffold(
-          appBar: CommonAppBar(automaticallyImplyLeading: false,),
+          appBar:  HomepageAppBar(
+            actions: [
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => RecPage()),
+                  );
+                },
+              ),
+            ],
+          ),
           body: Column(
             children: [
               Container(height: 30),
@@ -191,7 +204,6 @@ class _RecPage extends State<RecPage> {
 }
 
 String keywordsToString(List<String> keywords) {
-  // 리스트의 모든 항목을 쉼표와 공백으로 구분된 하나의 문자열로 변환합니다.
   return keywords.join(', ');
 }
 
@@ -273,10 +285,6 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
           width: MediaQuery.of(context).size.width,
           height: 100,
           child: GestureDetector(
-            // onTap: () {
-            //   HapticFeedback.mediumImpact();
-            //   context.read<RecommendPageBloc>().add(RecommendPageInitEvent());
-            //},
             child: SpinKitThreeInOut(
               color: Color(0xffd86a04),
               size: 50.0,
@@ -284,22 +292,41 @@ class _RecPageImageWidget extends State<RecPageImageWidget> {
             ),
           ),
         );
+      } else if (state is RecommendErrorState) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                '추천할 수 있는 제품이 없습니다. \n 바우만 피부 테스트를 진행해주세요 ',
+                style: TextStyle(fontSize: 25, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffd86a04)),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (contextx) => BaumannStartPage()));
+                },
+                child: Text(
+                  "바우만 테스트",
+                  style: TextStyle(color: Colors.white),
+                ))
+          ],
+        );
       } else {
-        // else일때는 RecommendLoadedState임
-
-        //print("${state} + hello");
-        //print("${state.category}."); //RecommendLoadedState
-        // print("Container");
-
         return ListView.separated(
             shrinkWrap: true,
             itemBuilder: (context, index) {
               {
                 return GestureDetector(
                     onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => ProductDetailPage(
-                      //         name: state.recCosmetics![index].name)));
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ProductDetailPage(
                           searchResults: state.recCosmetics![index],
