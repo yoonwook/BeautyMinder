@@ -119,7 +119,6 @@ class BaumannService {
           url,
           headers: headers
       );
-      print("testtest1 : ${response.statusCode}");
 
       if (response.statusCode == 200) {
         print("Success Delete - baumann result");
