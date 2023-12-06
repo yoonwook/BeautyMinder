@@ -50,22 +50,14 @@ class APIService {
     }
   }
 
-// 탈퇴 함수
+  //회원 탈퇴
   static Future<Result<bool>> delete(DeleteRequestModel model) async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
 
-    // AccessToken 가지고오기
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
+    final url = Uri.http(Config.apiURL, Config.deleteAPI).toString();
 
-    // URL 생성
-    final url = Uri.http(Config.apiURL, Config.deleteAPI)
-        .toString(); //deleteAPI 뒤에 + userID 지움
-
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -79,28 +71,20 @@ class APIService {
     }
   }
 
-  // 사용자 프로필 조회 함수
+  //사용자 프로필 조회
   static Future<Result<User>> getUserProfile() async {
-    // 로그인 상세 정보 가져오기
-    // final user = await SharedService.getUser();
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
-
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.userProfileAPI).toString();
 
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      // GET 요청
       final response = await DioClient.sendRequest(
         'GET',
         url,
@@ -108,7 +92,6 @@ class APIService {
       );
 
       if (response.statusCode == 200) {
-        // 사용자 정보 파싱
         final user = User.fromJson(response.data as Map<String, dynamic>);
         return Result.success(user);
       }
@@ -119,27 +102,20 @@ class APIService {
     }
   }
 
-  // 리뷰 조회 함수
+  //리뷰 조회
   static Future<Result<List<dynamic>>> getReviews() async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
-
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.getUserReview).toString();
 
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
     };
 
     try {
-      // GET 요청
       final response = await DioClient.sendRequest(
         'GET',
         url,
@@ -149,7 +125,6 @@ class APIService {
       if (response.statusCode == 200) {
         return Result.success(response.data);
       }
-
       return Result.failure("Failed to get user reviews");
     } catch (e) {
       print(e);
@@ -157,20 +132,14 @@ class APIService {
     }
   }
 
-  // 회원정보 수정 함수
+  //회원정보 수정
   static Future<Result<bool>> sendEditInfo(UpdateRequestModel model) async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
-
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
 
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -190,17 +159,12 @@ class APIService {
 
   //프로필 사진 변경
   static Future<String> editProfileImgInfo(String image) async {
-    // 로그인 상세 정보 가져오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
     final refreshToken = await SharedService.getRefreshToken();
 
-    final userId = user?.id ?? '-1';
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.editProfileImg).toString();
 
-    // 헤더 설정
     final headers = {
       'Authorization': 'Bearer $accessToken',
       'Cookie': 'XRT=$refreshToken',
@@ -216,14 +180,12 @@ class APIService {
       ),
     });
 
-    // Use Dio's post method for multipart data
     final response = await DioClient.sendRequest(
       'POST',
       url,
       body: formData,
       headers: headers,
     );
-
     if (response.statusCode == 200) {
       return response.data;
     } else {
@@ -233,17 +195,10 @@ class APIService {
 
   // 리뷰 수정 함수
   static Future<Result<List<dynamic>>> updateReview(id) async {
-    // 유저 정보 가지고 오기
-    final user = await SharedService.getUser();
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
-    //refreshToken 가지고오기
     final refreshToken = await SharedService.getRefreshToken();
 
-    // user.id가 있으면 userId에 user.id를 저장 없으면 -1을 저장
-    final userId = user?.id ?? '-1';
-
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
     final headers = {
@@ -252,7 +207,6 @@ class APIService {
     };
 
     try {
-      // put 요청
       final response =
           await DioClient.sendRequest('PUT', url, headers: headers);
       return Result.success(response.data);
@@ -262,14 +216,12 @@ class APIService {
     }
   }
 
-  // 리뷰 삭제 함수
+  //리뷰 삭제
   static Future<Result<List<dynamic>>> deleteReview(String id) async {
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
-    //refreshToken 가지고오기
     final refreshToken = await SharedService.getRefreshToken();
 
-    // URL 생성
     final url = Uri.http(Config.apiURL, Config.getReviewAPI + id).toString();
 
     final headers = {
@@ -278,10 +230,8 @@ class APIService {
     };
 
     try {
-      // del 요청
       final response =
           await DioClient.sendRequest('DELETE', url, headers: headers);
-      print('res is ${response.data}');
       return Result.success(response.data);
     } catch (e) {
       print(e);
@@ -289,16 +239,13 @@ class APIService {
     }
   }
 
-
-
   //비밀번호 변경
   static Future<Result<bool>> changePassword({
     required String currentPassword,
     required String newPassword,
   }) async {
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
-    //refreshToken 가지고오기
     final refreshToken = await SharedService.getRefreshToken();
 
     final url = Uri.http(Config.apiURL, Config.changePassword).toString();
@@ -333,9 +280,8 @@ class APIService {
   static Future<Result<bool>> requestResetPassword({
     required String email,
   }) async {
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
-    //refreshToken 가지고오기
     final refreshToken = await SharedService.getRefreshToken();
 
     final url = Uri.http(Config.apiURL, Config.requestResetPassword).toString();
@@ -364,9 +310,8 @@ class APIService {
   //유저 정보 변경
   static Future<Result<bool>> updateUserInfo(
       Map<String, dynamic> userData) async {
-    // AccessToken가지고오기
+
     final accessToken = await SharedService.getAccessToken();
-    //refreshToken 가지고오기
     final refreshToken = await SharedService.getRefreshToken();
 
     final url = Uri.http(Config.apiURL, Config.editUserInfo).toString();
