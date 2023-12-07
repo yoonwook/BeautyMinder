@@ -54,7 +54,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      _showSnackBar('리뷰 불러오기 실패: $e');
+      _showSnackBar('리뷰 불러오기 실패하였습니다');
     }
   }
 
@@ -87,7 +87,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       log('Unsupported operation : ' + e.toString());
     } catch (e) {
       log(e.toString());
-      _showSnackBar('이미지 선택에 실패: $e');
+      _showSnackBar('이미지 선택에 실패하였습니다');
     }
   }
 
@@ -106,6 +106,22 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
       _showSnackBar('리뷰 추가는 로그인이 필수입니다!');
     }
   }
+
+  String parseAndFormatBaumannAnalysis(String nlpAnalysis) {
+    RegExp exp = RegExp(r'([ODRSPNTW]): (\d\.\d)');
+    var matches = exp.allMatches(nlpAnalysis);
+    List<String> formattedItems = [];
+
+    for (var match in matches) {
+      String key = match.group(1)!;
+      double value = double.parse(match.group(2)!) * 100;
+      formattedItems.add('${key}: ${value.toStringAsFixed(0)}%');
+    }
+
+    return formattedItems.join(', ');
+  }
+
+
 
 
   void _showReviewDialog({required String userId}) {
@@ -224,7 +240,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
                       Navigator.of(context).pop(); // 다이얼로그 닫기
                       _showSnackBar('리뷰가 추가되었습니다');
                     } catch (e) {
-                      _showSnackBar('리뷰 추가 실패: $e');
+                      _showSnackBar('리뷰 추가 실패하였습니다.');
                     }
                   },
                   child: Text('제출',
@@ -252,63 +268,75 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
         separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey),
         itemBuilder: (context, index) {
           var review = _cosmeticReviews[index];
+          String baumannString = parseAndFormatBaumannAnalysis(review.nlpAnalysis);
           return Card(
             elevation: 2,
             margin: EdgeInsets.all(8),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: ListTile(
-              title: Row(
+            child: Column(
                 children: [
-                  ...List.generate(5, (starIndex) {
-                    return Icon(
-                      starIndex < review.rating
-                          ? Icons.star
-                          : Icons.star_border,
-                      color: Colors.amber,
-                      size: 20,
-                    );
-                  }),
-                  SizedBox(width: 8),
-                  Text(
-                    '${review.rating} Stars',
-                    style: TextStyle(color: Colors.grey),
+                  ListTile(
+                    leading: Icon(Icons.person), // 사용자 아이콘을 표시합니다.
+                    title: Text(review.user.email), // 사용자 이름을 표시합니다.
+                    subtitle: Row(
+                      children: [
+                        ...List.generate(5, (starIndex) {
+                          return Icon(
+                            starIndex < review.rating ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                            size: 20,
+                          );
+                        }),
+                        SizedBox(width: 8),
+                        Text(
+                          '${review.rating} Stars',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      review.content,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 10),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children: review.images.map((image) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            image,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                              return SizedBox.shrink();
-                            },
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          review.content,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8.0,
+                          runSpacing: 4.0,
+                          children: review.images.map((image) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                image,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  return SizedBox.shrink();
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 10),
+                        if (review.nlpAnalysis.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.all(8.0), // 여기서 원하는 패딩 값을 설정하세요.
+                            child: Text(
+                              '바우만 분석: $baumannString',
+                              style: TextStyle(fontSize: 12),
+                              softWrap: true, // 필요에 따라 줄바꿈
+                            ),
                           ),
-                        );
-                      }).toList(),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    if (review.nlpAnalysis.isNotEmpty)
-                      Text('바우만분석: ${review.nlpAnalysis}'),
-                  ],
-                ),
-              ),
+                  ),
+                ]
             ),
           );
         },
@@ -335,8 +363,8 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
               ),
             ),
             Positioned(
-              right: 0,
-              top: 0,
+              right: -10,
+              top: -10,
               child: IconButton(
                 icon: Icon(Icons.remove_circle),
                 color: Colors.red,
@@ -357,7 +385,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(automaticallyImplyLeading: true,),
+      appBar: CommonAppBar(automaticallyImplyLeading: true, context: context,),
       body: Column(
         children: [
           if (_isLoading)
@@ -371,7 +399,26 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
               ),
             )
           else
-            _buildReviewList(),
+            if(_cosmeticReviews.isEmpty)
+              Expanded(
+                  child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "해당 제품의 리뷰가 존재하지 않습니다.\n리뷰를 등록해주세요.",
+                            style: TextStyle(color: Colors.grey, fontSize: 18),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      )
+                  )
+              )
+
+            else
+              _buildReviewList(),
+
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -379,7 +426,7 @@ class _CosmeticReviewPageState extends State<CosmeticReviewPage> {
           _addReview(); // 리뷰 추가 다이얼로그를 여는 버튼으로 변경
         },
         child: Icon(Icons.edit),
-        backgroundColor: Color(0xffe7a470),
+        backgroundColor: Color(0xffd86a04),
       ),
     );
   }
